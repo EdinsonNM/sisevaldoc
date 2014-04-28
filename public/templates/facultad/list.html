@@ -1,0 +1,61 @@
+<div class="panel panel-default">
+
+  <nav class="navbar navbar-default" role="navigation">
+      <div class="container-fluid">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-2">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="#//location.path()//">Listado de Facultades</a>
+        </div>
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-2">
+          <form class="navbar-form navbar-right">
+            <button type="button" class="btn btn-info" data-toggle="modal" data-target="#winUpload" ng-click="newUpload()">
+                <span class="glyphicon glyphicon-cloud-upload"></span>
+                Upload
+            </button>
+            <button type="button" class="btn btn-success" data-toggle="modal" data-target="#winNew" ng-click="new()">
+                <span class="glyphicon glyphicon-plus"></span> 
+                Nuevo
+            </button>
+          </form>
+          
+          
+        </div>
+      </div>
+    </nav>
+
+  <div class="panel-body">
+  	 <div loading-container="tableParams.settings().$loading">
+      <table ng-table="tableParams" show-filter="false" class="table table-bordered table-striped table-hover table-condensed ">
+        <tbody>
+          <tr ng-repeat="item in $data">
+            <td data-title="'ID'" sortable="id">//item.id//</td>
+            <td data-title="'Code'" sortable="code">//item.code//</td>
+            <td data-title="'Nombre'" sortable="name">//item.name//</td>
+            <td data-title="'Fecha Creación'" sortable="created_at">//item.created_at//</td>
+            <td data-title="'Ultima Actualización'" sortable="updated_at">//item.updated_at//</td>
+            <td data-title="'Opciones'" style="width:120px;">
+              <a title="Etapas de Evaluacion" class="btn btn-info btn-xs" ng-click="etapas(item.id)"><span class="glyphicon glyphicon-calendar"></span></a>
+              <a title="Listado de Escuelas" class="btn btn-warning btn-xs" ng-click="escuelas(item.id)"><span class="glyphicon glyphicon-th-list"></span></a>
+              
+              <a title="Editar" class="btn btn-success btn-xs" data-toggle="modal" data-target="#winUpd" ng-click="edit(item.id)"><span class="glyphicon glyphicon-pencil"></span></a>
+              <a title="Eliminar" class="btn btn-danger btn-xs" ng-click="delete(item.id)"><span class="glyphicon glyphicon-remove"></span></a>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+   
+  </div>
+</div>
+
+<window-dir title="Nueva Facultad" window="winNew" content="templates/facultad/form.html" entidad="entidad" others="others" save="save()"></window-dir>
+
+<window-dir title="Editar Facultad" window="winUpd" content="templates/facultad/form.html" entidad="entidad" others="others" save="update()"></window-dir>
+
+<window-dir title="Importar de Excel" window="winUpload" content="templates/facultad/upload.html" entidad="entidad" others="others" save="upload()" stylewidth="modal-lg"></window-dir>

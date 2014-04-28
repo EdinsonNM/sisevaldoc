@@ -1,0 +1,46 @@
+ <div class="row">
+  <div class="col-md-12">
+    <label for="Facultad">Facultad</label>
+    <input type="text" class="form-control"  ng-model="entidad.curso.escuela.facultad.name" ng-disabled="true" required/>
+  </div>
+</div>
+  <br/>
+  <div class="row">
+  <div class="col-md-12">
+    <label for="Facultad">Escuela</label>
+    <input type="text" class="form-control"  ng-model="entidad.curso.escuela.name" ng-disabled="true" required/>
+  </div>
+</div> 
+<br/>
+ <div class="row">
+  <div class="col-md-12">
+    <label for="Curso">Curso</label>
+    <input type="text" class="form-control"  ng-model="entidad.curso.name" ng-disabled="true" required/>
+  </div>
+</div> 
+<br/>
+<div class="row">
+  <div class="col-md-12">
+    <label for="Curso">Tipo</label>
+    <select ng-model="entidad.type" class="form-control">
+      <option value="Obligatorio">Obligatorio</option>
+      <option value="Electivo">Electivo</option>
+    </select>
+  </div>
+</div> 
+<br/>
+<div class="row">
+  <div class="col-md-4">
+    <label for="Curso">N° Horas Teoria</label>
+    <input type="text" class="form-control"  ng-model="entidad.number_hours_theory" required/>
+  </div>
+  <div class="col-md-4">
+    <label for="Curso">N° Horas Practica</label>
+    <input type="text" class="form-control"  ng-model="entidad.number_hours_practices" required/>
+  </div>
+  <div class="col-md-4">
+    <label for="Curso">N° Horas Laboratorio</label>
+    <input type="text" class="form-control"  ng-model="entidad.number_hours_laboratory" required/>
+  </div>
+</div> 
+<br/>

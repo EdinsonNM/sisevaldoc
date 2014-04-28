@@ -1,0 +1,55 @@
+<div class="panel panel-default">
+
+  <nav class="navbar navbar-default" role="navigation">
+      <div class="container-fluid">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-2">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="#//location.path()//">Carga No Lectiva</a>
+        </div>
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-2">
+          
+          <p class="navbar-text"><label>Docente:</label> <small>//others.docente.firstname+' '+others.docente.lastname//</small></p>
+          <p class="navbar-text"><label>Semestre:</label> <small>//others.semestre.year+' - '+others.semestre.period//</small></p>
+          <form class="navbar-form navbar-right" role="search">
+           
+            <button type="submit" ng-disabled="IndexSemestreSelected==-1" class="btn btn-success" data-toggle="modal" data-target="#winNew" ng-click="new()" ng-show="showEdit">Nuevo</button>
+          </form>
+        </div>
+      </div>
+    </nav>
+
+  <div class="panel-body" style="margin-top:-20px">
+    <div loading-container="tableParams.settings().$loading">
+      <table ng-table="tableParams" show-filter="false" class="table table-bordered table-striped table-hover table-condensed ">
+        <tbody>
+          <tr ng-repeat="item in $data">
+            <td data-title="'ID'" sortable="id">//item.id//</td>
+            <td data-title="'Semestre'" sortable="code">//item.semestre.year+'-'+item.semestre.period//</td>
+            <td data-title="'Actividad'" sortable="code">//item.actividad.description//</td>
+            <td data-title="'Lugar'" sortable="code">//item.place//</td>
+            <td data-title="'Inicio'">//item.date_start//</td>
+            <td data-title="'Fin'">//item.date_end//</td>
+            <td data-title="'N° Horas'">//item.numberhours//</td>
+            <td data-title="'Contenido'">//item.content//</td>
+            <td data-title="'Fecha Creación'">//item.created_at | date:'dd/MM/yyyy'//</td>
+            <td data-title="'Ultima Actualización'">//item.updated_at | date:'dd/MM/yyyy'//</td>
+            <td data-title="'Opciones'" style="width:70px;" ng-show="showEdit">
+              <a title="Editar" class="btn btn-success btn-xs" data-toggle="modal" data-target="#winUpd" ng-click="edit(item.id)"><span class="glyphicon glyphicon-pencil"></span></a>
+              <a title="Eliminar" class="btn btn-danger btn-xs" ng-click="delete(item.id)"><span class="glyphicon glyphicon-remove"></span></a>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    
+     
+</div>
+</div>
+<window-dir title="Nueva Carga No Lectiva" window="winNew" content="templates/carganolectiva/form.html" entidad="entidad" others="others" save="save()"></window-dir>
+
+<window-dir title="Editar Carga No Lectiva" window="winUpd" content="templates/carganolectiva/form.html" entidad="entidad" others="others" save="update()"></window-dir>

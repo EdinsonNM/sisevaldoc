@@ -1,0 +1,16 @@
+<div loading-container="others.Students.settings().$loading">
+      <table ng-table="others.Students" show-filter="true" class="table table-bordered table-striped table-hover table-condensed ">
+        <tbody>
+          <tr ng-repeat="item in $data">
+            <td data-title="'ID'" sortable="id">//item.id//</td>
+            <td data-title="'Code'" sortable="code" filter="{ 'code': 'text' }" style="width:60px;">//item.code//</td>
+            <td data-title="'Nombres'" sortable="firstname" filter="{ 'firstname': 'text' }">//item.firstname//</td>
+            <td data-title="'Apellidos'" sortable="lastname" filter="{ 'lastname': 'text' }">//item.lastname//</td>
+            <td data-title="''" style="width:40px;">
+              <a title="Seleccionar" class="btn btn-success btn-xs" data-toggle="modal" data-target="#winUpd" ng-click="others.AddStudent(item)"><span class="glyphicon glyphicon-pencil"></span></a>
+              
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>

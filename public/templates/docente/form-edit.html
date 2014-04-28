@@ -1,0 +1,87 @@
+  <div class="row">
+    <div class="col-md-6">
+      <label for="exampleInputPassword1">Nombres</label>
+      <input type="text" class="form-control" ng-model="entidad.firstname" placeholder="Nombres" required/>
+    </div>
+    <div class="col-md-6">
+      <label for="exampleInputPassword1">Apellidos</label>
+      <input type="text" class="form-control" ng-model="entidad.lastname" placeholder="Apellidos" required/>
+    </div>
+    
+  </div>
+  <div class="row">
+    <div class="col-md-6">
+      <label for="exampleInputPassword1">Email</label>
+      <input type="email" class="form-control" ng-model="entidad.usuario.email" placeholder="Email" required/>
+    </div>
+    <div class="col-md-6">
+      <label for="exampleInputPassword1">Categoria</label>
+    <select class="form-control" ng-model="entidad.categoriadocente_id" required>
+      <option ng-repeat="item in others.categorias" ng-value="item.id" ng-selected="item.id==entidad.categoriadocente_id">//item.name//</option>
+    </select> 
+    </div>
+    
+  </div>
+  <div class="row">
+    <div class="col-md-6">
+      <label for="exampleInputPassword1">Grado</label>
+      <select class="form-control" ng-model="entidad.grado_id" required>
+        <option ng-repeat="item in others.grados" ng-value="item.id" ng-selected="item.id==entidad.grado_id">//item.name//</option>
+      </select> 
+    </div>
+    <div class="col-md-6">
+      <label for="exampleInputPassword1">Titulo</label>
+      <select class="form-control" ng-model="entidad.titulo_id" required>
+        <option ng-repeat="item in others.titulos" ng-value="item.id" ng-selected="item.id==entidad.titulo_id">//item.name//</option>
+      </select> 
+    </div>
+    
+  </div>
+
+
+<div class="row">
+     <div class="col-md-6">
+      <label for="exampleInputPassword1">Condición</label>
+    <select class="form-control" ng-model="entidad.condition" ng-options="t for t in ['NOMBRADO','CONTRATADO']" required>
+
+    </select> 
+    </div>
+    <div class="col-md-6">
+      <label for="exampleInputPassword1">Dedicación</label>
+    <select class="form-control" ng-model="entidad.tipodedicacion_id" required>
+      <option ng-repeat="item in others.tiposdedicacion" ng-value="item.id" ng-selected="item.id==entidad.tipodedicacion_id">//item.name//</option>
+    </select> 
+    </div>
+    
+  </div>
+<br/>
+
+  <div class="row">
+    <div class="col-md-6">
+      <label for="exampleInputPassword1">Facultad</label>
+    <select class="form-control" ng-model="entidad.facultad_id" ng-change="others.loadescuelas()" required>
+      <option ng-repeat="item in others.facultades" ng-value="item.id" ng-selected="item.id==entidad.facultad_id">//item.name//</option>
+    </select> 
+    </div>
+    <div class="col-md-6">
+       <label for="exampleInputPassword1">Escuela</label>
+    <select class="form-control" ng-model="entidad.escuela_id" required>
+      <option ng-repeat="item in others.escuelas" ng-value="item.id" ng-selected="item.id==entidad.escuela_id">//item.name//</option>
+    </select> 
+    </div>    
+  </div>
+
+<br/>
+  <div class="row">
+    <div class="col-md-6">
+      <label for="exampleInputEmail1">Código de Docente</label>
+      <input type="text" class="form-control" ng-model="entidad.code" placeholder="Código" required/>
+    </div>
+    <div class="col-md-6">
+      <label for="usuario">Usuario</label>
+      <input name='usuario' type="text" class="form-control" ng-model="entidad.username" placeholder="usuario"  required/>
+      
+    </div>    
+  </div>
+
+ 

@@ -1,0 +1,70 @@
+<div class="panel panel-default">
+
+  <nav class="navbar navbar-default" role="navigation">
+      <div class="container-fluid">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-2">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="#//location.path()//">Mis Cursos Asignados</a>
+        </div>
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-2">
+
+        </div>
+      </div>
+    </nav>
+
+  <div class="panel-body" style="margin-top:-20px">
+    <div class="row">
+      <div class="col-md-2"  loading-container="showLoading">
+        <div class="list-group">
+          <a href="#/cursoasignado" class="list-group-item" ng-class="{'active':IndexSemestreSelected==$index}" ng-repeat="item in others.semestres" ng-click="LoadBySemestre(item,$index)">Semestre //item.year// - //item.period//
+          </a>
+
+        </div>
+      </div>
+      <div class="col-md-10">
+
+          <div style="padding:0px 0px 10px 0px">
+            <button class="btn btn-info btn-sm" ng-disabled="semestreSelected==-1" ng-click="carganolectiva()"><span class="glyphicon glyphicon-th-list"></span> Carga No Lectiva</button>
+          </div>
+        
+            <div loading-container="tableParams.settings().$loading">
+                <table ng-table="tableParams" show-filter="false" class="table table-bordered table-striped table-hover table-condensed ">
+                  <tbody>
+                    <tr ng-repeat="item in $data">
+                      <td data-title="'ID'" sortable="id">//item.id//</td>
+                      <td data-title="'Curso'">//item.curso.name//</td>
+                      <td data-title="'Escuela'" >//item.curso.escuela.name//</td>
+                      <td data-title="'Creditos'">//item.curso.numbercredits//</td>
+                      <td data-title="'Semestre'" >//item.semestre.year// - //item.semestre.period//</td>
+                      
+                      <td data-title="'Tipo'" >//item.type//</td>
+                      <td data-title="'Horas Teoria'" >//item.number_hours_theory//</td>
+                      <td data-title="'Horas Practica'" >//item.number_hours_practices//</td>
+                      <td data-title="'Horas Laboratorio'" >//item.number_hours_laboratory//</td>
+                      
+                      <td data-title="'Opciones'" style="width:140px;">
+                        <a title="Carga Lectiva" class="btn btn-default btn-xs" ng-click="edit(item.id)" data-toggle="modal" data-target="#winUpd" ><span class="glyphicon glyphicon-edit"></span></a>
+                        <a title="Alumnos" class="btn btn-info btn-xs" ng-click="alumnos(item.id)"><span class="glyphicon glyphicon-user"></span></a>
+                        <a href="//'#/cursoasignado/'+item.id+'/avancecurricular'//" title="Avance Curricular" class="btn btn-warning btn-xs" ng-click="escuelas(item.id)"><span class="glyphicon glyphicon-th-list"></span></a>
+                        
+                        <a title="AutoEvaluación" class="btn btn-success btn-xs" ng-click="autoevaluacion(item.id)"><span class="glyphicon glyphicon-thumbs-up"></span> </a>
+                        <!--<button type="button" class="btn btn-danger btn-xs" ng-click="delete(item.id)"><span class="glyphicon glyphicon-remove"></span></button>-->
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+
+      </div>
+    </div>
+  	 
+
+   
+  </div>
+</div>
+<window-dir title="Editar Carga Lectiva" window="winUpd" content="templates/cursoasignado/formCargaLectiva.html" entidad="entidad" others="others" save="update()"></window-dir>

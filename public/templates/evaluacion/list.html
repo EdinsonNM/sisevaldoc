@@ -1,0 +1,122 @@
+<div class="panel panel-default">
+
+  <nav class="navbar navbar-default" role="navigation">
+      <div class="container-fluid">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-2">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="#//location.path()//">EVALUACIÓN</a>
+        </div>
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-2">
+          <p class="navbar-text"><label>Curso: </label> //others.inscripcion.cursoasignado.curso.name//</p>
+
+          <p class="navbar-text"><label>Docente: </label> //others.inscripcion.cursoasignado.docente.firstname +' '+ others.inscripcion.cursoasignado.docente.lastname//</p>
+          <form class="navbar-form navbar-right" role="search">
+            <a ng-disabled="disabledEdition==false" href="print/constanciaevaluacion?idevaluacion=//entidad.id//" title="button" class="btn btn-default">
+                <span class="glyphicon glyphicon-print"></span>
+                Imprimir Constancia
+            </a>
+            <button ng-disabled="disabledEdition||formInvalid||tableParams.settings().$loading||showLoading" type="submit" class="btn btn-info" ng-click="CloseEvaluacion()" ng-show="showEvaluacion"><span class="glyphicon glyphicon-floppy-disk"></span> Enviar</button>
+          </form>
+        </div>
+      </div>
+    </nav>
+
+   <div class="panel-body" style="margin-top:-20px;">
+     <div loading-container="tableParams.settings().$loading" ng-show="showEvaluacion">
+      <div class="bs-callout bs-callout-info">
+        <h4><span class="glyphicon glyphicon-info-sign"></span> Información</h4>
+        <p>
+          La Evaluación es un sistema de  autoguardado automatico, la información que seleccione se guardará, pero no estara disponible  para el administrador hasta que no haya presionado el boton <b>Enviar</b>. Una vez enviada la evaluación esta no podra ser modificada
+          <h4 ng-show="finalizado"> <span class="glyphicon glyphicon-ok"></span> EVALUACION FINALIZADA</h4>
+          
+        </p>
+
+      </div>
+      <form id="formEvaluation" name="formEvaluation" novalidate>
+      <div class="alert alert-warning" ng-show="formInvalid">
+      <strong>Advertencia!</strong>
+      Debe completar toda la información antes de poder enviar el formulario de evaluación
+      </div>
+      <table ng-table="tableParams" show-filter="false" class="table table-bordered table-hover table-condensed ">
+        <tbody>
+          <tr ng-repeat="item in $data">
+            
+            <td data-title="'Listado de Criterios de Evaluación'" sortable="name" filter="{'name':'text'}">
+            
+            <div class="row">
+              <div class="col-md-12">
+                <h5>
+                <a href="javascript:void(0);" ng-click="show(item)" >
+                  <span ng-if="item.icon==null" class="glyphicon glyphicon-plus"></span>
+                  <span ng-if="item.icon!=null" ng-class="item.icon"></span>
+                   //item.name//
+                </a>
+               
+              </h5>
+              </div>
+              
+              
+            </div>
+           
+             <table class="table table-hover" ng-show="item.visible">
+              <tbody>
+
+            <tr ng-repeat="criterio in item.children">
+              <td>
+              	<div>
+              	<div class="col-md-10">
+              		//$index+1//. //criterio.name//
+              	</div>
+              	<div class="col-md-2">
+                  
+              		<select ng-disabled="disabledEdition" class="form-control input-sm" ng-model="criterio.valoracion.id" placeholder='seleccione' ng-change="SaveValoracion(criterio)" >
+                  <option value='0' >..Seleccione una opción..</option>
+              		<option ng-selected="criterio.valoracion.id==valoracion.id" ng-repeat="valoracion in others.tiposvaloracion" ng-value="valoracion.id">//valoracion.name//</option>
+              		
+              		</select>
+
+              	</div>
+              	</div>
+              </td>
+            </tr>
+          </tbody>
+            </table>
+
+            </td>
+           
+          </tr>
+        </tbody>
+      </table>
+   
+
+    </div>
+
+   <div  clas="row" ng-show="showMsg">
+    <div class="col-md-12">
+      <div class="bs-callout bs-callout-info">
+    <h4><span class="glyphicon glyphicon-info-sign"></span> //msg_title//</h4>
+    <br/>
+    <p ng-show="showNoExisteEvaluacion">
+      Aun no has registrado tu evaluación para este curso. Si deseas empezar a registrar tu evaluacion tan solo debes dar click en 
+      <a href="#//url//" class="alert-link" ng-click="createEvaluacion()">Crear Evaluación!</a>
+    </p>
+    <p ng-show="showNoExisteEtapaEvaluacion">
+      Lo sentimos!. Aun no se ha definido el periodo de evaluación en la facultad a la cual pertenece el curso asignado.
+      
+    </p>
+  </div>
+   
+    </div>
+
+   </div>
+  <div loading-container="showLoading"></div>
+</div>
+ </form>
+<window-dir title="Nuevo Criterio" window="winNew" content="templates/criterioevaluacion/form.html" entidad="entidad" others="others" save="save()"></window-dir>
+
+<window-dir title="Editar Criterio" window="winUpd" content="templates/criterioevaluacion/form.html" entidad="entidad" others="others" save="update()"></window-dir>

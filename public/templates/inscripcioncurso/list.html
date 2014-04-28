@@ -1,0 +1,57 @@
+<div class="panel panel-default">
+
+  <nav class="navbar navbar-default" role="navigation">
+      <div class="container-fluid">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-2">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="#//location.path()//">ALUMNOS INSCRITOS</a>
+        </div>
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-2">
+          <p class="navbar-text"><label>Curso:</label> <small>//others.cursoasignado.curso.name//</small></p>
+          <p class="navbar-text"><label>Docente:</label> <small>//others.cursoasignado.docente.firstname+' '+others.cursoasignado.docente.lastname//</small></p>
+          <p class="navbar-text"><label>Semestre:</label> <small>//others.cursoasignado.semestre.year+' - '+others.cursoasignado.semestre.period//</small></p>
+          <form class="navbar-form navbar-right" role="search">
+           
+            <button type="submit" ng-disabled="IndexSemestreSelected==-1" class="btn btn-success" data-toggle="modal" data-target="#winNew" ng-click="new()">Agregar Alumno</button>
+          </form>
+        </div>
+      </div>
+    </nav>
+
+  <div class="panel-body" style="margin-top:-20px">
+    <div class="row">
+      
+      <div class="col-md-12">
+        
+            <div loading-container="tableParams.settings().$loading">
+                <table ng-table="tableParams" show-filter="false" class="table table-bordered table-striped table-hover table-condensed ">
+                  <tbody>
+                    <tr ng-repeat="item in $data">
+                      <td data-title="'N'" sortable="N" style="width:50px;">//$index+1//</td>
+                      <td data-title="'Código'" sortable="code">//item.alumno.code//</td>
+                      
+                      <td data-title="'Alumno'">//item.alumno.lastname//, //item.alumno.firstname//</td>
+                      
+                      <td data-title="''" style="width:40px;">
+                        
+                        <a title="Quitar alumno del curso" class="btn btn-danger btn-xs" ng-click="delete(item.id)"><span class="glyphicon glyphicon-remove"></span></a>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+
+      </div>
+    </div>
+  	 
+
+   
+  </div>
+</div>
+
+<window-dir title="Nuevo Alumno" window="winNew" content="templates/inscripcioncurso/form.html" entidad="entidad" others="others" showfooter="false" stylewidth="modal-lg"></window-dir>

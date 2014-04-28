@@ -1,0 +1,21 @@
+<!-- Modal -->
+<form name="myForm" novalidate ng-submit="save()">
+<div class="modal" id="//window//" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog //stylewidth//" >
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h4 class="modal-title" id="myModalLabel">//title || 'untitled' //</h4>
+      </div>
+      <div class="modal-body" ng-include="content">
+          
+        
+      </div>
+      <div class="modal-footer" ng-show="//showfooter||'true'//">
+        <button type="button" class="btn btn-default" data-dismiss="modal" ng-click="close()">Salir</button>
+        <button type="submit" class="btn btn-primary" ng-disabled="myForm.$invalid" >Guardar</button>
+      </div>
+    </div>
+  </div>
+</div>
+</form>

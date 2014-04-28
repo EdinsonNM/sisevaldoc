@@ -1,0 +1,31 @@
+ <div class="form-group">
+    <label for="exampleInputEmail1">Facultad</label>
+    <input type="text" class="form-control"  ng-model="others.facultad.name" ng-disabled="true" required/>
+  </div>
+  <div class="form-group">
+    <label for="exampleInputPassword1">Nombre</label>
+    <input type="text" class="form-control" ng-model="entidad.name" placeholder="Enter name" required/>
+  </div>
+<div class="form-group">
+    <label for="exampleInputPassword1">Semestre</label>
+    <select class="form-control" ng-model="entidad.semestre_id" required>
+      <option ng-repeat="item in others.semestres" ng-value="item.id" ng-selected="item.id==entidad.semestre_id">//item.year// - //item.period//</option>
+    </select> 
+  </div>
+  <div class="row">
+    <div class="col-md-6">
+      <label for="exampleInputPassword1">Fecha Inicio</label>
+      <input type="date" class="form-control" ng-model="entidad.date_init" placeholder="Enter name" required date-input/>
+    </div>
+    <div class="col-md-6">
+       <label for="exampleInputPassword1">Fecha Fin</label>
+    <input type="date" class="form-control" ng-model="entidad.date_end" placeholder="Fecha Fin" required date-input/>
+    </div>
+  </div>
+  <br/>
+  <div class="form-group">
+   <label for="exampleInputPassword1">Matriz de Criterios de Evaluación</label>
+    <select class="form-control" ng-model="entidad.plantilla_id" required>
+      <option ng-repeat="item in others.matricescriterios" ng-value="item.id" ng-selected="item.id==entidad.plantilla_id">//item.name//</option>
+    </select> 
+  </div>

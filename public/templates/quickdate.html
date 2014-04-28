@@ -1,0 +1,47 @@
+<div class="">
+<p class="input-group">
+	<input type="text"  ng-model="inputDate" class="form-control" ng-focus="toggleCalendar()" value="//mainButtonStr//" ng-required="//required//" placeholder="//placeholder//"  ng-class="{'ng-invalid': inputDateErr}" ng-enter="selectDateFromInput(true)" ng-blur="selectDateFromInput(false)" on-tab="onDateInputTab()"/>
+	<span class="input-group-btn">
+		<a class="btn btn-default" type="button" ng-click="toggleCalendar()" title="//hoverText//">
+			<i class="glyphicon glyphicon-calendar"></i>
+		</a>
+	</span>
+</p>
+
+  <div class="quickdate-popup" ng-class="{open: calendarShown}">
+    <a href="" tabindex="-1" class="quickdate-close" ng-click="toggleCalendar()">
+    	<div ng-bind-html="closeButtonHtml">
+    	</div>
+    </a>
+    <div class="quickdate-text-inputs">
+      <div class="quickdate-input-wrapper" style="display:none;">
+        <label>Date</label>
+        <input name="inputDate" class="quickdate-date-input" ng-class="{'ng-invalid': inputDateErr}" type="text"  placeholder="1/1/2013" ng-enter="selectDateFromInput(true)" ng-blur="selectDateFromInput(false)" on-tab="onDateInputTab()" />
+      </div>
+      <div class="quickdate-input-wrapper" ng-hide="disableTimepicker">
+        <label>Time</label>
+        <input class="quickdate-time-input" ng-class="{'ng-invalid': inputTimeErr}" name="inputTime" type="text" ng-model="inputTime" placeholder="12:00 PM" ng-enter="selectDateFromInput(true)" ng-blur="selectDateFromInput(false)" on-tab="onTimeInputTab()">
+      </div>
+    </div>
+    <div class="quickdate-calendar-header">
+      <a href="" class="quickdate-prev-month quickdate-action-link" tabindex="-1" ng-click="prevMonth()"><div ng-bind-html="prevLinkHtml"></div></a>
+      <span class="quickdate-month">//calendarDate | date:'MMMM yyyy'//</span>
+      <a href="" class="quickdate-next-month quickdate-action-link" ng-click="nextMonth()" tabindex="-1" ><div ng-bind-html="nextLinkHtml"></div></a>
+    </div>
+    <table class="quickdate-calendar">
+      <thead>
+        <tr>
+          <th ng-repeat="day in dayAbbreviations">//day//</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr ng-repeat="week in weeks">
+          <td style="font-size:10px;" ng-mousedown="selectDate(day.date, true, true)" ng-class="{'other-month': day.other, 'disabled-date': day.disabled, 'selected': day.selected, 'is-today': day.today}" ng-repeat="day in week">//day.date | date:'d'//</td>
+        </tr>
+      </tbody>
+    </table>
+    <div class="quickdate-popup-footer">
+      <a href="" class="btn btn-info btn-xs" tabindex="-1" ng-hide="disableClearButton" ng-click="clear()">Clear</a>
+    </div>
+  </div>
+</div>

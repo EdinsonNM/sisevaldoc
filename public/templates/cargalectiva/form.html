@@ -1,0 +1,44 @@
+  <div class="form-group">
+    <label for="semana">Semana</label>
+    <select class="form-control" ng-model="entidad.week" required>
+      <option ng-repeat="item in others.weeks" ng-value="item" ng-selected="item==entidad.week">Semana //item//</option>
+    </select> 
+  </div>
+  <div class="row">
+    <div class="col-md-6">
+      <label for="semana">Lugar</label>
+      <select class="form-control" ng-model="entidad.typeplace" required>
+        <option ng-repeat="item in others.places" ng-value="item.label" ng-selected="item.label==entidad.typeplace"> //item.label//</option>
+      </select> 
+    </div>
+    <div class="col-md-6">
+      <label for="place">//others.labelplace//</label>
+      <input type="text" class="form-control" ng-model="entidad.place" /> 
+    </div>
+    
+  </div>
+ <div class="row">
+  <div class="col-md-6">
+    <label for="inicio">Inicio</label>
+    <input type="date" class="form-control" ng-model="entidad.date_start" placeholder="Enter name" date-input/> 
+  </div>
+  <div class="col-md-6">
+    <label for="inicio">Fin</label>
+    <input type="date" class="form-control" ng-model="entidad.date_end" placeholder="Enter name" date-input/>
+  </div>
+    
+    
+  </div>
+<br/>
+<div class="form-group">
+    <label for="contenido">Contenido</label>
+   <textarea ng-model="entidad.content" class="form-control" rows="5"></textarea>
+  </div>
+
+  <div class="row">
+    <div class="col-md-4">
+      <label for="semana">N° Horas</label>
+      <input type="text" class="form-control" ng-model="entidad.numberhours"/>
+    </div>
+    
+  </div>

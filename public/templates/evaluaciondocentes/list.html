@@ -1,0 +1,89 @@
+<div class="panel panel-default">
+
+  <nav class="navbar navbar-default" role="navigation">
+      <div class="container-fluid">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-2">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="#//location.path()//">Evaluación de Docentes</a>
+        </div>
+       
+      </div>
+    </nav>
+
+  <div class="panel-body" style="margin-top:-20px">
+    <div class="row">
+      <div class="col-md-4">
+
+              <label>Facultad: </label>
+              <select class="form-control" placeholder="Search" ng-model="facultadSelected" ng-change="loadEscuelas()">
+                <option ng-repeat="facultad  in facultades" value="//facultad.id//">//facultad.name//</option>
+              </select>
+
+      </div>
+      <div class="col-md-4">
+
+            <label>Escuela: </label>
+              <select class="form-control" placeholder="Search" ng-model="escuelaSelected" ng-change="loadDocentes()">
+                <option ng-repeat="escuela  in escuelas" value="//escuela.id//">//escuela.name//</option>
+              </select>
+
+      </div>
+      <div class="col-md-4">
+
+              <label>Docente: </label>
+              <select class="form-control" ng-model="docenteSelected" ng-change="loadDocente()">
+                <option ng-repeat="docente  in docentes" value="//docente.id//">//docente.firstname+' '+docente.lastname//</option>
+              </select>
+
+      </div>
+    </div>
+    <br/>
+    <div class="row">
+      <div class="col-md-2"  loading-container="showLoading">
+        <div class="list-group">
+          <a href="#//location.path()//" class="list-group-item" ng-class="{'active':IndexSemestreSelected==$index}" ng-repeat="item in others.semestres" ng-click="LoadBySemestre(item,$index)">Semestre //item.year// - //item.period//</a>
+        </div>
+      </div>
+      <div class="col-md-10">
+        <div style="padding:0px 0px 10px 0px">
+            <button class="btn btn-info btn-sm" ng-disabled="semestreSelected==-1" ng-click="carganolectiva()"><span class="glyphicon glyphicon-th-list"></span> Carga No Lectiva</button>
+          </div>
+            <div loading-container="tableParams.settings().$loading">
+                <table ng-table="tableParams" show-filter="false" class="table table-bordered table-striped table-hover table-condensed ">
+                  <tbody>
+                    <tr ng-repeat="item in $data">
+                      <td data-title="'N°'" sortable="id">//$index+1//</td>
+                      <td data-title="'ID'" sortable="id">//item.id//</td>
+                      <td data-title="'Curso'">//item.curso.name//</td>
+                      <td data-title="'Escuela'">//item.curso.escuela.name//</td>
+                      <td data-title="'Creditos'">//item.curso.numbercredits//</td>
+                      <td data-title="'Semestre'" >//item.semestre.year// - //item.semestre.period//</td>
+                      <td data-title="'Docente'" >//item.docente.firstname// //item.docente.lastname//</td>
+                      <td data-title="'Fecha de Registro'" sortable="created_at">//item.created_at//</td>
+                      <td data-title="'Ultima Actualización'" sortable="updated_at">//item.updated_at//</td>
+                      <td data-title="'Opciones'" style="width:70px;">
+                        <a href="//'#/cursoasignado/'+item.id+'/cargalectiva'//" title="Avance Curricular" class="btn btn-warning btn-xs" ng-click="escuelas(item.id)"><span class="glyphicon glyphicon-th-list"></span></a>
+                        <a href="//'#/cursoasignado/'+item.id+'/evaluacionjefedpto'//" title="Realizar Evaluación  de Curso" class="btn btn-success btn-xs" ng-click="evaluacion(item.id)"><span class="glyphicon glyphicon-thumbs-up"></span></a>
+
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+
+      </div>
+    </div>
+  	 
+
+   
+  </div>
+</div>
+
+<window-dir title="Nuevo Curso Asignado" window="winNew" content="templates/cursoasignado/form.html" entidad="entidad" others="others" save="save()"></window-dir>
+
+<window-dir title="//titleUpload//" window="winUpload" content="templates/asignacioncursos/upload.html" entidad="entidad" others="others" save="upload()" stylewidth="modal-lg"></window-dir>

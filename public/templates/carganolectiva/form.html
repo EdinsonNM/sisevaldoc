@@ -1,0 +1,31 @@
+  <div class="form-group">
+    <label for="semana">Actividad</label>
+    <select class="form-control" ng-model="entidad.actividad_id" required>
+      <option ng-repeat="item in others.actividades" ng-value="item.id" ng-selected="item.id==entidad.actividad_id">//item.description//</option>
+    </select> 
+  </div>
+ <div class="row">
+  <div class="col-md-6">
+    <label for="inicio">Inicio</label>
+    <input type="date" class="form-control" ng-model="entidad.date_start" placeholder="Enter name" date-input/> 
+  </div>
+  <div class="col-md-6">
+    <label for="inicio">Fin</label>
+    <input type="date" class="form-control" ng-model="entidad.date_end" placeholder="Enter name" date-input/>
+  </div>
+    
+    
+  </div>
+<br/>
+  <div class="form-group">
+    <label for="contenido">Lugar</label>
+    <input type="text" class="form-control" ng-model="entidad.place" placeholder="Lugar"/>
+  </div>
+    <div class="form-group">
+    <label for="contenido">Número de Horas</label>
+    <input type="text" class="form-control" ng-model="entidad.numberhours" placeholder="Lugar"/>
+  </div>
+<div class="form-group">
+    <label for="contenido">Contenido</label>
+   <textarea ng-model="entidad.content" class="form-control" rows="5"></textarea>
+  </div>

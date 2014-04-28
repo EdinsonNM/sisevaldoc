@@ -1,0 +1,26 @@
+ <div class="form-group">
+    <label for="exampleInputEmail1">Docente</label>
+    <input type="text" class="form-control"  ng-model="entidad.docente_name" ng-disabled="true" required/>
+  </div>
+   <div class="form-group">
+    <label for="exampleInputEmail1">Semestre</label>
+    <input type="text" class="form-control"  ng-model="entidad.semestre_name" ng-disabled="true" required/>
+  </div>
+  <div class="form-group">
+    <label for="exampleInputPassword1">Facultad</label>
+    <select class="form-control" ng-model="entidad.facultad_id" ng-change="others.loadescuelas()" required>
+      <option ng-repeat="item in others.facultades" ng-value="item.id" ng-selected="item.id==entidad.facultad_id">//item.name//</option>
+    </select> 
+  </div>
+  <div class="form-group">
+    <label for="exampleInputPassword1">Escuela</label>
+    <select class="form-control" ng-model="entidad.escuela_id" ng-change="others.loadcursos()" required>
+      <option ng-repeat="item in others.escuelas" ng-value="item.id" ng-selected="item.id==entidad.escuela_id">//item.name//</option>
+    </select> 
+  </div>
+ <div class="form-group">
+    <label for="exampleInputPassword1">Curso</label>
+    <select class="form-control" ng-model="entidad.curso_id" required>
+      <option ng-repeat="item in others.cursos" ng-value="item.id" ng-selected="item.id==entidad.curso_id">//item.name//</option>
+    </select> 
+  </div>

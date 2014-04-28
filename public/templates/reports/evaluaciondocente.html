@@ -1,0 +1,172 @@
+<div class="panel panel-default">
+
+  <nav class="navbar navbar-default" role="navigation">
+      <div class="container-fluid">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-2">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="#//location.path()//">Reporte de Evaluación por Docente</a>
+        </div>
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-2">
+          <form id="myform" class="navbar-form navbar-right" method="post" action="admin/exportexcel">
+            <input type="hidden" id="data_download" name="data_download" />
+            <button type="button" class="btn btn-info" ng-click="ExportToExcel()">
+                <span class="glyphicon glyphicon-print"></span> 
+                Imprimir
+            </button>
+            <button type="button" class="btn btn-success" ng-click="list()">
+                <span class="glyphicon glyphicon-refresh"></span> 
+                Generar
+            </button>
+          </form>
+          
+
+        </div>
+      </div>
+    </nav>
+
+  <div class="panel-body" style="margin-top:-20px">
+    <div class="row">
+      <div class="col-md-3">
+
+              <label>Facultad: </label>
+              <select class="form-control" placeholder="Search" ng-model="facultadSelected" ng-change="loadEscuelas()">
+                <option ng-repeat="facultad  in facultades" value="//facultad.id//">//facultad.name//</option>
+              </select>
+
+      </div>
+      <div class="col-md-3">
+
+            <label>Escuela: </label>
+              <select class="form-control" placeholder="Search" ng-model="escuelaSelected" ng-change="loadDocentes()">
+                <option ng-repeat="escuela  in escuelas" value="//escuela.id//">//escuela.name//</option>
+              </select>
+
+      </div>
+      <div class="col-md-2">
+              <label>Docente: </label>
+              <select class="form-control" ng-model="docenteSelected" ng-change="loadCursos()">
+                <option ng-repeat="docente  in docentes" value="//docente.id//">//docente.firstname+' '+docente.lastname//</option>
+              </select>
+
+      </div>
+
+      <div class="col-md-2">
+
+              <label>Semestre: </label>
+              <select class="form-control" ng-model="semestreSelected"  ng-change="loadCursos()">
+                <option ng-repeat="semestre  in semestres" value="//semestre.id//">//semestre.year+'-'+semestre.period//</option>
+              </select>
+
+      </div>
+      <div class="col-md-2">
+
+              <label>Curso: </label>
+              <select class="form-control" placeholder="Search" ng-model="cursoSelected" ng-change="changeCurso()">
+                <option ng-repeat="curso  in cursos" value="//curso.id//">//curso.curso.name//</option>
+              </select>
+
+      </div>
+    </div>
+
+    
+    <br/>
+    <div class="row">
+      <div class="col-md-12" loading-container="showLoading" >
+        <div class="alert alert-warning" ng-show="showmessage" >
+          <strong>Alerta!</strong>
+          //message//
+        </div>
+        <div id="reportTable">
+          
+        
+        <table class="table table-bordered table-hover table-condensed "  >
+          <thead>
+            <tr>
+              <td colspan="" rowspan="" headers="" class="text-center">
+
+                <span class="pull-left"><img ng-src="//logo//" alt=""/></span>
+                <h3>Universidad Nacional de Ucayali</h3>
+              <p>Detalle de Evaluación del Docente</p>
+              </td>
+            </tr>
+            <tr>
+              <td colspan="" rowspan="" headers="">
+                <div class="row">
+                  <div class="col-md-4">
+                    <label for="Docente">Docente:</label><br/>
+                //cursoasignado.docente.firstname+' '+cursoasignado.docente.lastname//
+                  </div>
+                  <div class="col-md-4">
+                    <label for="Docente">Curso:</label><br/>
+                //cursoasignado.curso.name//
+                  </div>
+                  <div class="col-md-4">
+                    <label for="Docente">Semestre:</label><br/>
+                //cursoasignado.semestre.year+' - '+cursoasignado.semestre.period//
+                  </div>
+                </div>
+                
+              </td>
+              
+            </tr>
+          </thead>
+          <tbody>
+            
+            <tr ng-repeat="item in data">
+              <td>
+                   <h6>
+                   <a  style="cursor: pointer;" ng-click="show(item)" >
+                   <span ng-if="item.icon==null" class="glyphicon glyphicon-plus"></span>
+                   <span ng-if="item.icon!=null" ng-class="item.icon"></span>
+                   //item.name//
+                   </a>
+                   
+                   </h6>
+                   <table class="table table-hover table-bordered" ng-show="item.visible">
+                    <thead>
+                      <tr>
+                        <th>Descripción</th>
+                        <th ng-repeat="valoracion in item.children[0].valoracionevaluacion" style="text-align:center;">
+                          //$index+1//
+                        </th>
+                        <th>Promedio</th>
+                      </tr>
+                    </thead>
+                  <tbody>
+                  
+                  <tr ng-repeat="criterio in item.children">
+                  <td>
+                  //$index+1//. //criterio.name//
+                  </td>
+                  <td ng-repeat="valoracion in criterio.valoracionevaluacion"   style="text-align:center;">
+                  //valoracion.tipovaloracion.value//
+                  </td>
+                  <td>
+                    //promedio(criterio.valoracionevaluacion)//
+                  </td>
+                  </tr>
+                  </tbody>
+                  </table>
+              </td>
+              
+            </tr>
+          </tbody>
+        </table>
+        </div>    
+
+      </div>
+    </div>
+  	 
+
+   
+  </div>
+</div>
+
+<window-dir title="Nuevo Curso Asignado" window="winNew" content="templates/cursoasignado/form.html" entidad="entidad" others="others" save="save()"></window-dir>
+
+<window-dir title="//titleUpload//" window="winUpload" content="templates/asignacioncursos/upload.html" entidad="entidad" others="others" save="upload()" stylewidth="modal-lg"></window-dir>

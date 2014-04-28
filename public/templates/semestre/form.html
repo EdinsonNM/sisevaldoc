@@ -1,0 +1,25 @@
+ <div class="form-group">
+    <label for="año">Año</label>
+    <input type="text" class="form-control" ng-model="entidad.year" placeholder="Año" required/>
+   
+  </div>
+  <div class="form-group">
+    <label for="periodo">Periodo</label>
+    <input type="text" class="form-control" ng-model="entidad.period" placeholder="Periodo" required/>
+  </div>
+  <div class="row">
+    <div class="col-md-6">
+      <label for="periodo">Inicio</label>
+      <input type="date" class="form-control" ng-model="entidad.date_start" required/>
+    </div>
+    <div class="col-md-6">
+      <label for="periodo">Fin</label>
+      <input type="date" class="form-control" ng-model="entidad.date_end" required/>
+    </div>
+    
+  </div>
+  <br/>
+  <div class="form-group">
+    <label for="periodo">Número de Semanas del Semestre</label>
+    <input type="text" class="form-control" ng-model="entidad.numberweeks" placeholder="Numero de Semanas" required/>
+  </div>

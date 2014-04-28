@@ -1,0 +1,218 @@
+<div class="panel panel-default">
+
+  <nav class="navbar navbar-default" role="navigation">
+      <div class="container-fluid">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-2">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="#//location.path()//">Reporte Declaración Jurada de Carga Horaria Asignada</a>
+        </div>
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-2">
+           <form id="myform" class="navbar-form navbar-right" method="post" action="admin/exportexcel">
+            <input type="hidden" id="data_download" name="data_download" />
+            <button type="button" class="btn btn-success" ng-click="ExportToExcel()">
+                <span class="glyphicon glyphicon-print"></span> 
+                Imprimir
+            </button>
+          </form>
+
+        </div>
+      </div>
+    </nav>
+
+  <div class="panel-body" style="margin-top:-20px">
+    <div class="row">
+      <div class="col-md-3">
+
+              <label>Facultad: </label>
+              <select class="form-control" placeholder="Search" ng-model="facultad_id" ng-change="loadEscuelas()">
+                
+                <option ng-repeat="facultad  in facultades" value="//facultad.id//">//facultad.name//</option>
+              </select>
+
+      </div>
+      <div class="col-md-3">
+
+            <label>Escuela: </label>
+              <select class="form-control" placeholder="Search" ng-model="escuela_id" ng-change="loadDocentes()">
+                <option ng-repeat="escuela  in escuelas" value="//escuela.id//">//escuela.name//</option>
+              </select>
+
+      </div>
+      <div class="col-md-3">
+              <label>Docente: </label>
+              <select class="form-control" ng-model="docente_id" ng-change="filter()">
+                <option ng-repeat="docente  in docentes" value="//docente.id//">//docente.firstname+' '+docente.lastname//</option>
+              </select>
+
+      </div>
+
+      <div class="col-md-3">
+
+              <label>Semestre: </label>
+              <select class="form-control" ng-model="semestre_id"  ng-change="filter()">
+                <option ng-repeat="semestre  in semestres" value="//semestre.id//">//semestre.year+'-'+semestre.period//</option>
+              </select>
+
+      </div>
+    </div>
+    <br/>
+
+    <div class="row">
+      <div class="col-md-12" loading-container="showLoading">
+        <div class="alert alert-warning" ng-show="showmessage" >
+          <strong>Alerta!</strong>
+          //message//
+        </div>
+        
+            
+
+      </div>
+    </div>
+  	 
+<div class="row">
+<div class="col-md-12" id="reportTable">
+
+  <!-- Table -->
+<table class="table table-bordered" border="1" style="border-color:#000;">
+<tbody>
+  <tr>
+    <td colspan="12" class="text-center">
+      <span class="pull-left"><img ng-src="//logo//" alt=""/></span>
+      <h3>Universidad Nacional de Ucayali</h3>
+      <p>Declaración Jurada de Carga Horaria Asignada</p>
+      <p>FORMATO 1</p>
+    </td>
+  </tr>
+  <tr>
+    <td colspan="4" rowspan="3"><strong>I. DATOS SOBRE LA SITUACIÓN DEL DOCENTE:</strong></td>
+    <td colspan="2"><strong>FACULTAD:</strong></td>
+    <td colspan="6">//facultad.name//</td>
+  </tr>
+  <tr>
+    <td colspan="2"><strong>Escuela:</strong></td>
+    <td colspan="6">//escuela.name//</td>
+  </tr>
+  <tr>
+    <td colspan="2"><strong>DPTO. ACADÉMICO:</strong></td>
+    <td colspan="6">//escuela.name//</td>
+  </tr>
+
+  <tr>
+    <td colspan="4" rowspan="2">
+      <strong>NOMBRE COMPLETO:</strong> <br/>
+      //docente.firstname+' '+docente.lastname//
+    </td>
+    <td colspan="2" class="text-center"><strong>CONDICION</strong></td>
+    <td colspan="3" class="text-center"><strong>CATEGORIA</strong></td>
+    <td colspan="3" class="text-center"><strong>DEDICACION</strong></td>
+  </tr>
+  <tr>
+    <td colspan="2" class="text-center">//docente.condition//</td>
+    <td colspan="3" class="text-center">//docente.categoria_docente.name//</td>
+    <td colspan="3" class="text-center">//docente.tipo_dedicacion.name//</td>
+  </tr>
+
+  <tr>
+    <td colspan="3">AÑO ACADÉMICO:</td>
+    <td colspan="1">//semestre.year//</td>
+    <td colspan="1"><strong>CICLO (SEM):</strong></td>
+    <td colspan="1">//semestre.period//</td>
+    <td colspan="1"><strong>Fecha Inicio:</strong></td>
+    <td colspan="2">//semestre.date_start//</td>
+    <td colspan="1"><strong>Fecha Fin:</strong></td>
+    <td colspan="2">//semestre.date_end//</td>
+  </tr>
+  <tr>
+    <td colspan="2" rowspan="2"><strong>1. TRABAJO LECTIVO: Datos completos y con claridad:</strong></td>
+    <td colspan="2" class="text-center"><strong>CURSO</strong></td>
+    <td colspan="1" rowspan="2" class="text-center"><strong>ESCUELA PROF</strong></td>
+    <td colspan="1" rowspan="2" class="text-center"><strong>N° SECCION O GRUPO</strong></td>
+    <td colspan="1" rowspan="2" class="text-center"><strong>N° TOTAL ALUMNOS</strong></td>
+    <td colspan="1" rowspan="2" class="text-center"><strong>N° CREDITOS</strong></td>
+    <td colspan="3" class="text-center"><strong>HORAS</strong></td>
+    <td colspan="1" rowspan="2" class="text-center"><strong>TOTAL HORAS</strong></td>
+
+  </tr>
+  <tr>
+    <td colspan="1" rowspan="1" class="text-center"><strong>Obligat.</strong></td>
+    <td colspan="1" rowspan="1" class="text-center"><strong>Electivo</strong></td>
+
+    <td colspan="1" rowspan="1" class="text-center"><strong>Teor.</strong></td>
+    <td colspan="1" rowspan="1" class="text-center"><strong>Pract.</strong></td>
+    <td colspan="1" rowspan="1" class="text-center"><strong>Lab.</strong></td>
+  </tr>
+  <!--listado de cursos del docente-->
+  <tr ng-repeat="curso in cursos">
+    <td colspan="2" rowspan="1">//curso.curso.name//</td>
+    <td colspan="1" rowspan="1" class="text-center">
+      <span ng-if="curso.type=='Obligatorio'">x</span>
+    </td>
+    <td colspan="1" rowspan="1" class="text-center">
+      <span ng-if="curso.type=='Electivo'">x</span>
+    </td>
+    <td colspan="1" rowspan="1">//curso.curso.escuela.name//</td>
+    <td colspan="1" rowspan="1"></td>
+    <td colspan="1" rowspan="1" class="text-center">//curso.alumnos.length//</td>
+    <td colspan="1" rowspan="1" class="text-center">//curso.curso.numbercredits//</td>
+    <td colspan="1" rowspan="1" class="text-center">//curso.number_hours_theory//</td>
+    <td colspan="1" rowspan="1" class="text-center">//curso.number_hours_practices//</td>
+    <td colspan="1" rowspan="1" class="text-center">//curso.number_hours_laboratory//</td>
+    
+    <td colspan="1" rowspan="1" class="text-center">// curso.number_hours_theory + curso.number_hours_practices + curso.number_hours_laboratory //</td>
+  </tr>
+
+
+  <tr>
+    <td colspan="2" rowspan="1"><strong>2. TRABAJO NO LECTIVO</strong></td>
+    <td colspan="9" rowspan="1"><strong>ACTIVIDAD</strong></td>
+    <td colspan="1" rowspan="1"><strong>TOTAL</strong></td>
+  </tr>
+  <!--listado de carga no lectiva-->
+  <tr ng-repeat="carga in cargasnolectivas">
+    <td colspan="2" rowspan="1">//carga.actividad.description//</td>
+    <td colspan="9" rowspan="1">//carga.content//</td>
+    <td colspan="1" rowspan="1">//carga.numberhours//</td>
+  </tr>
+  <!--total carga no lectiva-->
+  <tr>
+    <td colspan="2" rowspan="1"></td>
+    <td colspan="9" rowspan="1"></td>
+    <td colspan="1" rowspan="1">//totalCargaNoLectiva//</td>
+  </tr>
+
+  <tr>
+    <td colspan="12" rowspan="1">
+    Nota: del punto 3. al 10. Adjuntar copia de los medios de verificación (Resoluciones, Memorandum, etc.)
+    </td>
+  </tr>
+
+  <tr>
+    <td colspan="4" rowspan="1">
+    FIRMA DEL DOCENTE:
+    <p>&nbsp;</p>
+    </td>
+    <td colspan="4" rowspan="1">
+    Firma del Jefe de Departamento
+    <p>&nbsp;</p>
+    </td>
+    <td colspan="4" rowspan="1">
+    Vo. Bo. Del Decano
+    <p>&nbsp;</p>
+    </td>
+  </tr>
+
+</tbody>
+</table>
+
+  
+</div>
+</div>
+   
+  </div>
+</div>
+

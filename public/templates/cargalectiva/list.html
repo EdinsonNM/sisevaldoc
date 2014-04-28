@@ -1,0 +1,65 @@
+<div class="panel panel-default">
+
+  <nav class="navbar navbar-default" role="navigation">
+      <div class="container-fluid">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-2">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="#//location.path()//">Avance Curricular por curso</a>
+        </div>
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-2">
+          <p class="navbar-text"><label>Curso:</label> <small>//others.cursoasignado.curso.name//</small></p>
+          <p class="navbar-text"><label>Docente:</label> <small>//others.cursoasignado.docente.firstname+' '+others.cursoasignado.docente.lastname//</small></p>
+          <p class="navbar-text"><label>Semestre:</label> <small>//others.cursoasignado.semestre.year+' - '+others.cursoasignado.semestre.period//</small></p>
+          <form class="navbar-form navbar-right" role="search">
+           
+            <button type="submit" ng-disabled="IndexSemestreSelected==-1" class="btn btn-success" data-toggle="modal" data-target="#winNew" ng-click="new()" ng-show="showEdit">Nuevo</button>
+          </form>
+        </div>
+      </div>
+    </nav>
+
+  <div class="panel-body" style="margin-top:-20px">
+    <div loading-container="tableParams.settings().$loading">
+      <table ng-table="tableParams" show-filter="true" class="table table-bordered table-striped table-hover table-condensed ">
+        <tbody ng-repeat="group in $groups | orderBy:'week'">
+          <tr class="ng-table-group">
+            <td colspan="//$columns.length//">
+                <a href="" ng-click="group.$hideRows = !group.$hideRows">
+                    <span class="glyphicon" ng-class="{ 'glyphicon-chevron-right': group.$hideRows, 'glyphicon-chevron-down': !group.$hideRows }"></span>
+                    <strong>Semana // group.value //</strong>
+                </a>
+            </td>
+        </tr>
+        <tr ng-hide="group.$hideRows" ng-repeat="item in group.data">
+           <td data-title="'N°'" sortable="N" style="width:50px;">//$index+1//</td>
+                      <td data-title="'Semana'" sortable="code" style="width:50px;">//item.week//</td>
+                      
+                      <td data-title="'Inicio'" style="width:80px;">//item.date_start| date:'dd/MM/yyyy'//</td>
+                      <td data-title="'Fin'" style="width:80px;">//item.date_end| date:'dd/MM/yyyy' //</td>
+                      <td data-title="'N° Horas'" style="width:80px;">//item.numberhours //</td>
+                      <td data-title="'Lugar'" style="width:80px;">//item.typeplace //</td>
+                      <td data-title="'Nombre Lugar'">//item.place //</td>
+                      <td data-title="'Contenido'">//item.content//</td>
+                      
+                      <td data-title="'Operaciones'" style="width:80px;" ng-show="showEdit">
+                        <a title="Editar" class="btn btn-warning btn-xs" ng-click="edit(item.id)" data-toggle="modal" data-target="#winUpd"><span class="glyphicon glyphicon-pencil"></span></a>
+                        <a title="Eliminar" class="btn btn-danger btn-xs" ng-click="delete(item.id)"><span class="glyphicon glyphicon-remove"></span></a>
+                      </td>
+        </tr>
+
+        </tbody>
+      </table>
+    </div>
+
+    
+  	 
+</div>
+</div>
+<window-dir title="Nuevo Avance Curricular" window="winNew" content="templates/cargalectiva/form.html" entidad="entidad" others="others" save="save()"></window-dir>
+
+<window-dir title="Editar Avance Curricular" window="winUpd" content="templates/cargalectiva/form.html" entidad="entidad" others="others" save="update()"></window-dir>
