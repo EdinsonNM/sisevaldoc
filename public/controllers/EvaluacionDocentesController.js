@@ -217,7 +217,17 @@ app.controller("EvaluacionDocentesController", function EvaluacionDocentesContro
         $location.url('carganolectiva/'+$scope.semestre.id+'/docente/'+$scope.others.docente.id);
     }
 
-    
+    $scope.show=function(item){
+        if(item.visible){
+            item.visible=false;
+            item.icon="glyphicon glyphicon-plus";
+        }
+        else{
+            item.visible=true;
+            item.icon="glyphicon glyphicon-minus";
+        }
+        return false;
+    }
 
     
     

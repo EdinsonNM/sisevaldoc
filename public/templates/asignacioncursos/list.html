@@ -74,13 +74,13 @@
                   <tbody>
                     <tr ng-repeat="item in $data">
                       <td data-title="'ID'" sortable="id">//item.id//</td>
+                      <td data-title="'Escuela'">//item.curso.escuela.name//</td>
                       <td data-title="'Codigo'">//item.curso.code//</td>
                       <td data-title="'Curso'">//item.curso.name//</td>
                       <td data-title="'Ciclo'">//item.curso.ciclo//</td>
                       <td data-title="'Creditos'">//item.curso.numbercredits//</td>
                       <td data-title="'Semestre'" >//item.semestre.year// - //item.semestre.period//</td>
                       <td data-title="'Docente'" >//item.docente.firstname// //item.docente.lastname//</td>
-                      <td data-title="'Fecha de Registro'" sortable="created_at">//item.created_at//</td>
                       <td data-title="'Ultima Actualización'" sortable="updated_at">//item.updated_at//</td>
                       <td data-title="'Opciones'" style="width:70px;">
                         <a title="Alumnos" class="btn btn-info btn-xs" ng-click="alumnos(item.id)"><span class="glyphicon glyphicon-user"></span></a>

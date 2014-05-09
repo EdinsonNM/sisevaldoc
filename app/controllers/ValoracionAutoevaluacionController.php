@@ -12,22 +12,40 @@ class ValoracionAutoevaluacionController extends \BaseController {
 		$filter=Input::get("filter");
 		$plantilla_id=(!isset($filter['plantilla_id']))?'':$filter['plantilla_id'];
 		$autoevaluacion_id=(!isset($filter['autoevaluacion_id']))?'':$filter['autoevaluacion_id'];
+		
+		$curso_id=(!isset($filter['curso_id']))?'':$filter['curso_id'];
+
+		$plantillacriterios=Curso::select('plantillacriterios.id')
+		->leftjoin('escuela','curso.escuela_id','=','escuela.id')
+		->leftjoin('facultad','escuela.facultad_id','=','facultad.id')
+		->leftjoin('etapaevaluacion','facultad.id','=','etapaevaluacion.facultad_id')
+		->leftjoin('plantillacriterios','plantillacriterios.id','=','etapaevaluacion.plantilla_id')
+		->whereRaw("plantillacriterios.tipo='AutoEvaluacion'")
+		->Where('curso.id','=',$curso_id)
+		->get();
+
+		
+        $ids = array();   
+        foreach ($plantillacriterios as $plantillacriterio) {
+            $ids[]=$plantillacriterio->id;
+        }
+
 		$entities=CriterioEvaluacion::with(array('children'=>function($q)  use ($autoevaluacion_id){
 				$q->with(array('valoracionautoevaluacion' => function($q)  use ($autoevaluacion_id)
 					{
 					    $q->where('autoevaluacion_id','=',$autoevaluacion_id);
-
+					    
 					}));
 			}))
 			
 			->with(array('valoracionautoevaluacion' => function($q) use ($autoevaluacion_id)
 			{
 			    $q->where('autoevaluacion_id','=',$autoevaluacion_id);
-
+			    
 			}))
 			
 			//->with('autoevaluacion')
-			->where('plantilla_id','=',$plantilla_id)
+			->whereIn('plantilla_id',$ids)
 			->where("grupo",'=',1)
 			->paginate(Input::get('count'));
 		return Response::json(

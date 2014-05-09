@@ -42,6 +42,7 @@ class PlantillaCriteriosController extends \BaseController {
 
         $entity = new PlantillaCriterios();
  		$entity->name=Input::get('name');
+ 		$entity->tipo=Input::get('tipo');
         $entity->save();
 
         return Response::json(array(
@@ -94,6 +95,7 @@ class PlantillaCriteriosController extends \BaseController {
         $entity = PlantillaCriterios::find($id);
  		
  		$entity->name=Input::get('name');
+ 		$entity->tipo=Input::get('tipo');
         $entity->save();
 
         return Response::json(array(

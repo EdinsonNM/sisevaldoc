@@ -1,5 +1,15 @@
 
   <div class="form-group">
+  	<div class="row">
     <label for="exampleInputPassword1">Nombre</label>
     <input type="text" class="form-control" ng-model="entidad.name" placeholder="Enter name" required/>
+    </div>
+    <div class="row">
+     <label for="exampleInputPassword1">Tipo</label>
+    <select class="form-control" ng-model="entidad.tipo" required>
+      <option value="Evaluacion">Evaluacion</option>
+      <option value="AutoEvaluacion">Auto Evaluacion</option>
+      <option value="EvaluacionJefe">Evaluacion Jefe Dpto.</option>
+    </select> 
+   </div>
   </div>

@@ -126,6 +126,19 @@ app.controller("AutoEvaluacionController", function AutoEvaluacionController(Val
             
         }
    };
+   $scope.validateForm=function(){
+        $scope.formInvalid=false;
+        var invalid=false;
+        $.each($scope.dataCriterios, function(index, element){
+            $.each(this.children, function(index, element){
+                if(this.valoracion.id==0){
+                    invalid=true;
+                }
+            });
+        });
+        $scope.formInvalid=invalid;
+   };
+
    $scope.SaveValoracion=function(criterio){
         console.log(criterio);
         var valoracion={
@@ -140,7 +153,7 @@ app.controller("AutoEvaluacionController", function AutoEvaluacionController(Val
                     text: 'valoracion actualizada satisfactoriamente', 
                     type: 'success',
                     layout:'bottomRight',
-                    timeout:3000,
+                    timeout:2000,
             });
             
         });
@@ -152,6 +165,7 @@ app.controller("AutoEvaluacionController", function AutoEvaluacionController(Val
         count: 10000,          // count per page
          filter:{
             plantilla_id:$scope.others.etapaevaluacion.plantilla_id,
+            curso_id:$scope.others.cursoasignado.curso.id,
             autoevaluacion_id:$scope.entidad.id
         },
         sorting: {
@@ -168,12 +182,23 @@ app.controller("AutoEvaluacionController", function AutoEvaluacionController(Val
                         // update table params
                         params.total(data.total);
                         // set new data
+                        $.each(data.data, function(index, element){
+                          $.each(this.children, function(index, element){
+                            this.valoracion={id:0};
+                            if(this.valoracionautoevaluacion.length>0)
+                                this.valoracion.id=this.valoracionautoevaluacion[0].tipovaloracion_id||0;
+                          });
+                        });
+                        $scope.dataCriterios=data.data;
+                        $scope.validateForm();
+                        console.log(data.data)
                         $defer.resolve(data.data);
                     }, 500);
                 });
             }
         });
     };
+
     $scope.show=function(item){
         if(item.visible){
             item.visible=false;

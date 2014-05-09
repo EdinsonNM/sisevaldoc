@@ -12,22 +12,35 @@ class ValoracionEvaluacionController extends \BaseController {
 		$filter=Input::get("filter");
 		$plantilla_id=(!isset($filter['plantilla_id']))?'':$filter['plantilla_id'];
 		$evaluacion_id=(!isset($filter['evaluacion_id']))?'':$filter['evaluacion_id'];
-		$entities=CriterioEvaluacion::with(array('children'=>function($q)  use ($evaluacion_id){
-				return $q->with(array('valoracionevaluacion' => function($q)  use ($evaluacion_id)
-					{
-					    return $q->where('evaluacion_id','=',$evaluacion_id);
+        
+		$plantillacriterios=PlantillaCriterios::select('plantillacriterios.id')
+				    ->whereRaw("plantillacriterios.tipo='Evaluacion'")
+			        ->where('plantillacriterios.id','=',$plantilla_id)
+			        ->get();
+			       
+        $ids = array();   
+        foreach ($plantillacriterios as $plantillacriterio) {
+            $ids[]=$plantillacriterio->id;
+        }
 
+		$entities=CriterioEvaluacion::with(array('children'=>function($q)  use ($evaluacion_id){
+			   $q->with(array('valoracionevaluacion' => function($q)  use ($evaluacion_id)
+					{
+					    $q->where('evaluacion_id','=',$evaluacion_id);
+					    
 					}));
 			}))
 			
 			->with(array('valoracionevaluacion' => function($q) use ($evaluacion_id)
 			{
 			    $q->where('evaluacion_id','=',$evaluacion_id);
-
+			  
 			}))
-			->where('plantilla_id','=',$plantilla_id)
-			->where("grupo",'=',1)
+			
+			->whereIn('plantilla_id',$ids)
+			->where("grupo",'=',1)			
 			->paginate(Input::get('count'));
+
 		return Response::json(
 	           $entities->toArray(),
 	          201
