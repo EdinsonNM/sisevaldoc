@@ -1,3 +1,18 @@
+
+Create Table
+
+CREATE TABLE `ficha_impresion` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `codigo` varchar(10) DEFAULT NULL,
+  `alumno_id` int(11) DEFAULT NULL,
+  `semestre_id` int(11) DEFAULT NULL,
+  `created_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
+  `updated_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
+  `total` int(10) unsigned NOT NULL DEFAULT '1',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=17 DEFAULT CHARSET=latin1
+
+
 DELIMITER $$
 USE `user40`$$
 
