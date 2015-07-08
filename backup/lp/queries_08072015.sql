@@ -10,7 +10,7 @@ CREATE TABLE `ficha_impresion` (
   `updated_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
   `total` int(10) unsigned NOT NULL DEFAULT '1',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=17 DEFAULT CHARSET=latin1
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=latin1
 
 
 DELIMITER $$

@@ -39,7 +39,7 @@ return array(
 	|
 	*/
 
-	'timezone' => 'UTC',
+	'timezone' => 'America/Lima',
 
 	/*
 	|--------------------------------------------------------------------------
@@ -109,7 +109,7 @@ return array(
 		'Cartalyst\Sentry\SentryServiceProvider',
 		'Lightshire\PHPExcel\ServiceProvider',
 		'Barryvdh\DomPDF\ServiceProvider',
-		
+
 	),
 
 	/*

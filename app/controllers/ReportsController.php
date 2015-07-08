@@ -348,4 +348,42 @@ class ReportsController extends BaseController {
 			return Response::json($data, 201);
 		}
 
+		public function getReporteAutoevaluacionPorCriterio(){
+			$facultad_id =Input::get('facultad_id',0);
+			$escuela_id  =Input::get('escuela_id',0);
+			$semestre_id =Input::get('semestre_id',0);
+			$criterio_id =Input::get('criterio_id',0);
+			$data=CriterioEvaluacion::where(function($q) use($criterio_id){
+				if($criterio_id!=0){
+					$q=$q->where('idpadre','=',$criterio_id);
+				}
+				return $q;
+			})
+				->with(array('valoracionautoevaluacion'=>function($q) use($facultad_id,$escuela_id,$semestre_id){
+					$q=$q->select(DB::raw('valoracionautoevaluacion.*'))
+						->leftJoin('autoevaluacion','autoevaluacion.id','=','valoracionautoevaluacion.autoevaluacion_id')
+						->leftJoin('cursoasignado','cursoasignado.id','=','autoevaluacion.cursoasignado_id')
+						->leftJoin('curso','curso.id','=','cursoasignado.curso_id')
+						->leftJoin('escuela','escuela.id','=','curso.escuela_id')
+						->where(function($q2) use($facultad_id,$escuela_id,$semestre_id){
+							if($facultad_id!=0){
+								$q2=$q2->where('escuela.facultad_id','=',$facultad_id);
+							}
+							if($escuela_id!=0){
+								$q2=$q2->where('escuela.id','=',$escuela_id);
+							}
+							if($semestre_id!=0){
+								$q2=$q2->where('cursoasignado.semestre_id','=',$semestre_id);
+							}
+							return $q2;
+						});
+						//$qSi=$q->where('tipovaloracion_id','=','5')->count();
+						//$qNo=$q->where('tipovaloracion_id','=','6')->count();
+						//$qTotal = $qSi->union($q2->getQuery());
+
+					return $q;
+				}))->get();
+				return Response::json($data,200);
+		}
+
 }
