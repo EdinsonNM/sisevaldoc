@@ -330,6 +330,8 @@ class ReportsController extends BaseController {
 				->where('fromquestion', '=', 'Alumno')
 				->first();
 			$plantillaCriterios = array();
+
+			/**/
 		}
 
 }
