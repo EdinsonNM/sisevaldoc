@@ -173,6 +173,11 @@ app.config(function($interpolateProvider, $routeProvider){
       templateUrl : "templates/reports/evaluacionpromedioaldocdim.html",
      controller : "EvaluacionPromedioAlDocDimController"
     })
+    .when('/reports/evaluaciondesempenodocal', {
+      templateUrl : "templates/reports/evaluaciondesempenodocal.html",
+     controller : "EvaluacionDesempenoDocAlController"
+    })
+
      .otherwise({ redirectTo : "/"});
 });
 

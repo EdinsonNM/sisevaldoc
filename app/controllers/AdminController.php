@@ -185,7 +185,8 @@ class AdminController extends BaseController {
                 $menu[5]['children'][5]=array('title'=>"Carga Horaria Asignada",'url'=>'#/reports/cargahorariaasignada','icon'=>'');
                 $menu[5]['children'][6]=array('title'=>"Avance Curricular",'url'=>'#/reports/avancecurricular','icon'=>'');
 
-								$menu[5]['children'][7]=array('title'=>"Evaluacion Promedio de Alumnos a los Docentes por Dimension",'url'=>'#/reports/evaluacionpromedioaldocdim','icon'=>'');
+								$menu[5]['children'][7]=array('title'=>"Evaluacion de Desempeño Docente según percepción de los Estudiantes",'url'=>'#/reports/evaluaciondesempenodocal','icon'=>'');
+								$menu[5]['children'][8]=array('title'=>"Evaluacion Promedio de Alumnos a los Docentes por Dimension",'url'=>'#/reports/evaluacionpromedioaldocdim','icon'=>'');
 
 
                 break;

@@ -6,11 +6,11 @@ class ReportsController extends BaseController {
     public function __construct()
     {
         //$this->beforeFilter('auth', array('except' => 'home.index'));
-        $this->beforeFilter(function()
+        /*$this->beforeFilter(function()
         {
             if (!Sentry::check())
                 return View::make('home.index');
-        });
+        });*/
 
     }
     public function getIndex(){
@@ -329,9 +329,23 @@ class ReportsController extends BaseController {
 				->where('facultad_id', '=', $facultad_id)
 				->where('fromquestion', '=', 'Alumno')
 				->first();
-			$plantillaCriterios = array();
 
-			/**/
+			$data = DB::select('call Indicador_Eval_Prom_AlDocDim(' . $semestre_id . ',' . $etapaEvaluacion->plantilla_id . ',' . $docente_id . ')');
+			return Response::json($data, 201);
+		}
+
+		function getReporteevaldesempenodocal(){
+			$semestre_id = Input::get("semestre_id");
+			$facultad_id = Input::get("facultad_id");
+			$escuela_id = Input::get("escuela_id");
+
+			$etapaEvaluacion = EtapaEvaluacion::where('semestre_id', '=', $semestre_id)
+				->where('facultad_id', '=', $facultad_id)
+				->where('fromquestion', '=', 'Alumno')
+				->first();
+
+			$data = DB::select('call Reporte_Eval_Desempeno_DocAl(' . $semestre_id . ',' . $etapaEvaluacion->plantilla_id . ',' . $escuela_id . ')');
+			return Response::json($data, 201);
 		}
 
 }

@@ -1976,7 +1976,7 @@ app.controller("EvaluacionPromedioAlDocDimController",function($log,CriterioEval
             text: ''
         },
         xAxis: {
-            title: {text: 'COD PLAZA'},
+            title: {text: 'CRITERIOS DE EVALUACIÓN'},
             categories: [
 
             ]
@@ -1986,7 +1986,7 @@ app.controller("EvaluacionPromedioAlDocDimController",function($log,CriterioEval
         },
         yAxis: {
             min: 0,
-            max: 30,
+            //max: 30,
             title: {
                 text: 'PUNTAJE OBTENIDO'
             }
@@ -2120,80 +2120,261 @@ app.controller("EvaluacionPromedioAlDocDimController",function($log,CriterioEval
         {"id": "pie", "title": "Pie"},
         {"id": "scatter", "title": "Scatter"}
     ];
+
+		$scope.solocriteriospadres = [];
+
+		$scope.setDecimalJS = function (input, places) {
+        if (isNaN(input)) return input;
+        // If we want 1 decimal place, we want to mult/div by 10
+        // If we want 2 decimal places, we want to mult/div by 100, etc
+        // So use the following to create that factor
+        var factor = "1" + Array(+(places > 0 && places + 1)).join("0");
+        return Math.round(input * factor) / factor;
+    };
+
     $scope.list=function(){
         $scope.showLoading=true;
         $scope.showmessage=false;
 
-        EtapaEvaluacionService.get({
-            'filter[semestre_id]':$scope.semestreSelected,
-            'filter[facultad_id]':$scope.facultadSelected,
-            'filter[fromquestion]':'Alumno'
 
-        },function(data){
-            if(data.total>0){
-                $scope.plantillaSelected=data.data[0].plantilla_id;
-                $log.info("PLANTiLLA:"+$scope.plantillaSelected);
-                if($scope.semestreSelected!=-1){
-                    if($scope.plantillaSelected!=-1){
+				if($scope.semestreSelected!=-1){
+					var params={
+							"semestre_id":$scope.semestreSelected,
+							"facultad_id":$scope.facultadSelected,
+							"escuela_id":$scope.escuelaSelected,
+							"docente_id":$scope.docenteSelected
+					};
+					$http({
+							url: './reports/evaluacionpromedioaldocdim',
+							method: "GET",
+							params:params
+					}).success(function (data) {
+							//console.log(data);
+							$scope.datatable=data;
 
-                        var params={
-                            "plantilla_id":$scope.plantillaSelected,
-                            "semestre_id":$scope.semestreSelected,
-                            "facultad_id":$scope.facultadSelected,
-                            "escuela_id":$scope.escuelaSelected,
-                            "docente_id":$scope.docenteSelected,
-                            "cursoasignado_id":$scope.cursoSelected
-                        //{plantilla_id: 1, semestre_id: "0", facultad_id: "0", escuela_id: "0", docente_id: "0"}
-                        };
-                        $http({
-                            url: './reports/evaluacionjefedepartamento',
-                            method: "GET",
-                            params:params
-                        }).success(function (data) {
+							var solocriteriospadres = [];
+							var gLabels = [];
+							var puntaje={name:'Promedio', 'data':[], color:'#2f7ed8', dataLabels: { enabled: true}};
 
-                            console.log(params);
-                            $scope.datatable=data;
+							$.each($scope.criteriosevaluacionpadres,function(idx, item){
+									solocriteriospadres.push({criterio: item.name, id: item.id, sumaprom: 0, numitems: 0, prom: 0});
+									gLabels.push(item.name);
+							});
 
-                            var plaza=[];
-                            var puntaje={name:'Puntaje Obtenido','data':[],color:'#2f7ed8',dataLabels: { enabled: true}};
+							$.each(data,function(idx, item){
+								$.each(solocriteriospadres, function(idx2, itemsc){
+									if(item.idpadre == itemsc.id){
+										itemsc.sumaprom += item.prom*1;
+										itemsc.numitems++;
+									}
+								});
+							});
 
+							var min_prom = data[0].prom;
+							var min_sd = data[0].sd;
+							$.each(data,function(idx, item){
+								if(min_prom>item.prom){
+									min_prom = item.prom;
+								}
+								if(min_sd>item.sd){
+									min_sd = item.sd;
+								}
+							});
 
-                            $.each(data,function(index,element){
+							$.each(solocriteriospadres, function(idx, item){
+									item.prom = item.sumaprom/item.numitems;
+									puntaje.data.push($scope.setDecimalJS(item.prom, 2));
+							});
 
-                                //cargamos el array con los 5 valores
-                                var valores = [];
-                                valores.push(this.cinco);
-                                valores.push(this.cuatro);
-                                valores.push(this.tres);
-                                valores.push(this.dos);
-                                valores.push(this.uno);
-
-                                //utilizamos la funcion especial de math para hallar el valor maximo del array
-                                var max=Math.max.apply(null, valores);
-
-                                puntaje.data.push(parseInt(max));
-                                plaza.push(this.docente_id + 'CS');
-
-                            });
-                            //$scope.chartSeries=[Siempre,Frecuente,Poco,Nunca];
-                            $scope.chartConfig.series=[puntaje];
-                            $scope.chartConfig.xAxis.categories=plaza;
-
-                            $scope.showLoading=false;
-                            $scope.showTable=true;
-                        });
+							$scope.solocriteriospadres = solocriteriospadres;
+							$scope.min_prom = min_prom;
+							$scope.min_sd = min_sd;
 
 
-                    }else{
+							$scope.chartConfig.series=[puntaje];
+            	$scope.chartConfig.xAxis.categories= gLabels;
 
-                        $scope.showmessage=true;
-                        $scope.showLoading=false;
-                    }
-                }
+							$scope.showLoading=false;
+							$scope.showTable=true;
+					});
+				}
+    };
+});
+
+
+app.controller("EvaluacionDesempenoDocAlController",function($log,CriterioEvaluacionService, EtapaEvaluacionService,CursoAsignadoService,SemestreService,FacultadService,EscuelaService,DocenteService,$scope,$timeout,$routeParams,$http,$resource,ngTableParams){
+    $scope.facultadSelected=0;
+    $scope.escuelaSelected=0;
+    $scope.docenteSelected=0;
+    $scope.cursoSelected=0;
+    $scope.semestreSelected=-1;
+    $scope.plantillaSelected=-1;
+    $scope.showmessage=false;
+    $scope.showLoading=false;
+    $scope.chartSeries=[];
+    $scope.categories=[];
+    $scope.showTable=false;
+
+    $scope.chartConfig = {
+        "options": {
+            "chart": {
+                "type": "column"
+            },
+        },
+        title: {
+            text: 'RESUMEN DE EVALUACION DEL DOCENTE SEGUN PERCEPCION DEL ALUMNO'
+        },
+        subtitle: {
+            text: ''
+        },
+        xAxis: {
+            title: {text: 'DOCENTES'},
+            categories: [
+
+            ]
+        },
+        credits:{
+            enabled:false
+        },
+        yAxis: {
+            min: 0,
+            //max: 30,
+            title: {
+                text: 'PUNTAJE OBTENIDO'
             }
-
-        })
+        },
+        plotOptions: {
+            column: {
+                pointPadding: 0.2,
+                borderWidth: 0
+            }
+        },
+        series: []
 
     };
 
+
+    FacultadService.get({},function(data){
+        $scope.facultades=data.data;
+        if(data.total>0)
+            $scope.facultadSelected=data.data[0].id;
+        $scope.loadEscuelas();
+    });
+
+    SemestreService.get({},function(data){
+        $scope.semestres=data.data;
+        if(data.total>0){
+            $scope.semestreSelected=data.data[0].id;
+        }
+    });
+    $scope.loadEscuelas=function(){
+        $scope.escuelaSelected=0;
+        //$scope.loadEtapaEvaluacion();
+        if($scope.facultadSelected>0){
+            EscuelaService.get({'filter[facultad_id]':$scope.facultadSelected},function(data){
+                $scope.escuelas=data.data;
+            });
+        }else{
+            $scope.escuelas=[];
+        }
+    }
+
+    $scope.loadCursos=function(){
+        $scope.cursoSelected=0;
+        if($scope.docenteSelected>0){
+            var params={
+                'filter[docente_id]':$scope.docenteSelected,
+                'filter[semestre_id]':$scope.semestreSelected
+            };
+            CursoAsignadoService.get(params,function(data){
+                $scope.cursos=data.data;
+                if(data.total>0){
+                    $scope.cursoSelected=data.data[0].id;
+                    //$scope.loadEtapaEvaluacion(data.data[0].curso.escuela.facultad_id);
+                }
+
+            });
+        }else{
+            $scope.cursos=[];
+        }
+
+    };
+    $scope.loadCriterios=function(data){
+        var myData=data;
+        $scope.tableParams = new ngTableParams({
+            page: 1,            // show first page
+            count: 10,          // count per page
+            filter:{
+
+            },
+            sorting: {
+                name: 'asc'     // initial sorting
+            }
+        }, {
+            total: 1,           // length of data
+            counts:[],
+            getData: function($defer, params) {
+                var datapaginate = angular.copy(myData);
+
+                $defer.resolve(myData);
+            }
+        });
+    };
+    $scope.chartTypes = [
+        {"id": "line", "title": "Line"},
+        {"id": "spline", "title": "Smooth line"},
+        {"id": "area", "title": "Area"},
+        {"id": "areaspline", "title": "Smooth area"},
+        {"id": "column", "title": "Column"},
+        {"id": "bar", "title": "Bar"},
+        {"id": "pie", "title": "Pie"},
+        {"id": "scatter", "title": "Scatter"}
+    ];
+
+    $scope.list=function(){
+        $scope.showLoading=true;
+        $scope.showmessage=false;
+
+				if($scope.semestreSelected!=-1){
+					var params={
+							"semestre_id":$scope.semestreSelected,
+							"facultad_id":$scope.facultadSelected,
+							"escuela_id":$scope.escuelaSelected
+					};
+					$http({
+							url: './reports/reporteevaldesempenodocal',
+							method: "GET",
+							params:params
+					}).success(function (data) {
+							//console.log(data);
+							$scope.datatable=data;
+
+							var gLabels = [];
+							var puntaje={name:'Puntaje', 'data':[], color:'#2f7ed8', dataLabels: { enabled: true}};
+
+							$.each(data,function(idx, item){
+								gLabels.push(item.firstname + ' ' + item.lastname);
+								puntaje.data.push(item.prom4*1);
+							});
+
+							$scope.chartConfig.series=[puntaje];
+            	$scope.chartConfig.xAxis.categories= gLabels;
+
+							$scope.showLoading=false;
+							$scope.showTable=true;
+					});
+				}
+    };
+});
+
+
+app.filter('setDecimal', function ($filter) {
+    return function (input, places) {
+        if (isNaN(input)) return input;
+        // If we want 1 decimal place, we want to mult/div by 10
+        // If we want 2 decimal places, we want to mult/div by 100, etc
+        // So use the following to create that factor
+        var factor = "1" + Array(+(places > 0 && places + 1)).join("0");
+        return Math.round(input * factor) / factor;
+    };
 });
