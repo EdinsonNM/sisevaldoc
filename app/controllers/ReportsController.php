@@ -325,7 +325,11 @@ class ReportsController extends BaseController {
 			$escuela_id = Input::get("escuela_id");
 			$docente_id = Input::get("docente_id");
 
-			
+			$etapaEvaluacion = EtapaEvaluacion::where('semestre_id', '=', $semestre_id)
+				->where('facultad_id', '=', $facultad_id)
+				->where('fromquestion', '=', 'Alumno')
+				->first();
+			$plantillaCriterios = array();
 		}
 
 }
