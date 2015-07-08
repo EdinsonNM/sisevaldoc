@@ -15,6 +15,8 @@
           
           <p class="navbar-text"><label>Docente:</label> <small>//others.docente.firstname+' '+others.docente.lastname//</small></p>
           <p class="navbar-text"><label>Semestre:</label> <small>//others.semestre.year+' - '+others.semestre.period//</small></p>
+          <p class="navbar-text"><label>Facultad:</label> <small>//others.facultad.name//</small></p>
+          <p class="navbar-text"><label>Escuela:</label> <small>//others.escuela.name//</small></p>
           <form class="navbar-form navbar-right" role="search">
            
             <button type="submit" ng-disabled="IndexSemestreSelected==-1" class="btn btn-success" data-toggle="modal" data-target="#winNew" ng-click="new()" ng-show="showEdit">Nuevo</button>

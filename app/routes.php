@@ -10,6 +10,7 @@
 | and give it the Closure to execute when that URI is requested.
 |
 */
+//llamamos con controlador restfull
 
 Route::controller('login/{type}','LoginController');
 Route::controller('admin','AdminController');

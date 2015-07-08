@@ -1,4 +1,4 @@
-app.controller("EvaluacionDocentesController", function EvaluacionDocentesController($fileUploader,DocenteService,FacultadService,EscuelaService,CursoService,SemestreService,$scope,$timeout,$routeParams,$http,$route,$location, $resource,ngTableParams){
+app.controller("EvaluacionDocentesController", function EvaluacionDocentesController($fileUploader,DocenteService,FacultadService,EscuelaService,CursoService,SemestreService,$scope,$timeout,$routeParams,$http,$route,$location, $resource,ngTableParams,$log){
     $scope.others={};
     $scope.entidad={};
     $scope.IndexSemestreSelected=-1;
@@ -10,14 +10,16 @@ app.controller("EvaluacionDocentesController", function EvaluacionDocentesContro
     $scope.docenteSelected=-1;
     var ENTITYNAME='cursoasignado';
 
-   
+    $scope.loadingData=true;
     $http({url: './admin/type',method: "GET"}).success(function (data) {
             $scope.faculta_id=data.entity.escuela.facultad_id;
+            $scope.escuela=data.entity.escuela.name;
             FacultadService.get({facultad_id:$scope.faculta_id},function(data){
                 $scope.facultades=data.data; 
                 $scope.others.facultades=data.data;
                 if(data.total>0)
                     $scope.facultadSelected=data.data[0].id;
+                $scope.loadingData=false;
                 $scope.loadEscuelas();
             });
     });
@@ -33,22 +35,27 @@ app.controller("EvaluacionDocentesController", function EvaluacionDocentesContro
     
 
     
+
     $scope.loadEscuelas=function(){
         $scope.escuelaSelected=-1;
-        EscuelaService.get({'filter[facultad_id]':$scope.facultadSelected},function(data){
+        $scope.loadingData=true;
+        EscuelaService.get({'filter[facultad_id]':$scope.facultadSelected,'filter[name]':$scope.escuela},function(data){
                $scope.escuelas=data.data; 
                if(data.total>0)
                 $scope.escuelaSelected=data.data[0].id;
+                $scope.loadingData=false;
                $scope.loadDocentes();
         });
     }
 
     $scope.loadDocentes=function(){
         $scope.docenteSelected=-1;
+        $scope.loadingData=true;
         DocenteService.get({'filter[escuela_id]':$scope.escuelaSelected},function(data){
             $scope.docentes=data.data;
             if(data.total>0){
-                $scope.docenteSelected=data.data[0].id;
+                //$scope.docenteSelected=data.data[0].id;
+                $scope.loadingData=false;
                 $scope.loadDocente();
                 $scope.list();
             }
@@ -76,10 +83,11 @@ app.controller("EvaluacionDocentesController", function EvaluacionDocentesContro
         console.log($scope.docentes);
         console.log($scope.docenteSelected);
         $scope.others.docente=_.find($scope.docentes, function (item) {
-            console.log( $scope.docenteSelected);
+            //console.log( $scope.docenteSelected);
             return item.id == $scope.docenteSelected;
         });
-        console.log($scope.others.docente);
+        //console.log($scope.others.docente);
+        $log.log("$scope.IndexSemestreSelected",$scope.IndexSemestreSelected);
         if($scope.IndexSemestreSelected!=-1){
             $scope.list();
         }
@@ -97,26 +105,27 @@ app.controller("EvaluacionDocentesController", function EvaluacionDocentesContro
    };
 
    $scope.list=function(){
-        
-            try{
+        console.log("Semestre id "+ $scope.semestre.id);
+        console.log("Docente id "+ $scope.docenteSelected);
+
+            if(!$scope.tableParams){
                 var Api = $resource('./'+ENTITYNAME);
                 $scope.tableParams = new ngTableParams({
                 page: 1,            // show first page
                 count: 10,          // count per page
                 r:Math.random(),
-                filter:{
-                    semestre_id:$scope.semestre.id,
-                    docente_id:$scope.docenteSelected
-                },
+               
                 sorting: {
                     name: 'asc'     // initial sorting
                 }
                 }, {
                     total: 0,           // length of data
                     getData: function($defer, params) {
+                        params.$params.filter.semestre_id=$scope.semestre.id;
+                        params.$params.filter.docente_id=$scope.docenteSelected;
                         // ajax request to api
                         Api.get(params.url(), function(data) {
-                            
+
                             $timeout(function() {
                                 if(data.total==0){
                                     data.data={};
@@ -130,9 +139,12 @@ app.controller("EvaluacionDocentesController", function EvaluacionDocentesContro
                         });
                     }
                 });
-            }catch(e){
-                console.log(e);
+            }else{
+                $scope.tableParams.filter.semestre_id=$scope.semestre.id;
+                $scope.tableParams.filter.docente_id=$scope.docenteSelected;
+                $scope.tableParams.reload();
             }
+            //console.log(e);
         
     };
     $scope.new=function(){

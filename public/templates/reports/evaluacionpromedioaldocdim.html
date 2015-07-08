@@ -1,0 +1,229 @@
+<div class="panel panel-default">
+
+    <nav class="navbar navbar-default" role="navigation">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-2">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="#//location.path()//">Reporte de Evaluación Promedio de los Aumnos a los Docentes Por Dimension de la Escuela</a>
+            </div>
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-2">
+                <form class="navbar-form navbar-right">
+                    <button type="button" class="btn btn-info" onclick="javascript:imprSelec('printchart')">
+                        <span class="glyphicon glyphicon-print"></span>
+                        Imprimir
+                    </button>
+                    <button type="button" class="btn btn-success" ng-click="list()">
+                        <span class="glyphicon glyphicon-plus"></span>
+                        Generar
+                    </button>
+                </form>
+
+            </div>
+        </div>
+    </nav>
+
+    <div class="panel-body" style="margin-top:-20px">
+        <div class="row">
+            <div class="col-md-3">
+
+                <label>Facultad: </label>
+                <select class="form-control" placeholder="Search" ng-model="facultadSelected" ng-change="loadEscuelas()">
+                    <option value="0">Todas las Facultades</option>
+                    <option ng-repeat="facultad  in facultades" value="//facultad.id//">//facultad.name//</option>
+                </select>
+
+            </div>
+            <div class="col-md-3">
+
+                <label>Escuela: </label>
+                <select class="form-control" placeholder="Search" ng-model="escuelaSelected" ng-change="loadDocentes()">
+                    <option value="0" >Todas las Escuelas</option>
+                    <option ng-repeat="escuela  in escuelas" value="//escuela.id//">//escuela.name//</option>
+                </select>
+
+            </div>
+            <div class="col-md-2">
+
+                <label>Semestre: </label>
+                <select class="form-control" ng-model="semestreSelected"  ng-change="loadCursos()">
+                    <option value="0">Todos los Semestres</option>
+                    <option ng-repeat="semestre  in semestres" value="//semestre.id//">//semestre.year+'-'+semestre.period//</option>
+                </select>
+
+            </div>
+            <div class="col-md-2">
+                <label>Docente: </label>
+                <select class="form-control" ng-model="docenteSelected" ng-change="loadCursos()">
+                    <option value="0">Todas los Docentes</option>
+                    <option ng-repeat="docente  in docentes" value="//docente.id//">//docente.firstname+' '+docente.lastname//</option>
+                </select>
+
+            </div>
+
+        </div>
+        <br/>
+        <br/>
+
+
+        <div class="row">
+            <div class="col-md-12">
+              <div align="center">
+                <table class="table table-bordered table-hover table-condensed center">
+                  <thead>
+                    <tr>
+                      <th>Total Docente / IND</th>
+                      <th ng-repeat="criterio in criteriosevaluacion"><abbr title="//criterio.name//">P//$index+1//</abbr></th>
+                      <th>&nbsp;</th>
+                    </tr>
+                    <tr>
+                      <th rowspan="2" colspan="1">INDICADORES</th>
+                      <th class="text-center" rowspan="1" colspan="//criterio.children.length//" ng-repeat="criterio in criteriosevaluacionpadres">//criterio.name//</th>
+                      <th rowspan="2" colspan="1">VALOR <br/>MINIMO</th>
+                    </tr>
+                    <tr>
+                      <th ng-repeat="criterio in criteriosevaluacion"><abbr title="//criterio.name//">P//$index+1//</abbr></th>
+                    </tr>
+                  </thead>
+                    <tr>
+                      <th>PROMEDIO</th>
+                      <td colspan="9"></td>
+                      <td colspan="10"></td>
+                      <td colspan="5"></td>
+                      <td colspan="6"></td>
+                      <td colspan="2"></td>
+                      <td colspan="1"></td>
+                    </tr>
+                    <tr>
+                      <th>DESVIACIÓN ESTÁNDAR</th>
+                      <td colspan="9"></td>
+                      <td colspan="10"></td>
+                      <td colspan="5"></td>
+                      <td colspan="6"></td>
+                      <td colspan="2"></td>
+                      <td colspan="1"></td>
+                    </tr>
+                    <tr>
+                      <th>PROMEDIO POR DIMENSIÓN</th>
+                      <td colspan="9"></td>
+                      <td colspan="10"></td>
+                      <td colspan="5"></td>
+                      <td colspan="6"></td>
+                      <td colspan="2"></td>
+                      <td colspan="1"></td>
+                    </tr>
+                  <tbody>
+                  </tbody>
+                </table>
+
+                  <table class="table table-bordered table-hover table-condensed center"  ng-show="showTable" >
+
+                      <tr align="center" style="border: 1px solid #000;">
+                          <td colspan="30" style="border: 1px solid #000;background-color: #17CFB6"><strong>EVALUACION DOCENTE POR EL JEFE DE DEPARTAMENTO</strong></td>
+                          <td colspan="5" style="border: 1px solid #000;background-color: #17CFB6"><strong>PUNTAJES OBTENIDOS</strong></td>
+                      </tr>
+                      <tr align="center" style="border: 1px solid #000;">
+                          <td colspan="1" rowspan="1" style="border: 1px solid #000;background-color: #17CFB6"><strong>N° Plazas</strong></td>
+                          <td colspan="6" rowspan="1" style="border: 1px solid #000;background-color: #17CFB6"><strong>Especialidad</strong></td>
+                          <td colspan="1" rowspan="1" style="border: 1px solid #000;background-color: #17CFB6"><strong>Cod Plaza</strong></td>
+                          <td colspan="1" rowspan="1" style="border: 1px solid #000;background-color: #17CFB6"><strong>P1</strong></td>
+                          <td colspan="1" rowspan="1" style="border: 1px solid #000;background-color: #17CFB6"><strong>P2</strong></td>
+                          <td colspan="1" rowspan="1" style="border: 1px solid #000;background-color: #17CFB6"><strong>P3</strong></td>
+                          <td colspan="1" rowspan="1" style="border: 1px solid #000;background-color: #17CFB6"><strong>P4</strong></td>
+                          <td colspan="1" rowspan="1" style="border: 1px solid #000;background-color: #17CFB6"><strong>P5</strong></td>
+                          <td colspan="1" rowspan="1" style="border: 1px solid #000;background-color: #17CFB6"><strong>P6</strong></td>
+                          <td colspan="1" rowspan="1" style="border: 1px solid #000;background-color: #17CFB6"><strong>P7</strong></td>
+                          <td colspan="1" rowspan="1" style="border: 1px solid #000;background-color: #17CFB6"><strong>P8</strong></td>
+                          <td colspan="1" rowspan="1" style="border: 1px solid #000;background-color: #17CFB6"><strong>P9</strong></td>
+                          <td colspan="1" rowspan="1" style="border: 1px solid #000;background-color: #17CFB6"><strong>P10</strong></td>
+                          <td colspan="1" rowspan="1" style="border: 1px solid #000;background-color: #17CFB6"><strong>P11</strong></td>
+                          <td colspan="1" rowspan="1" style="border: 1px solid #000;background-color: #17CFB6"><strong>P12</strong></td>
+                          <td colspan="1" rowspan="1" style="border: 1px solid #000;background-color: #17CFB6"><strong>P13</strong></td>
+                          <td colspan="1" rowspan="1" style="border: 1px solid #000;background-color: #17CFB6"><strong>P14</strong></td>
+                          <td colspan="1" rowspan="1" style="border: 1px solid #000;background-color: #17CFB6"><strong>P15</strong></td>
+                          <td colspan="1" rowspan="1" style="border: 1px solid #000;background-color: #17CFB6"><strong>P16</strong></td>
+                          <td colspan="1" rowspan="1" style="border: 1px solid #000;background-color: #17CFB6"><strong>P17</strong></td>
+                          <td colspan="1" rowspan="1" style="border: 1px solid #000;background-color: #17CFB6"><strong>P18</strong></td>
+                          <td colspan="1" rowspan="1" style="border: 1px solid #000;background-color: #17CFB6"><strong>P19</strong></td>
+                          <td colspan="1" rowspan="1" style="border: 1px solid #000;background-color: #17CFB6"><strong>P20</strong></td>
+                          <td colspan="1" rowspan="1" style="border: 1px solid #000;background-color: #17CFB6"><strong>P21</strong></td>
+                          <td colspan="1" rowspan="1" style="border: 1px solid #000;background-color: #17CFB6"><strong>P22</strong></td>
+
+                          <td colspan="1" rowspan="1" style="border: 1px solid #000;background-color: #17CFB6"><strong>PJE 5 =Siempre</strong></td>
+                          <td colspan="1" rowspan="1" style="border: 1px solid #000;background-color: #17CFB6"><strong>PJE 4 =Casi siempre</strong></td>
+                          <td colspan="1" rowspan="1" style="border: 1px solid #000;background-color: #17CFB6"><strong>PJE 3 =Algunas veces</strong></td>
+                          <td colspan="1" rowspan="1" style="border: 1px solid #000;background-color: #17CFB6"><strong>PJE 2 =Raras veces</strong></td>
+                          <td colspan="1" rowspan="1" style="border: 1px solid #000;background-color: #17CFB6"><strong>PJE 1 =Nunca</strong></td>
+                      </tr>
+
+                      <tr ng-repeat="item in datatable" align="center">
+                          <td colspan="1" rowspan="1" style="border: 1px solid #000;">//$index + 1//</td>
+                          <td colspan="6" rowspan="1" style="border: 1px solid #000;" align="left">//item.escuela//</td>
+                          <td colspan="1" rowspan="1" style="border: 1px solid #000;"><strong>//item.docente_id + 'CS'//</strong></td>
+                          <td colspan="1" rowspan="1" style="border: 1px solid #000;"><strong>//item.P1//</strong></td>
+                          <td colspan="1" rowspan="1" style="border: 1px solid #000;"><strong>//item.P2//</strong></td>
+                          <td colspan="1" rowspan="1" style="border: 1px solid #000;"><strong>//item.P3//</strong></td>
+                          <td colspan="1" rowspan="1" style="border: 1px solid #000;"><strong>//item.P4//</strong></td>
+                          <td colspan="1" rowspan="1" style="border: 1px solid #000;"><strong>//item.P5//</strong></td>
+                          <td colspan="1" rowspan="1" style="border: 1px solid #000;"><strong>//item.P6//</strong></td>
+                          <td colspan="1" rowspan="1" style="border: 1px solid #000;"><strong>//item.P7//</strong></td>
+                          <td colspan="1" rowspan="1" style="border: 1px solid #000;"><strong>//item.P8//</strong></td>
+                          <td colspan="1" rowspan="1" style="border: 1px solid #000;"><strong>//item.P9//</strong></td>
+                          <td colspan="1" rowspan="1" style="border: 1px solid #000;"><strong>//item.P10//</strong></td>
+                          <td colspan="1" rowspan="1" style="border: 1px solid #000;"><strong>//item.P11//</strong></td>
+                          <td colspan="1" rowspan="1" style="border: 1px solid #000;"><strong>//item.P12//</strong></td>
+                          <td colspan="1" rowspan="1" style="border: 1px solid #000;"><strong>//item.P13//</strong></td>
+                          <td colspan="1" rowspan="1" style="border: 1px solid #000;"><strong>//item.P14//</strong></td>
+                          <td colspan="1" rowspan="1" style="border: 1px solid #000;"><strong>//item.P15//</strong></td>
+                          <td colspan="1" rowspan="1" style="border: 1px solid #000;"><strong>//item.P16//</strong></td>
+                          <td colspan="1" rowspan="1" style="border: 1px solid #000;"><strong>//item.P17//</strong></td>
+                          <td colspan="1" rowspan="1" style="border: 1px solid #000;"><strong>//item.P18//</strong></td>
+                          <td colspan="1" rowspan="1" style="border: 1px solid #000;"><strong>//item.P19//</strong></td>
+                          <td colspan="1" rowspan="1" style="border: 1px solid #000;"><strong>//item.P20//</strong></td>
+                          <td colspan="1" rowspan="1" style="border: 1px solid #000;"><strong>//item.P21//</strong></td>
+                          <td colspan="1" rowspan="1" style="border: 1px solid #000;"><strong>//item.P22//</strong></td>
+
+                          <td colspan="1" rowspan="1" style="border: 1px solid #000;background-color: #17CFB6"><strong>//item.cinco//</strong></td>
+                          <td colspan="1" rowspan="1" style="border: 1px solid #000;"><strong>//item.cuatro//</strong></td>
+                          <td colspan="1" rowspan="1" style="border: 1px solid #000;"><strong>//item.tres//</strong></td>
+                          <td colspan="1" rowspan="1" style="border: 1px solid #000;"><strong>//item.dos//</strong></td>
+                          <td colspan="1" rowspan="1" style="border: 1px solid #000;"><strong>//item.uno//</strong></td>
+                      </tr>
+                  </table>
+              </div>
+            </div>
+        </div>
+        <br/>
+
+        <div class="row">
+            <div class="col-md-2">
+                <label>Tipo Gráfico</label>
+                <select ng-model="chartConfig.options.chart.type" ng-options="t.id as t.title for t in chartTypes"></select>
+            </div>
+        </div>
+        <br/>
+        <div class="alert alert-warning" ng-show="showmessage" >
+            <strong>Alerta!</strong>
+            //message//
+        </div>
+        <br/>
+
+        <div class="row" id="printchart">
+            <div class="col-md-12" loading-container="showLoading">
+                <highchart id="chart1" config="chartConfig"></highchart>
+            </div>
+        </div>
+
+    </div>
+</div>
+<script type="text/javascript">
+    function imprSelec(muestra)
+    {var ficha=document.getElementById(muestra);var ventimp=window.open(' ','popimpr');ventimp.document.write(ficha.innerHTML);ventimp.document.close();ventimp.print();ventimp.close();}
+</script>
+<window-dir title="Nuevo Curso Asignado" window="winNew" content="templates/cursoasignado/form.html" entidad="entidad" others="others" save="save()"></window-dir>
+
+<window-dir title="//titleUpload//" window="winUpload" content="templates/asignacioncursos/upload.html" entidad="entidad" others="others" save="upload()" stylewidth="modal-lg"></window-dir>

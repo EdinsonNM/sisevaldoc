@@ -7,21 +7,30 @@ class CriterioEvaluacionController extends \BaseController {
 	 *
 	 * @return Response
 	 */
-	public function index()
-	{
-		$filter=Input::get("filter");
-		$name=(!isset($filter['name']))?'':$filter['name'];
-		$plantilla_id=(!isset($filter['plantilla_id']))?'':$filter['plantilla_id'];
-		$entities=CriterioEvaluacion::with('children')
-			->where('plantilla_id','=',$plantilla_id)
-			->where("name",'LIKE','%'.$name.'%')
-			->where("grupo",'=',1)
-			->paginate(Input::get('count'));
-		return Response::json(
-	           $entities->toArray(),
-	          201
-	    );
-	}
+	public function index() {
+	 $filter=Input::get("filter");
+	 $name=(!isset($filter['name']))?'':$filter['name'];
+	 $plantilla_id=(!isset($filter['plantilla_id']))?'':$filter['plantilla_id'];//filter[plantilla_id]=2
+	 $grupo=Input::get('grupo','1');
+	 $idpadre=Input::get('idpadre','');
+	 $entities=CriterioEvaluacion::with('children')
+	 ->where(function($q) use($grupo,$idpadre){
+		 if($grupo!=''){
+		 	$q=$q->where('grupo','=',$grupo);
+		 }
+		 if($idpadre!=''){
+		 	$q=$q->where('idpadre','=',$idpadre);
+		 }
+		 return $q;
+	 })
+	 ->where('plantilla_id','=',$plantilla_id)
+	 ->where("name",'LIKE','%'.$name.'%')
+	 ->paginate(Input::get('count'));
+	 return Response::json(
+	 $entities->toArray(),
+	 201
+	 );
+ }
 
 	/**
 	 * Show the form for creating a new resource.
@@ -50,8 +59,8 @@ class CriterioEvaluacionController extends \BaseController {
  		$entity->grupo=Input::get('grupo');
  		$entity->plantilla_id=Input::get('plantilla_id');
 
-            
-       
+
+
         $entity->save();
 
         return Response::json(array(
@@ -75,7 +84,7 @@ class CriterioEvaluacionController extends \BaseController {
 	          'success' => true,
 	          'data' => $entity->toArray()
 	          ),
-	          
+
 	          201
 	     );
 	}
@@ -103,7 +112,7 @@ class CriterioEvaluacionController extends \BaseController {
 
         $entity = CriterioEvaluacion::find($id);
 
- 		$entity->name=Input::get('name');      
+ 		$entity->name=Input::get('name');
         $entity->save();
 
         return Response::json(array(

@@ -19,31 +19,44 @@ app.controller("EvaluacionController", function EvaluacionController(ValoracionE
             EtapaEvaluacionService.get(
                 {
                     'filter[semestre_id]':$scope.others.inscripcion.cursoasignado.semestre.id,
-                    'filter[facultad_id]':$scope.others.inscripcion.cursoasignado.curso.escuela.facultad_id
+                    'filter[facultad_id]':$scope.others.inscripcion.cursoasignado.curso.escuela.facultad_id,
+                    'filter[fromquestion]':'Alumno'
                 },
                 function(data){
                     if(data.total>0){
                         $scope.others.etapaevaluacion=data.data[0];
+                        
+                        var result=$scope.ValidateEtapa($scope.others.etapaevaluacion);
+                        if(result.success){
                         //Obtengo la autoevaluacion de docente para el curso asignado
-                        EvaluacionService.get({inscripcioncurso_id:$routeParams.id},function(data){
-                            if(data.total>0){
-                                $scope.existeevaluacion=true;
-                                $scope.entidad=data.data[0];
-                                $scope.showEvaluacion=true;
-                                $scope.list();
-                                if($scope.entidad.finalizado=='1'){
-                                    $scope.disabledEdition=true;
-                                    $scope.finalizado=true;
+                            EvaluacionService.get({inscripcioncurso_id:$routeParams.id},function(data){
+                                if(data.total>0){
+                                    $scope.existeevaluacion=true;
+                                    $scope.entidad=data.data[0];
+                                    $scope.showEvaluacion=true;
+                                    $scope.list();
+                                    if($scope.entidad.finalizado=='1'){
+                                        $scope.disabledEdition=true;
+                                        $scope.finalizado=true;
+                                    }
+                                }else{
+                                     $scope.msg_title="No existe Evaluación";
+                                     $scope.showNoExisteEvaluacion=true;
+                                     $scope.showMsg=true;
+                                     $scope.showEvaluacion=false;
+                                     
                                 }
-                            }else{
-                                 $scope.msg_title="No existe Evaluación";
-                                 $scope.showNoExisteEvaluacion=true;
-                                 $scope.showMsg=true;
-                                 $scope.showEvaluacion=false;
-                                 
-                            }
-                            $scope.showLoading=false;
-                       });
+                                $scope.showLoading=false;
+                           });
+                        }else{
+                                console.log(result);
+                                $scope.msg_title="Error Periodo de Evaluación";
+                                $scope.messageOtherError=result.message;
+                                $scope.showOtherError=true;
+                                $scope.showMsg=true;
+                                $scope.showEvaluacion=false;
+                                $scope.showLoading=false;
+                        }
                     }else{
                         $scope.msg_title=" No existe Etapa de Evaluación";
                         $scope.showNoExisteEtapaEvaluacion=true;
@@ -55,8 +68,42 @@ app.controller("EvaluacionController", function EvaluacionController(ValoracionE
    });
    
    
-   TipoValoracionService.get({},function(data){ $scope.others.tiposvaloracion=data.data;});
+   
    var ENTITYNAME='criterioevaluacion';
+
+   $scope.ValidateEtapa=function(etapa){
+    var result={},
+        inicio=moment(etapa.date_init).tz("America/Lima").format('YYYY/MM/DD'),
+        fin=moment(etapa.date_end).tz("America/Lima").format('YYYY/MM/DD'),
+        myDate=moment().tz("America/Lima").format('YYYY/MM/DD');
+
+        if(moment(myDate).isBefore(inicio))
+        {
+            console.log("etapa aun no inicia");
+            result={
+                message:"Etapa de Evaluación al Docente aun no ha iniciado",
+                success:false
+            };
+        }else
+        {
+            if(moment(myDate).isAfter(fin))
+            {
+                console.log('etapa de evaluación ha culminado');
+                result={
+                    message:"Etapa de Evaluación al Docente ha culminado",
+                    success:false
+                };
+            }else
+            {
+                console.log('etapa de evaluación vigente');
+                result={
+                    message:"Etapa de Evaluación al Docentese encuentra vigente",
+                    success:true
+                };
+            }
+        }
+        return result;
+   };
 
    $scope.createEvaluacion=function(){
         $scope.showLoading=true;
@@ -146,13 +193,17 @@ app.controller("EvaluacionController", function EvaluacionController(ValoracionE
                     text: 'valoracion actualizada satisfactoriamente', 
                     type: 'success',
                     layout:'bottomRight',
-                    timeout:5000,
+                    timeout:500,
             });
             
         });
    };
    $scope.list=function(){
 
+        PlantillaCriteriosService.get({id:$scope.others.etapaevaluacion.plantilla_id},function(data){
+            TipoValoracionService.get({'filter[tipo]':data.data.tiporespuesta},function(data){ 
+                $scope.others.tiposvaloracion=data.data;});
+        });
         $scope.tableParams = new ngTableParams({
         page: 1,            // show first page
         count: 10000,          // count per page

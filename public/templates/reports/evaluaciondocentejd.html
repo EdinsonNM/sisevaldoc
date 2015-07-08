@@ -9,7 +9,7 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-          <a class="navbar-brand" href="#//location.path()//">Reporte de Avance Curricular</a>
+          <a class="navbar-brand" href="#//location.path()//">Reporte de Evaluación por Docente</a>
         </div>
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-2">
           <form id="myform" class="navbar-form navbar-right" method="post" action="admin/exportexcel">
@@ -49,7 +49,7 @@
       </div>
       <div class="col-md-2">
               <label>Docente: </label>
-              <select class="form-control" ng-model="docenteSelected" ng-change="loadCursos()" ng-disabled="loadingData" >
+              <select class="form-control" ng-model="docenteSelected" ng-change="loadCursos()" ng-disabled="loadingData">
                 <option ng-repeat="docente  in docentes" value="//docente.id//">//docente.firstname+' '+docente.lastname//</option>
               </select>
 
@@ -76,76 +76,87 @@
     
     <br/>
     <div class="row">
-      <div class="col-md-12">
+      <div class="col-md-12" loading-container="showLoading" >
         <div class="alert alert-warning" ng-show="showmessage" >
           <strong>Alerta!</strong>
           //message//
         </div>
         <div id="reportTable">
           
-       <div loading-container="tableParams.settings().$loading">
-        <table class="table table-bordered">
-          <tbody>
+        
+        <table class="table table-bordered table-hover table-condensed "  >
+          <thead>
             <tr>
-              <td colspan="6" class="text-center">
-                <span class="pull-left"><img ng-src="//logo//" alt=""/  ></span>
-                <h3>Universidad Nacional de Ucayali</h3>
-                <p>Avance curricular</p>
-              </td>
-            </tr>
-            <tr>
-              <td><b>Facultad:</b></td>
-              <td>//cursoasignado.curso.escuela.facultad.name//</td>
-              <td><b>Semestre:</b></td>
-              <td>//cursoasignado.semestre.year+' - '+cursoasignado.semestre.period//</td>
-              <td><b>Condición:</b></td>
-              <td>//cursoasignado.docente.condition//</td>
-            </tr>
-            <tr>
-              <td><b>Escuela:</b></td>
-              <td>//cursoasignado.curso.escuela.name//</td>
-              <td><b>Catedrático:</b></td>
-              <td>//cursoasignado.docente.firstname+' '+cursoasignado.docente.lastname//</td>
-              <td><b>Dedicación:</b></td>
-              <td>//docente.tipo_dedicacion.name//</td>
-            </tr>
-            <tr>
-              <td colspan="6" class="text-center"><b>ASIGNATURA</b></td>
-            </tr>
-            <tr>
-              <td colspan="6" class="text-center">//cursoasignado.curso.name//</td>
-            </tr>
-            <tr>
-              <td colspan="6">
-                <table ng-table="tableParams" show-filter="false" class="table table-bordered table-striped table-hover table-condensed " style="margin: 0px 0px 0px 0px;">
-                  <tbody ng-repeat="group in $groups | orderBy:'week'">
-                    <tr class="ng-table-group">
-                      <td colspan="//$columns.length//">
-                          <a href="" ng-click="group.$hideRows = !group.$hideRows">
-                              <span class="glyphicon" ng-class="{ 'glyphicon-chevron-right': group.$hideRows, 'glyphicon-chevron-down': !group.$hideRows }"></span>
-                              <strong>Semana // group.value //</strong>
-                          </a>
-                      </td>
-                    </tr>
+              <td colspan="" rowspan="" headers="" class="text-center">
 
-                  <tr ng-hide="group.$hideRows" ng-repeat="item in group.data">
-                    <td data-title="'Avance (%)'" style="width:50px;">//item.week//</td>
-                    <td data-title="'Contenido'">//$index+1//. //item.content//</td>
-                    <td data-title="'N° Horas'"  style="width:50px;">//item.numberhours//</td>          
-                  </tr>
-                  
-                  </tbody>
-                </table>
+                <span class="pull-left"><img ng-src="//logo//" alt=""/></span>
+                <h3>Universidad Nacional de Ucayali</h3>
+              <p>Detalle de Evaluación del Docente</p>
               </td>
             </tr>
             <tr>
-              <td colspan="5">TOTAL DE HORAS:</td>
-              <td  style="width:50px;">//totalHoras//</td>
+              <td colspan="" rowspan="" headers="">
+                <div class="row">
+                  <div class="col-md-4">
+                    <label for="Docente">Docente:</label><br/>
+                //cursoasignado.docente.firstname+' '+cursoasignado.docente.lastname//
+                  </div>
+                  <div class="col-md-4">
+                    <label for="Docente">Curso:</label><br/>
+                //cursoasignado.curso.name//
+                  </div>
+                  <div class="col-md-4">
+                    <label for="Docente">Semestre:</label><br/>
+                //cursoasignado.semestre.year+' - '+cursoasignado.semestre.period//
+                  </div>
+                </div>
+                
+              </td>
+              
+            </tr>
+          </thead>
+          <tbody>
+            
+            <tr ng-repeat="item in data">
+              <td>
+                   <h6>
+                   <a  style="cursor: pointer;" ng-click="show(item)" >
+                   <span ng-if="item.icon==null" class="glyphicon glyphicon-plus"></span>
+                   <span ng-if="item.icon!=null" ng-class="item.icon"></span>
+                   //item.name//
+                   </a>
+                   
+                   </h6>
+                   <table class="table table-hover table-bordered" ng-show="item.visible">
+                    <thead>
+                      <tr>
+                        <th>Descripción</th>
+                        <th ng-repeat="valoracion in item.children[0].valoracionevaluacion" style="text-align:center;">
+                          //$index+1//
+                        </th>
+                        <th>Promedio</th>
+                      </tr>
+                    </thead>
+                  <tbody>
+                  
+                  <tr ng-repeat="criterio in item.children">
+                  <td>
+                  //$index+1//. //criterio.name//
+                  </td>
+                  <td ng-repeat="valoracion in criterio.valoracionevaluacion"   style="text-align:center;">
+                  //valoracion.tipovaloracion.value//
+                  </td>
+                  <td>
+                    //promedio(criterio.valoracionevaluacion)//
+                  </td>
+                  </tr>
+                  </tbody>
+                  </table>
+              </td>
+              
             </tr>
           </tbody>
         </table>
-      
-    </div>
         </div>    
 
       </div>

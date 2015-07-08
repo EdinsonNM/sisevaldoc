@@ -12,6 +12,11 @@
       {{ HTML::script('js/libs/underscore-min.js') }} 
       {{ HTML::script('js/libs/modernizr.custom.57796.js') }}
       {{ HTML::script('js/libs/jquery-ui-1.10.4.custom.min.js') }}
+
+      {{ HTML::script('js/libs/moment.min.js') }}
+      {{ HTML::script('js/libs/moment-timezone.min.js') }}
+      {{ HTML::script('js/libs/moment-timezone-data.js') }}
+      
         {{ HTML::style('css/normalize.css') }}
         {{ HTML::style('css/bootstrap.min.css') }}
         {{ HTML::style('css/home.css') }}

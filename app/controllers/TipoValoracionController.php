@@ -11,8 +11,9 @@ class TipoValoracionController extends \BaseController {
 	{
 		$filter=Input::get("filter");
 		$name=(!isset($filter['name']))?'':$filter['name'];
-				
+		$tipo=(!isset($filter['tipo']))?'':$filter['tipo'];
 		$entities = TipoValoracion::where('name','LIKE','%'.$name.'%')
+			->where('tipov','like',$tipo)
 			->paginate(Input::get('count'));
 	    return Response::json(
 	           $entities->toArray(),

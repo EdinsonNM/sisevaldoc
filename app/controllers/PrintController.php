@@ -16,7 +16,7 @@ class PrintController extends BaseController {
     {
         $id=Input::get('idevaluacion');
         $entity=Evaluacion::with(array('inscripcion'=>function($q){
-            return $q->with('alumno')->with(array('cursoasignado' =>function($q) {
+                return $q->with('alumno')->with(array('cursoasignado' =>function($q) {
                 return $q->with('curso')->with('docente')->with('semestre');
             }));
         }))->find($id);

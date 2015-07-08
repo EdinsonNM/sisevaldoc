@@ -29,3 +29,11 @@
       <option ng-repeat="item in others.matricescriterios" ng-value="item.id" ng-selected="item.id==entidad.plantilla_id">//item.name//</option>
     </select> 
   </div>
+  <div class="row">
+     <label for="exampleInputPassword1">Dirigido a:</label>
+    <select class="form-control" ng-model="entidad.fromquestion" required>
+      <option value="Alumno">Alumno</option>
+      <option value="Docente">Docente</option>
+      <option value="JefeDepartamento">Jefe Departamento</option>
+    </select> 
+   </div>

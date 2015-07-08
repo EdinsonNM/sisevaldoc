@@ -1,3 +1,4 @@
+
 <div class="panel panel-default">
 
   <nav class="navbar navbar-default" role="navigation">
@@ -9,16 +10,18 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-          <a class="navbar-brand" href="#//location.path()//">Reporte de Evaluación por Docente</a>
+          <a class="navbar-brand" href="#//location.path()//">Reporte de Auto-Evaluación General</a>
         </div>
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-2">
+
            <form class="navbar-form navbar-right">
+
                <button type="button" class="btn btn-info" onclick="javascript:imprSelec('printchart')">
                    <span class="glyphicon glyphicon-print"></span>
                    Imprimir
                </button>
-            <button type="button" class="btn btn-success" ng-click="list()">
-                <span class="glyphicon glyphicon-plus"></span> 
+           <button type="button" class="btn btn-success" ng-click="list()">
+                <span class="glyphicon glyphicon-plus"></span>
                 Generar
             </button>
           </form>
@@ -33,7 +36,7 @@
 
               <label>Facultad: </label>
               <select class="form-control" placeholder="Search" ng-model="facultadSelected" ng-change="loadEscuelas()">
-                
+                <option value="0" >Todas las Facultades</option>
                 <option ng-repeat="facultad  in facultades" value="//facultad.id//">//facultad.name//</option>
               </select>
 
@@ -47,14 +50,7 @@
               </select>
 
       </div>
-      <div class="col-md-2">
-              <label>Docente: </label>
-              <select class="form-control" ng-model="docenteSelected" ng-change="loadCursos()">
-                <option value="0">Todas los Docentes</option>
-                <option ng-repeat="docente  in docentes" value="//docente.id//">//docente.firstname+' '+docente.lastname//</option>
-              </select>
 
-      </div>
 
       <div class="col-md-2">
 
@@ -64,15 +60,7 @@
               </select>
 
       </div>
-      <div class="col-md-2">
 
-              <label>Curso: </label>
-              <select class="form-control" placeholder="Search" ng-model="cursoSelected">
-                <option value="0">Todas los Cursos</option>
-                <option ng-repeat="curso  in cursos" value="//curso.id//">//curso.curso.name//</option>
-              </select>
-
-      </div>
     </div>
     <br/>
     <div class="row">
@@ -87,9 +75,10 @@
           //message//
         </div>
         <br/>
-      <div class="row" id="printchart">
 
 
+    <div class="row" id="printchart">
+        <!--DATOS ESTATICOS  CABECERA GRAFICO Y TABLA-->
       <div class="col-md-12" loading-container="showLoading">
 
         <highchart id="chart1" config="chartConfig"></highchart>
@@ -97,40 +86,51 @@
 
       </div>
 
-    <div class="row" ng-show="showTable" align="center">
-      <div class="col-md-12" loading-container="showLoading">
-        <div loading-container="tableParams.settings().$loading">
-      <table ng-table="tableParams" show-filter="false" class="table table-bordered table-hover table-condensed " style="border: 1px solid #000;">
-        <tbody>
-          <tr ng-repeat="item in $data" style="border: 1px solid #000;">
-            <td style="border: 1px solid #000;">//$index//</td>
-            <td style="border: 1px solid #000;" data-title="'Criterio'">//item.name//</td>
-            <td style="border: 1px solid #000;" data-title="'Siempre'">//item.Siempre//</td>
-            <td style="border: 1px solid #000;" data-title="'Frecuente'">//item.Frecuente//</td>
-            <td style="border: 1px solid #000;" data-title="'Poco'">//item.Poco//</td>
-            <td style="border: 1px solid #000;" data-title="'Nunca'">//item.Nunca//</td>
-          </tr>
-          <tr style="border: 1px solid #000;">
-            <td style="border: 1px solid #000;"></td>
-            <td style="border: 1px solid #000;" data-title="'Criterio'"><b>TOTALES</b></td>
-            <td style="border: 1px solid #000;" data-title="'Siempre'">//totales.Siempre//</td>
-            <td style="border: 1px solid #000;" data-title="'Frecuente'">//totales.Frecuente//</td>
-            <td style="border: 1px solid #000;" data-title="'Poco'">//totales.Poco//</td>
-            <td style="border: 1px solid #000;" data-title="'Nunca'">//totales.Nunca//</td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-      </div>
-    </div>
 
-      </div>
+<div align="center">
+    <table class="table table-bordered table-hover table-condensed center"  ng-show="showTable" >
+
+          <tr align="center" style="border: 1px solid #000;">
+              <td colspan="2" rowspan="2" style="border: 1px solid #000;background-color: #17CFB6"><strong>N°</strong></td>
+              <td colspan="2" rowspan="2"style="border: 1px solid #000;background-color: #17CFB6 " ><strong>VARIABLES</strong></td>
+              <td colspan="4" style="border: 1px solid #000;background-color: #17CFB6"><strong>APRECIACIONES</strong></td>
+              <td colspan="1" rowspan="2" style="border: 1px solid #000;background-color: #17CFB6"><strong>TOTAL</strong></td>
+
+
+          </tr>
+          <tr align="center" style="border: 1px solid #000;">
+              <td colspan="1" rowspan="1" style="border: 1px solid #000;background-color: #17CFB6"><strong>SI</strong></td>
+              <td colspan="1" rowspan="1" style="border: 1px solid #000;background-color: #17CFB6"><strong>%</strong></td>
+              <td colspan="1" rowspan="1" style="border: 1px solid #000;background-color: #17CFB6"><strong>NO</strong></td>
+              <td colspan="1" rowspan="1" style="border: 1px solid #000;background-color: #17CFB6"><strong>%</strong></td>
+          </tr>
+          <tr ng-repeat="item in datatable" align="center">
+              <td colspan="2" rowspan="1" style="border: 1px solid #000;">//$index + 1//</td>
+              <td colspan="2" rowspan="1" style="border: 1px solid #000;" align="left">//item.name//</td>
+              <td colspan="1" rowspan="1" style="border: 1px solid #000;background-color: #0aadcf"><strong>//item.S//</strong></td>
+              <td colspan="1" rowspan="1" style="border: 1px solid #000;"><strong>//item.PS//</strong></td>
+              <td colspan="1" rowspan="1" style="border: 1px solid #000;background-color: #0aadcf"><strong>//item.N//</strong></td>
+              <td colspan="1" rowspan="1" style="border: 1px solid #000;"><strong>//item.PN//</strong></td>
+              <td colspan="2" rowspan="1" style="border: 1px solid #000;background-color: #0aadcf">//item.T//</td>
+
+          </tr>
+      </table>
+</div>
+
+    </div>
+      <!--FIN-->
+
+
+
+   
   </div>
+
 </div>
 <script type="text/javascript">
     function imprSelec(muestra)
     {var ficha=document.getElementById(muestra);var ventimp=window.open(' ','popimpr');ventimp.document.write(ficha.innerHTML);ventimp.document.close();ventimp.print();ventimp.close();}
 </script>
+
 <window-dir title="Nuevo Curso Asignado" window="winNew" content="templates/cursoasignado/form.html" entidad="entidad" others="others" save="save()"></window-dir>
 
 <window-dir title="//titleUpload//" window="winUpload" content="templates/asignacioncursos/upload.html" entidad="entidad" others="others" save="upload()" stylewidth="modal-lg"></window-dir>

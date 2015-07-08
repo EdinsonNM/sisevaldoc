@@ -4,7 +4,7 @@ var app = angular.module("app",['ngRoute','ngResource','ngTable','angularTree','
   $rootScope.user={};
   $http({url: './admin/usuario',method: "GET"}).success(function (data) {
             $rootScope.user=data.data;
-            
+
    });
   $http({url: './admin/type',method: "GET"}).success(function (data) {
       switch(data.type){
@@ -15,7 +15,7 @@ var app = angular.module("app",['ngRoute','ngResource','ngTable','angularTree','
               case 3:
                       break;
       }
-            
+
    });
 
   var baseLen = $location.absUrl().length - $location.url().length-6;
@@ -30,13 +30,13 @@ app.config(function($interpolateProvider, $routeProvider){
 
 	$routeProvider.when("/", {
         templateUrl : "templates/index.html"
-    }) 
-    .when('/#', { })  
+    })
+    .when('/#', { })
     .when('/facultad', {
       title:"Listado de Facultades",
       templateUrl : "templates/facultad/list.html",
       controller : "FacultadController"
-    })  
+    })
     .when('/semestre', {
       templateUrl : "templates/semestre/list.html",
      controller : "SemestreController"
@@ -88,7 +88,7 @@ app.config(function($interpolateProvider, $routeProvider){
     .when('/cursoasignado', {
       templateUrl : "templates/cursoasignado/list.html",
      controller : "CursoAsignadoController"
-    }) 
+    })
     .when('/cursoasignado/:id/autoevaluacion', {
       templateUrl : "templates/autoevaluacion/list.html",
      controller : "AutoEvaluacionController"
@@ -129,17 +129,49 @@ app.config(function($interpolateProvider, $routeProvider){
       templateUrl : "templates/reports/evaluaciondocente.html",
      controller : "EvaluacionDocenteController"
     })
+    .when('/reports/evaluaciondocentejd', {
+      templateUrl : "templates/reports/evaluaciondocentejd.html",
+     controller : "EvaluacionDocenteJdController"
+    })
+    .when('/reports/autoevaluaciondocentejd', {
+      templateUrl : "templates/reports/autoevaluaciondocentejd.html",
+     controller : "AutoEvaluacionDocenteJdController"
+    })
     .when('/reports/graphicevaluacion', {
       templateUrl : "templates/reports/graphicevaluacion.html",
      controller : "GraphicEvaluacionController"
+    })
+    .when('/reports/graphicautoevaluacion', {
+      templateUrl : "templates/reports/graphicautoevaluacion.html",
+     controller : "GraphicAutoEvaluacionController"
+    })
+    .when('/reports/graphicautoevaluacioncriterio', {
+        templateUrl : "templates/reports/graphicautoevaluacioncriterio.html",
+        controller : "GraphicAutoEvaluacionCriterioController"
+    })
+    .when('/reports/evaluacionjefedepartamento', {
+      templateUrl : "templates/reports/evaluacionjefedepartamento.html",
+      controller : "GraphicEvaluacionJefeController"
     })
     .when('/reports/cargahorariaasignada', {
       templateUrl : "templates/reports/cargahorariaasignada.html",
      controller : "CargaHorariaAsignadaController"
     })
+    .when('/reports/cargahorariaasignadajd', {
+      templateUrl : "templates/reports/cargahorariaasignadajd.html",
+     controller : "CargaHorariaAsignadaJdController"
+    })
     .when('/reports/avancecurricular', {
       templateUrl : "templates/reports/avancecurricular.html",
      controller : "AvanceCurricularController"
+    })
+    .when('/reports/avancecurricularjd', {
+      templateUrl : "templates/reports/avancecurricularjd.html",
+     controller : "AvanceCurricularJdController"
+    })
+    .when('/reports/evaluacionpromedioaldocdim', {
+      templateUrl : "templates/reports/evaluacionpromedioaldocdim.html",
+     controller : "EvaluacionPromedioAlDocDimController"
     })
      .otherwise({ redirectTo : "/"});
 });
@@ -182,7 +214,7 @@ app.directive('windowDir', function ()
           $scope.close=function(){
               console.log("close..")
               $scope.entidad={};
-              
+
               if($scope.myForm.usuario)
                 $scope.myForm.usuario.$setValidity('user',true);
           }
@@ -208,7 +240,7 @@ app.directive('user', function($http) {
                 }else{
                     ctrl.$setValidity('user', false);
                 }
-                
+
         });
         return username;
       });
@@ -240,7 +272,7 @@ app.directive('validatePassword', function($http) {
                   }else{
                       ctrl.$setValidity('validatePassword', false);
                   }
-                  
+
           });
         }else{
           ctrl.$setValidity('validatePassword', false);
@@ -267,7 +299,7 @@ app.directive('repeatPassword', function() {
         }else{
           ctrl.$setValidity('repeatPassword', false);
         }
-        
+
         return repeatpassword;
       });
     }
@@ -283,7 +315,7 @@ app.directive('repeatPassword', function() {
               console.log($(elm))
                   $(elm).datepicker({
                     dateFormat: 'yy/mm/dd'
-                  }); 
+                  });
             }
         };
 } ] )

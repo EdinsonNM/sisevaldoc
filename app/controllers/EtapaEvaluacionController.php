@@ -12,6 +12,7 @@ class EtapaEvaluacionController extends \BaseController {
 		$filter=Input::get("filter");
 		$facultad_id=(!isset($filter['facultad_id']))?'':$filter['facultad_id'];
 		$semestre_id=(!isset($filter['semestre_id']))?'':$filter['semestre_id'];
+		$from_question=(!isset($filter['fromquestion']))?'':$filter['fromquestion'];
 		if($semestre_id==''){
 			$entities = EtapaEvaluacion::with('Facultad')
 				->with('plantilla')
@@ -24,6 +25,7 @@ class EtapaEvaluacionController extends \BaseController {
 				->with('Semestre')	
 				->where('facultad_id','=',$facultad_id)
 				->where('semestre_id','=',$semestre_id)
+				->where('fromquestion','=',$from_question)
 				->paginate(Input::get('count'));
 	    }
 	    return Response::json(
@@ -59,6 +61,7 @@ class EtapaEvaluacionController extends \BaseController {
  		$entity->semestre_id=Input::get('semestre_id');
  		$entity->facultad_id=Input::get('facultad_id');
  		$entity->plantilla_id=Input::get('plantilla_id');
+ 		$entity->fromquestion=Input::get('fromquestion');
  		$entity->save();
 
         return Response::json(array(

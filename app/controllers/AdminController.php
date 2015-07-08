@@ -7,7 +7,7 @@ class AdminController extends BaseController {
         //$this->beforeFilter('auth', array('except' => 'home.index'));
         $this->beforeFilter(function()
         {
-            if (!Sentry::check())   
+            if (!Sentry::check())
                 return View::make('home.index');
         });
 
@@ -26,7 +26,7 @@ class AdminController extends BaseController {
     {
         $type = Session::get('type');
         Sentry::logout();
-        return Redirect::to('login/'.$type)->with('mensaje','¡Has cerrado sesión correctamente!.')->with('type',$type);
+        return Redirect::to('home')->with('mensaje','¡Has cerrado sesión correctamente!.')->with('type',$type);
     }
 
     public function getValidatelogin()
@@ -78,9 +78,9 @@ class AdminController extends BaseController {
 
     public function getUsuario()
     {
- 
+
         $usuario=Sentry::getUser();
-        
+
         return Response::json(array(
               'error' => false,
               'data' => $usuario->toArray()),
@@ -89,14 +89,14 @@ class AdminController extends BaseController {
     }
     public function getDocente()
     {
- 
+
         $usuario=Sentry::getUser();
         $grupos=$usuario->getGroups();
         $grupo=$grupos[0];
         $customusuario=null;
         switch($grupo->url){
             case 'administrador':
-                
+
                 break;
             case 'docente':
                 $customusuario=Docente::where('usuario_id','=',$usuario->id)->first();
@@ -110,17 +110,17 @@ class AdminController extends BaseController {
     }
     public function getAlumno()
     {
- 
+
         $usuario=Sentry::getUser();
         $grupos=$usuario->getGroups();
         $grupo=$grupos[0];
         $customusuario=null;
         switch($grupo->url){
             case 'administrador':
-                
+
                 break;
             case 'docente':
-                
+
                 break;
             case 'alumno':
                 $customusuario=Alumno::where('usuario_id','=',$usuario->id)->first();
@@ -135,7 +135,7 @@ class AdminController extends BaseController {
 
     public function getUseravailable()
     {
-        $username=Input::get("username");     
+        $username=Input::get("username");
         try
         {
             $user = Sentry::findUserByLogin($username);
@@ -158,9 +158,9 @@ class AdminController extends BaseController {
                 $menu[1]=array('title'=>"Usuarios",'url'=>'javascript:return false;','icon'=>'glyphicon glyphicon-user');
                 $menu[1]['children'][0]=array('title'=>"Docentes",'url'=>'#/docente','icon'=>'glyphicon glyphicon-user');
                 $menu[1]['children'][1]=array('title'=>"Alumnos",'url'=>'#/alumno','icon'=>'glyphicon glyphicon-user');
-                
-               
-               
+
+
+
 
                 $menu[0]=array('title'=>"Mantenimiento",'url'=>'javascript:return false;','icon'=>'glyphicon glyphicon-bookmark');
                 $menu[0]['children'][0]=array('title'=>"Grado",'url'=>'#/grado','icon'=>'glyphicon glyphicon-bookmark');
@@ -169,24 +169,29 @@ class AdminController extends BaseController {
                 $menu[0]['children'][3]=array('title'=>"Actividad",'url'=>'#/actividad','icon'=>'glyphicon glyphicon-dashboard');
 
                 $menu[2]=array('id'=>1,'title'=>"Facultades",'url'=>'#/facultad','icon'=>'glyphicon glyphicon-tower');
-                
+
                 $menu[3]=array('title'=>"Semestre",'url'=>'#/semestre','icon'=>'glyphicon glyphicon-calendar');
 
                 $menu[4]=array('title'=>"Evaluación",'url'=>'javascript:return false;','icon'=>'glyphicon glyphicon-list');
                 $menu[4]['children'][0]=array('title'=>"Criterios de Evaluación",'url'=>'#/matrizevaluacion','icon'=>'glyphicon glyphicon-list');
                 $menu[4]['children'][1]=array('title'=>"Asignación de Cursos",'url'=>'#/asignacioncursos','icon'=>'glyphicon glyphicon-book');
-                
+
                 $menu[5]=array('title'=>"Reportes",'url'=>'javascript:return false;','icon'=>'glyphicon glyphicon-book');
                 $menu[5]['children'][0]=array('title'=>"Evaluación Docente",'url'=>'#/reports/evaluaciondocente','icon'=>'');
                 $menu[5]['children'][1]=array('title'=>"Grafico Evaluación",'url'=>'#/reports/graphicevaluacion','icon'=>'');
-                $menu[5]['children'][2]=array('title'=>"Carga Horaria Asignada",'url'=>'#/reports/cargahorariaasignada','icon'=>'');
-                $menu[5]['children'][3]=array('title'=>"Avance Curricular",'url'=>'#/reports/avancecurricular','icon'=>'');
-                
-                
+                $menu[5]['children'][2]=array('title'=>"Grafico AutoEvaluación",'url'=>'#/reports/graphicautoevaluacion','icon'=>'');
+                $menu[5]['children'][3]=array('title'=>"Grafico AutoEvaluación Por Criterios",'url'=>'#/reports/graphicautoevaluacioncriterio','icon'=>'');
+                $menu[5]['children'][4]=array('title'=>"Grafico Evaluación Jefe Departamento ",'url'=>'#/reports/evaluacionjefedepartamento','icon'=>'');
+                $menu[5]['children'][5]=array('title'=>"Carga Horaria Asignada",'url'=>'#/reports/cargahorariaasignada','icon'=>'');
+                $menu[5]['children'][6]=array('title'=>"Avance Curricular",'url'=>'#/reports/avancecurricular','icon'=>'');
+
+								$menu[5]['children'][7]=array('title'=>"Evaluacion Promedio de Alumnos a los Docentes por Dimension",'url'=>'#/reports/evaluacionpromedioaldocdim','icon'=>'');
+
+
                 break;
             case 'docente':
                 $menu[0]=array('id'=>1,'title'=>"Mis Cursos",'url'=>'#/cursoasignado','icon'=>'glyphicon glyphicon-book');
-                
+
                 break;
 
             case 'alumno':
@@ -196,10 +201,13 @@ class AdminController extends BaseController {
             case 'jefedpto':
                 $menu[0]=array('title'=>"Evaluación de Cursos",'url'=>'#/evaluaciondocentes','icon'=>'glyphicon glyphicon-book');
                 $menu[1]=array('title'=>"Reportes",'url'=>'javascript:return false;','icon'=>'glyphicon glyphicon-book');
-                $menu[1]['children'][0]=array('title'=>"Evaluación Docente",'url'=>'#/reports/evaluaciondocente','icon'=>'glyphicon glyphicon-bookmark');
+                $menu[1]['children'][0]=array('title'=>"Evaluación Docente",'url'=>'#/reports/evaluaciondocentejd','icon'=>'glyphicon glyphicon-bookmark');
+                $menu[1]['children'][1]=array('title'=>"Auto Evaluación Docente",'url'=>'#/reports/autoevaluaciondocentejd','icon'=>'glyphicon glyphicon-bookmark');
+                $menu[1]['children'][2]=array('title'=>"Avance Curricular",'url'=>'#/reports/avancecurricularjd','icon'=>'');
+                $menu[1]['children'][3]=array('title'=>"Carga Horaria Asignada",'url'=>'#/reports/cargahorariaasignadajd','icon'=>'');
                 break;
         }
-        
+
         return Response::json(array(
               'error' => false,
               'data' => $menu),
@@ -209,7 +217,7 @@ class AdminController extends BaseController {
 
     public function getType()
     {
- 
+
         $usuario=Sentry::getUser();
         $type = Session::get('type');
         $customusuario=null;
@@ -218,7 +226,7 @@ class AdminController extends BaseController {
             $customusuario=new Docente();
             break;
             case 'alumno':
-                $customusuario=Alumno::where('usuario_id','=',$usuario->id) 
+                $customusuario=Alumno::where('usuario_id','=',$usuario->id)
                     ->with(array('escuela' =>function($q){
                         return $q->with('facultad');
                     } ))

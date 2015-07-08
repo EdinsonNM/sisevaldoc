@@ -26,45 +26,94 @@ app.controller("AutoEvaluacionController", function AutoEvaluacionController(Val
             EtapaEvaluacionService.get(
                 {
                     'filter[semestre_id]':$scope.others.cursoasignado.semestre.id,
-                    'filter[facultad_id]':$scope.others.escuela.facultad_id
+                    'filter[facultad_id]':$scope.others.escuela.facultad_id,
+                    'filter[fromquestion]':'Docente'
                 },
                 function(data){
-                    if(data.total>0){
-                        $scope.others.etapaevaluacion=data.data[0];
-                        //Obtengo la autoevaluacion de docente para el curso asignado
-                        AutoEvaluacionService.get({cursoasignado_id:$routeParams.id},function(data){
-                            if(data.total>0){
-                                $scope.existeautoevaluacion=true;
-                                $scope.entidad=data.data[0];
-                                $scope.showEvaluacion=true;
-                                $scope.list();
-                                if($scope.entidad.finalizado=='1'){
-                                    $scope.disabledEdition=true;
-                                    $scope.finalizado=true;
-                                }
+                    
+                        if(data.total>0){
+                            $scope.others.etapaevaluacion=data.data[0];
+                            var result=$scope.ValidateEtapa($scope.others.etapaevaluacion);
+                            if(result.success){
+                                
+                                //Obtengo la autoevaluacion de docente para el curso asignado
+                                AutoEvaluacionService.get({cursoasignado_id:$routeParams.id},function(data){
+                                    if(data.total>0){
+                                        $scope.existeautoevaluacion=true;
+                                        $scope.entidad=data.data[0];
+                                        $scope.showEvaluacion=true;
+                                        $scope.list();
+                                        if($scope.entidad.finalizado=='1'){
+                                            $scope.disabledEdition=true;
+                                            $scope.finalizado=true;
+                                        }
+                                    }else{
+                                         $scope.msg_title="No existe Autoevaluación";
+                                         $scope.showNoExisteEvaluacion=true;
+                                         $scope.showMsg=true;
+                                         $scope.showEvaluacion=false;
+                                         
+                                    }
+                                    $scope.showLoading=false;
+                               });
                             }else{
-                                 $scope.msg_title="No existe Autoevaluación";
-                                 $scope.showNoExisteEvaluacion=true;
-                                 $scope.showMsg=true;
-                                 $scope.showEvaluacion=false;
-                                 
+                                console.log(result);
+                                $scope.msg_title="Error Periodo de Evaluación";
+                                $scope.messageOtherError=result.message;
+                                $scope.showOtherError=true;
+                                $scope.showMsg=true;
+                                $scope.showEvaluacion=false;
+                                $scope.showLoading=false;
                             }
+                        }else{
+                            $scope.msg_title=" No existe Etapa de Evaluación";
+                            $scope.showNoExisteEtapaEvaluacion=true;
+                            $scope.showMsg=true;
+                            $scope.showEvaluacion=false;
                             $scope.showLoading=false;
-                       });
-                    }else{
-                        $scope.msg_title=" No existe Etapa de Evaluación";
-                        $scope.showNoExisteEtapaEvaluacion=true;
-                        $scope.showMsg=true;
-                        $scope.showEvaluacion=false;
-                        $scope.showLoading=false;
-                    }
+                        }
+                    
             });
         });
    });
    
    
-   TipoValoracionService.get({},function(data){ $scope.others.tiposvaloracion=data.data;});
+   
    var ENTITYNAME='criterioevaluacion';
+   
+   $scope.ValidateEtapa=function(etapa){
+    var result={},
+        inicio=moment(etapa.date_init).tz("America/Lima").format('YYYY/MM/DD'),
+        fin=moment(etapa.date_end).tz("America/Lima").format('YYYY/MM/DD'),
+        myDate=moment().tz("America/Lima").format('YYYY/MM/DD');
+
+        if(moment(myDate).isBefore(inicio))
+        {
+            console.log("etapa aun no inicia");
+            result={
+                message:"Etapa de Autoevaluación aun no ha iniciado",
+                success:false
+            };
+        }else
+        {
+            if(moment(myDate).isAfter(fin))
+            {
+                console.log('etapa de evaluación ha culminado');
+                result={
+                    message:"Etapa de Autoevaluación ha culminado",
+                    success:false
+                };
+            }else
+            {
+                console.log('etapa de evaluación vigente');
+                result={
+                    message:"Etapa de Autoevaluación se encuentra vigente",
+                    success:true
+                };
+            }
+        }
+        return result;
+   };
 
    $scope.createAutoevaluacion=function(){
         $scope.showLoading=true;
@@ -128,6 +177,7 @@ app.controller("AutoEvaluacionController", function AutoEvaluacionController(Val
    };
    $scope.validateForm=function(){
         $scope.formInvalid=false;
+        
         var invalid=false;
         $.each($scope.dataCriterios, function(index, element){
             $.each(this.children, function(index, element){
@@ -140,6 +190,7 @@ app.controller("AutoEvaluacionController", function AutoEvaluacionController(Val
    };
 
    $scope.SaveValoracion=function(criterio){
+        $scope.validateForm();
         console.log(criterio);
         var valoracion={
             tipovaloracion_id: criterio.valoracion.id,
@@ -159,6 +210,11 @@ app.controller("AutoEvaluacionController", function AutoEvaluacionController(Val
         });
    };
    $scope.list=function(){
+        PlantillaCriteriosService.get({id:$scope.others.etapaevaluacion.plantilla_id},function(data){
+            TipoValoracionService.get({'filter[tipo]':data.data.tiporespuesta},function(data){ 
+                $scope.others.tiposvaloracion=data.data;});
+        });
+        
 
         $scope.tableParams = new ngTableParams({
         page: 1,            // show first page

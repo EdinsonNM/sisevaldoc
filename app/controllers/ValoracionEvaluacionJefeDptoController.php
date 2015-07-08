@@ -12,6 +12,17 @@ class ValoracionEvaluacionJefeDptoController extends \BaseController {
 		$filter=Input::get("filter");
 		$plantilla_id=(!isset($filter['plantilla_id']))?'':$filter['plantilla_id'];
 		$evaluacionjefedpto_id=(!isset($filter['evaluacionjefedpto_id']))?'':$filter['evaluacionjefedpto_id'];
+		
+		$plantillacriterios=PlantillaCriterios::select('plantillacriterios.id')
+				    ->whereRaw("plantillacriterios.tipo='EvaluacionJefe'")
+			        ->where('plantillacriterios.id','=',$plantilla_id)
+			        ->get();
+			       
+        $ids = array();   
+        foreach ($plantillacriterios as $plantillacriterio) {
+            $ids[]=$plantillacriterio->id;
+        }
+
 		$entities=CriterioEvaluacion::with(array('children'=>function($q)  use ($evaluacionjefedpto_id){
 				$q->with(array('valoracionevaluacionjefedpto' => function($q)  use ($evaluacionjefedpto_id)
 					{
@@ -19,15 +30,14 @@ class ValoracionEvaluacionJefeDptoController extends \BaseController {
 
 					}));
 			}))
-			
+
 			->with(array('valoracionevaluacionjefedpto' => function($q) use ($evaluacionjefedpto_id)
 			{
 			    $q->where('evaluacionjefedpto_id','=',$evaluacionjefedpto_id);
 
 			}))
-			
-			//->with('autoevaluacion')
-			->where('plantilla_id','=',$plantilla_id)
+
+			->whereIn('plantilla_id',$ids)
 			->where("grupo",'=',1)
 			->paginate(Input::get('count'));
 		return Response::json(

@@ -34,7 +34,7 @@
       <div class="col-md-3">
 
               <label>Facultad: </label>
-              <select class="form-control" placeholder="Search" ng-model="facultadSelected" ng-change="loadEscuelas()" >
+              <select class="form-control" placeholder="Search" ng-model="facultadSelected" ng-change="loadEscuelas()">
                 <option ng-repeat="facultad  in facultades" value="//facultad.id//">//facultad.name//</option>
               </select>
 
@@ -49,7 +49,7 @@
       </div>
       <div class="col-md-2">
               <label>Docente: </label>
-              <select class="form-control" ng-model="docenteSelected" ng-change="loadCursos()" ng-disabled="loadingData" >
+              <select class="form-control" ng-model="docenteSelected" ng-change="loadCursos()" ng-disabled="loadingData">
                 <option ng-repeat="docente  in docentes" value="//docente.id//">//docente.firstname+' '+docente.lastname//</option>
               </select>
 

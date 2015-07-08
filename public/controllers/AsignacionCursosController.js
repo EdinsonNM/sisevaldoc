@@ -106,11 +106,13 @@ app.controller("AsignacionCursosController", function AsignacionCursosController
         $scope.others.data.reload();
    };
 //END UPLOAD
+    $scope.loadingData=true;
     FacultadService.get({},function(data){
                $scope.facultades=data.data; 
                $scope.others.facultades=data.data;
                if(data.total>0)
                 $scope.facultadSelected=data.data[0].id;
+                $scope.loadingData=false;
                $scope.loadEscuelas();
     });
     $http({url: './admin/type',method: "GET"}).success(function (data) {
@@ -137,20 +139,25 @@ app.controller("AsignacionCursosController", function AsignacionCursosController
     
     $scope.loadEscuelas=function(){
         $scope.escuelaSelected=-1;
+        $scope.loadingData=true;
         EscuelaService.get({'filter[facultad_id]':$scope.facultadSelected},function(data){
                $scope.escuelas=data.data; 
                if(data.total>0)
                 $scope.escuelaSelected=data.data[0].id;
+               $scope.loadingData=false;
                $scope.loadDocentes();
+
         });
     }
 
     $scope.loadDocentes=function(){
         $scope.docenteSelected=-1;
+        $scope.loadingData=true;
         DocenteService.get({'filter[escuela_id]':$scope.escuelaSelected},function(data){
             $scope.docentes=data.data;
             if(data.total>0){
                 $scope.docenteSelected=data.data[0].id;
+                $scope.loadingData=false;
                 $scope.loadDocente();
             }
         });

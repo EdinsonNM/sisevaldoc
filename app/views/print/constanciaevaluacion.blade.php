@@ -28,6 +28,14 @@
 	<br/>
 	<div class="row">
 		<div class="col-md-2 col-md-offset-1">
+			<label>NUMERO (ID):</label>
+		</div>
+		<div class="col-md-6">
+			{{ $entity->inscripcion->alumno_id}} - {{ $entity->inscripcion->cursoasignado->id}} 
+		</div>
+	</div>	
+	<div class="row">
+		<div class="col-md-2 col-md-offset-1">
 			<label>SEMESTRE:</label>
 		</div>
 		<div class="col-md-6">
@@ -65,7 +73,7 @@
 	<br/>
 	<div class="row">
 		<div class="col-md-12 text-center">
-			<strong>UD. A EVALUADO A SU DOCENTE SATISFACTORIAMENTE.</strong>
+			<strong>UD. HA EVALUADO A SU DOCENTE SATISFACTORIAMENTE.</strong>
 		</div>
 	</div>	
 	<br/>
