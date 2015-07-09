@@ -93,3 +93,36 @@ BEGIN
     END$$
 
 DELIMITER ;
+
+
+
+
+//Report eval jefe
+
+DELIMITER $$
+
+USE `user40`$$
+
+DROP PROCEDURE IF EXISTS `Reporte_Eval_Jefe`$$
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `Reporte_Eval_Jefe`(IN vidSemestre INT, IN vidPlantilla INT, IN vidJefe INT)
+BEGIN
+	SELECT
+	vej.id, vej.`evaluacionjefedpto_id`, vej.`criterioevaluacion_id`, vej.`tipovaloracion_id`,
+	d.id AS docente_id, ej.`docente_id` AS evaluador, GROUP_CONCAT(tv.`value`) AS valores,
+	SUM(IF(tv.`value` = 5, 1, 0)) AS suma5,
+	SUM(IF(tv.`value` = 4, 1, 0)) AS suma4,
+	SUM(IF(tv.`value` = 3, 1, 0)) AS suma3,
+	SUM(IF(tv.`value` = 2, 1, 0)) AS suma2,
+	SUM(IF(tv.`value` = 1, 1, 0)) AS suma1
+	FROM valoracionevaluacionjefedpto vej
+	INNER JOIN criterioevaluacion ce ON vej.`criterioevaluacion_id`=ce.`id`
+	INNER JOIN tipovaloracion tv ON vej.`tipovaloracion_id`=tv.id
+	INNER JOIN evaluacionjefedpto ej ON vej.`evaluacionjefedpto_id`=ej.`id`
+	INNER JOIN cursoasignado ca ON ej.`cursoasignado_id`=ca.`id`
+	INNER JOIN docente d ON ca.`docente_id`=d.id
+	WHERE ce.`plantilla_id`=vidPlantilla AND ej.`docente_id`=vidJefe AND ca.`semestre_id`=vidSemestre
+	GROUP BY d.id;
+    END$$
+
+DELIMITER ;

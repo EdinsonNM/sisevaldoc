@@ -1137,9 +1137,9 @@ app.controller("GraphicEvaluacionJefeController",function($log, CriterioEvaluaci
 
 														$.each($scope.datatable, function(idx, el){
 															var arr = el.valores.split(',');
-															el.arr_valores = arr;
+															el.arr_valores = arr;															
 														});
-														
+
                             var plaza=[];
                             var puntaje={name:'Puntaje Obtenido','data':[],color:'#2f7ed8',dataLabels: { enabled: true}};
 

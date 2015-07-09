@@ -100,7 +100,7 @@
                           <td colspan="6" rowspan="1" style="border: 1px solid #000;" align="left"></td>
                           <td colspan="1" rowspan="1" style="border: 1px solid #000;"><strong>//item.docente_id + 'CS'//</strong></td>
 
-                          <td ng-repeat="valor in item.arr_valores" colspan="1" rowspan="1" style="border: 1px solid #000;"><strong>//valor//</strong></td>
+                          <td ng-repeat="valor in item.arr_valores track by $index" colspan="1" rowspan="1" style="border: 1px solid #000;"><strong>//valor//</strong></td>
 
                           <td colspan="1" rowspan="1" style="border: 1px solid #000;background-color: #17CFB6"><strong>//item.suma5//</strong></td>
                           <td colspan="1" rowspan="1" style="border: 1px solid #000;"><strong>//item.suma4//</strong></td>
