@@ -933,7 +933,7 @@ app.controller("GraphicAutoEvaluacionController",function($log,EtapaEvaluacionSe
 
 });
 
-app.controller("GraphicEvaluacionJefeController",function($log,EtapaEvaluacionService,CursoAsignadoService,SemestreService,FacultadService,EscuelaService,DocenteService,$scope,$timeout,$routeParams,$http,$resource,ngTableParams){
+app.controller("GraphicEvaluacionJefeController",function($log, CriterioEvaluacionService, EtapaEvaluacionService,CursoAsignadoService,SemestreService,FacultadService,EscuelaService,DocenteService,$scope,$timeout,$routeParams,$http,$resource,ngTableParams){
     $scope.facultadSelected=0;
     $scope.escuelaSelected=0;
     $scope.docenteSelected=0;
@@ -945,6 +945,7 @@ app.controller("GraphicEvaluacionJefeController",function($log,EtapaEvaluacionSe
     $scope.chartSeries=[];
     $scope.categories=[];
     $scope.showTable=false;
+		$scope.escuela = "";
 
     $scope.chartConfig = {
         "options": {
@@ -985,6 +986,19 @@ app.controller("GraphicEvaluacionJefeController",function($log,EtapaEvaluacionSe
 
     };
 
+		$scope.criteriosevaluacion = [];
+		$scope.criteriosevaluacionpadres = [];
+		CriterioEvaluacionService.get({
+			'filter[plantilla_id]': 2
+		},function(data){
+			angular.forEach(data.data, function(item){
+				$scope.criteriosevaluacionpadres.push(item);
+				angular.forEach(item.children, function(item2){
+					$scope.criteriosevaluacion.push(item2);
+				});
+			});
+		});
+
     FacultadService.get({},function(data){
         $scope.facultades=data.data;
         if(data.total>0)
@@ -1005,7 +1019,6 @@ app.controller("GraphicEvaluacionJefeController",function($log,EtapaEvaluacionSe
         if($scope.facultadSelected>0){
             EscuelaService.get({'filter[facultad_id]':$scope.facultadSelected},function(data){
                 $scope.escuelas=data.data;
-
                 $scope.loadDocentes();
             });
         }else{
@@ -1022,7 +1035,7 @@ app.controller("GraphicEvaluacionJefeController",function($log,EtapaEvaluacionSe
 
 
             $http({
-                url: './reports/docentessemestre',
+                url: './docente/methods/jefes-dpto',
                 method: "GET",
                 params:{
                     facultad_id:$scope.facultadSelected,
@@ -1120,27 +1133,20 @@ app.controller("GraphicEvaluacionJefeController",function($log,EtapaEvaluacionSe
                             method: "GET",
                             params:params
                         }).success(function (data) {
-
-                            console.log(params);
                             $scope.datatable=data;
 
+														$.each($scope.datatable, function(idx, el){
+															var arr = el.valores.split(',');
+															el.arr_valores = arr;
+														});
+														
                             var plaza=[];
                             var puntaje={name:'Puntaje Obtenido','data':[],color:'#2f7ed8',dataLabels: { enabled: true}};
 
-
-                            $.each(data,function(index,element){
-
-                                //cargamos el array con los 5 valores
-                                var valores = [];
-                                valores.push(this.cinco);
-                                valores.push(this.cuatro);
-                                valores.push(this.tres);
-                                valores.push(this.dos);
-                                valores.push(this.uno);
-
+                            $.each(data,function(index, el){
+                                var valores = [el.suma5, el.suma4, el.suma3, el.suma2, el.suma1];
                                 //utilizamos la funcion especial de math para hallar el valor maximo del array
                                 var max=Math.max.apply(null, valores);
-
                                 puntaje.data.push(parseInt(max));
                                 plaza.push(this.docente_id + 'CS');
 

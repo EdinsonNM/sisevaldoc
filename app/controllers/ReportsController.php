@@ -51,6 +51,7 @@ class ReportsController extends BaseController {
               201
         );
     }
+
     public function getEvaluaciondocente()
     {
         $criterio_id=Input::get("criterio_id", '');
@@ -187,7 +188,7 @@ class ReportsController extends BaseController {
 
     }
 
-    public function getEvaluacionjefedepartamento()
+    public function getEvaluacionjefedepartamento2()
     {
 
         $facultad_id =Input::get('facultad_id');
@@ -208,10 +209,22 @@ class ReportsController extends BaseController {
 
             $data[]=$criterio;
         }
-//dd($data);
         return Response::json($data, 201);
-
     }
+
+		public function getEvaluacionjefedepartamento(){
+			$facultad_id =Input::get('facultad_id');
+			$semestre_id =Input::get('semestre_id');
+			$docente_id =Input::get('docente_id');//Docente evaluador (Jefe Departamento)
+
+			$etapaEvaluacion = EtapaEvaluacion::where('semestre_id', '=', $semestre_id)
+				->where('facultad_id', '=', $facultad_id)
+				->where('fromquestion', '=', 'JefeDepartamento')
+				->first();
+
+			$data = DB::select('call Reporte_Eval_Jefe(' . $semestre_id . ',' . $etapaEvaluacion->plantilla_id . ',' . $docente_id . ')');
+			return Response::json($data, 201);
+		}
 
     public function getCriterios()
     {

@@ -68,84 +68,47 @@
         </div>
         <br/>
         <br/>
-        
+
 
         <div class="row">
             <div class="col-md-12">
               <div align="center">
-                  <table class="table table-bordered table-hover table-condensed center"  ng-show="showTable" >
-
+                  <table class="table table-bordered table-hover table-condensed center"  >
+                    <thead>
                       <tr align="center" style="border: 1px solid #000;">
-                          <td colspan="30" style="border: 1px solid #000;background-color: #17CFB6"><strong>EVALUACION DOCENTE POR EL JEFE DE DEPARTAMENTO</strong></td>
-                          <td colspan="5" style="border: 1px solid #000;background-color: #17CFB6"><strong>PUNTAJES OBTENIDOS</strong></td>
+                          <th colspan="30" style="border: 1px solid #000;background-color: #17CFB6"><strong>EVALUACION DOCENTE POR EL JEFE DE DEPARTAMENTO</strong></th>
+                          <th colspan="5" style="border: 1px solid #000;background-color: #17CFB6"><strong>PUNTAJES OBTENIDOS</strong></th>
                       </tr>
                       <tr align="center" style="border: 1px solid #000;">
-                          <td colspan="1" rowspan="1" style="border: 1px solid #000;background-color: #17CFB6"><strong>N° Plazas</strong></td>
-                          <td colspan="6" rowspan="1" style="border: 1px solid #000;background-color: #17CFB6"><strong>Especialidad</strong></td>
-                          <td colspan="1" rowspan="1" style="border: 1px solid #000;background-color: #17CFB6"><strong>Cod Plaza</strong></td>
-                          <td colspan="1" rowspan="1" style="border: 1px solid #000;background-color: #17CFB6"><strong>P1</strong></td>
-                          <td colspan="1" rowspan="1" style="border: 1px solid #000;background-color: #17CFB6"><strong>P2</strong></td>
-                          <td colspan="1" rowspan="1" style="border: 1px solid #000;background-color: #17CFB6"><strong>P3</strong></td>
-                          <td colspan="1" rowspan="1" style="border: 1px solid #000;background-color: #17CFB6"><strong>P4</strong></td>
-                          <td colspan="1" rowspan="1" style="border: 1px solid #000;background-color: #17CFB6"><strong>P5</strong></td>
-                          <td colspan="1" rowspan="1" style="border: 1px solid #000;background-color: #17CFB6"><strong>P6</strong></td>
-                          <td colspan="1" rowspan="1" style="border: 1px solid #000;background-color: #17CFB6"><strong>P7</strong></td>
-                          <td colspan="1" rowspan="1" style="border: 1px solid #000;background-color: #17CFB6"><strong>P8</strong></td>
-                          <td colspan="1" rowspan="1" style="border: 1px solid #000;background-color: #17CFB6"><strong>P9</strong></td>
-                          <td colspan="1" rowspan="1" style="border: 1px solid #000;background-color: #17CFB6"><strong>P10</strong></td>
-                          <td colspan="1" rowspan="1" style="border: 1px solid #000;background-color: #17CFB6"><strong>P11</strong></td>
-                          <td colspan="1" rowspan="1" style="border: 1px solid #000;background-color: #17CFB6"><strong>P12</strong></td>
-                          <td colspan="1" rowspan="1" style="border: 1px solid #000;background-color: #17CFB6"><strong>P13</strong></td>
-                          <td colspan="1" rowspan="1" style="border: 1px solid #000;background-color: #17CFB6"><strong>P14</strong></td>
-                          <td colspan="1" rowspan="1" style="border: 1px solid #000;background-color: #17CFB6"><strong>P15</strong></td>
-                          <td colspan="1" rowspan="1" style="border: 1px solid #000;background-color: #17CFB6"><strong>P16</strong></td>
-                          <td colspan="1" rowspan="1" style="border: 1px solid #000;background-color: #17CFB6"><strong>P17</strong></td>
-                          <td colspan="1" rowspan="1" style="border: 1px solid #000;background-color: #17CFB6"><strong>P18</strong></td>
-                          <td colspan="1" rowspan="1" style="border: 1px solid #000;background-color: #17CFB6"><strong>P19</strong></td>
-                          <td colspan="1" rowspan="1" style="border: 1px solid #000;background-color: #17CFB6"><strong>P20</strong></td>
-                          <td colspan="1" rowspan="1" style="border: 1px solid #000;background-color: #17CFB6"><strong>P21</strong></td>
-                          <td colspan="1" rowspan="1" style="border: 1px solid #000;background-color: #17CFB6"><strong>P22</strong></td>
+                          <th colspan="1" rowspan="1" style="border: 1px solid #000;background-color: #17CFB6"><strong>N° Plazas</strong></th>
+                          <th colspan="6" rowspan="1" style="border: 1px solid #000;background-color: #17CFB6"><strong>Especialidad</strong></th>
+                          <th colspan="1" rowspan="1" style="border: 1px solid #000;background-color: #17CFB6"><strong>Cod Plaza</strong></th>
 
-                          <td colspan="1" rowspan="1" style="border: 1px solid #000;background-color: #17CFB6"><strong>PJE 5 =Siempre</strong></td>
-                          <td colspan="1" rowspan="1" style="border: 1px solid #000;background-color: #17CFB6"><strong>PJE 4 =Casi siempre</strong></td>
-                          <td colspan="1" rowspan="1" style="border: 1px solid #000;background-color: #17CFB6"><strong>PJE 3 =Algunas veces</strong></td>
-                          <td colspan="1" rowspan="1" style="border: 1px solid #000;background-color: #17CFB6"><strong>PJE 2 =Raras veces</strong></td>
-                          <td colspan="1" rowspan="1" style="border: 1px solid #000;background-color: #17CFB6"><strong>PJE 1 =Nunca</strong></td>
+                          <th ng-repeat="criterio in criteriosevaluacion" colspan="1" rowspan="1" style="border: 1px solid #000;background-color: #17CFB6"><strong><abbr title="////">P//$index+1//</abbr></strong></th>
+
+                          <th colspan="1" rowspan="1" style="border: 1px solid #000;background-color: #17CFB6"><strong>PJE 5<br/><small>Siempre <br/>&nbsp;</small></strong></th>
+                          <th colspan="1" rowspan="1" style="border: 1px solid #000;background-color: #17CFB6"><strong>PJE 4<br/><small>Casi <br/>siempre</small></strong></th>
+                          <th colspan="1" rowspan="1" style="border: 1px solid #000;background-color: #17CFB6"><strong>PJE 3<br/><small>Algunas <br/>veces</small></strong></th>
+                          <th colspan="1" rowspan="1" style="border: 1px solid #000;background-color: #17CFB6"><strong>PJE 2<br/><small>Raras <br/>veces</small></strong></th>
+                          <th colspan="1" rowspan="1" style="border: 1px solid #000;background-color: #17CFB6"><strong>PJE 1<br/><small>Nunca <br/>&nbsp;</small></strong></th>
                       </tr>
+                    </thead>
 
+                    <tbody>
                       <tr ng-repeat="item in datatable" align="center">
                           <td colspan="1" rowspan="1" style="border: 1px solid #000;">//$index + 1//</td>
-                          <td colspan="6" rowspan="1" style="border: 1px solid #000;" align="left">//item.escuela//</td>
+                          <td colspan="6" rowspan="1" style="border: 1px solid #000;" align="left"></td>
                           <td colspan="1" rowspan="1" style="border: 1px solid #000;"><strong>//item.docente_id + 'CS'//</strong></td>
-                          <td colspan="1" rowspan="1" style="border: 1px solid #000;"><strong>//item.P1//</strong></td>
-                          <td colspan="1" rowspan="1" style="border: 1px solid #000;"><strong>//item.P2//</strong></td>
-                          <td colspan="1" rowspan="1" style="border: 1px solid #000;"><strong>//item.P3//</strong></td>
-                          <td colspan="1" rowspan="1" style="border: 1px solid #000;"><strong>//item.P4//</strong></td>
-                          <td colspan="1" rowspan="1" style="border: 1px solid #000;"><strong>//item.P5//</strong></td>
-                          <td colspan="1" rowspan="1" style="border: 1px solid #000;"><strong>//item.P6//</strong></td>
-                          <td colspan="1" rowspan="1" style="border: 1px solid #000;"><strong>//item.P7//</strong></td>
-                          <td colspan="1" rowspan="1" style="border: 1px solid #000;"><strong>//item.P8//</strong></td>
-                          <td colspan="1" rowspan="1" style="border: 1px solid #000;"><strong>//item.P9//</strong></td>
-                          <td colspan="1" rowspan="1" style="border: 1px solid #000;"><strong>//item.P10//</strong></td>
-                          <td colspan="1" rowspan="1" style="border: 1px solid #000;"><strong>//item.P11//</strong></td>
-                          <td colspan="1" rowspan="1" style="border: 1px solid #000;"><strong>//item.P12//</strong></td>
-                          <td colspan="1" rowspan="1" style="border: 1px solid #000;"><strong>//item.P13//</strong></td>
-                          <td colspan="1" rowspan="1" style="border: 1px solid #000;"><strong>//item.P14//</strong></td>
-                          <td colspan="1" rowspan="1" style="border: 1px solid #000;"><strong>//item.P15//</strong></td>
-                          <td colspan="1" rowspan="1" style="border: 1px solid #000;"><strong>//item.P16//</strong></td>
-                          <td colspan="1" rowspan="1" style="border: 1px solid #000;"><strong>//item.P17//</strong></td>
-                          <td colspan="1" rowspan="1" style="border: 1px solid #000;"><strong>//item.P18//</strong></td>
-                          <td colspan="1" rowspan="1" style="border: 1px solid #000;"><strong>//item.P19//</strong></td>
-                          <td colspan="1" rowspan="1" style="border: 1px solid #000;"><strong>//item.P20//</strong></td>
-                          <td colspan="1" rowspan="1" style="border: 1px solid #000;"><strong>//item.P21//</strong></td>
-                          <td colspan="1" rowspan="1" style="border: 1px solid #000;"><strong>//item.P22//</strong></td>
 
-                          <td colspan="1" rowspan="1" style="border: 1px solid #000;background-color: #17CFB6"><strong>//item.cinco//</strong></td>
-                          <td colspan="1" rowspan="1" style="border: 1px solid #000;"><strong>//item.cuatro//</strong></td>
-                          <td colspan="1" rowspan="1" style="border: 1px solid #000;"><strong>//item.tres//</strong></td>
-                          <td colspan="1" rowspan="1" style="border: 1px solid #000;"><strong>//item.dos//</strong></td>
-                          <td colspan="1" rowspan="1" style="border: 1px solid #000;"><strong>//item.uno//</strong></td>
+                          <td ng-repeat="valor in item.arr_valores" colspan="1" rowspan="1" style="border: 1px solid #000;"><strong>//valor//</strong></td>
+
+                          <td colspan="1" rowspan="1" style="border: 1px solid #000;background-color: #17CFB6"><strong>//item.suma5//</strong></td>
+                          <td colspan="1" rowspan="1" style="border: 1px solid #000;"><strong>//item.suma4//</strong></td>
+                          <td colspan="1" rowspan="1" style="border: 1px solid #000;"><strong>//item.suma3//</strong></td>
+                          <td colspan="1" rowspan="1" style="border: 1px solid #000;"><strong>//item.suma2//</strong></td>
+                          <td colspan="1" rowspan="1" style="border: 1px solid #000;"><strong>//item.suma1//</strong></td>
                       </tr>
+                    </tbody>
                   </table>
               </div>
             </div>
