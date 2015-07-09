@@ -15,23 +15,18 @@ class AlumnoController extends \BaseController {
 		$lastname=(!isset($filter['lastname']))?'':$filter['lastname'];
 		$yearinput=(!isset($filter['yearinput']))?'':$filter['yearinput'];
 		$escuela_id=(!isset($filter['escuela_id']))?0:$filter['escuela_id'];
-		
+
 		$entities = Alumno::with('Usuario')
 		->with('Escuela')
 		->where('firstname','LIKE','%'.$firstname.'%')
 		->where('code','LIKE','%'.$code.'%')
 		->where('lastname','LIKE','%'.$lastname.'%')
-		->where(function ($query) use($yearinput){
-			if($yearinput!='')
-		    	return $query->where('yearinput', '=', $yearinput);
-		    else
-		    	return $query;
-		})
-		->where(function ($query) use($escuela_id){
-			if($escuela_id!=0)
-		    	return $query->where('escuela_id', '=', $escuela_id);
-		    else
-		    	return $query;
+		->where(function ($query) use($yearinput,$escuela_id){
+				if($yearinput!='')
+			    	$query=$query->where('yearinput', '=', $yearinput);
+				if($escuela_id!=0)
+			    	$query=$query->where('escuela_id', '=', $escuela_id);
+		    return $query;
 		})
 		->paginate(Input::get('count'));
 	    return Response::json(
@@ -66,7 +61,7 @@ class AlumnoController extends \BaseController {
  		$entity->escuela_id=Input::get('escuela_id');
  		$entity->yearinput=Input::get('yearinput');
 
- 		
+
 	$user = Sentry::createUser(array(
         'username'     => $entity->code,
         'first_name'=>$entity->firstname,
@@ -104,7 +99,7 @@ class AlumnoController extends \BaseController {
 	          'success' => true,
 	          'data' => $entity->toArray()
 	          ),
-	          
+
 	          201
 	     );
 	}
