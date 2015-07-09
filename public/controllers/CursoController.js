@@ -1,5 +1,5 @@
-app.controller("CursoController", function CursoController($fileUploader,FacultadService,EscuelaService,$scope,$routeParams,$timeout,$http,$location,$resource,$route,ngTableParams){   
-    
+app.controller("CursoController", function CursoController($fileUploader,FacultadService,EscuelaService,$scope,$routeParams,$timeout,$http,$location,$resource,$route,ngTableParams){
+
     $scope.others={};
     $scope.entidad={};
     var ENTITYNAME='curso';
@@ -14,7 +14,7 @@ app.controller("CursoController", function CursoController($fileUploader,Faculta
         page: 1,            // show first page
         count: 10,          // count per page
         filter:{
-            
+
         },
         sorting: {
             name: 'asc'     // initial sorting
@@ -66,7 +66,7 @@ app.controller("CursoController", function CursoController($fileUploader,Faculta
         page: 1,            // show first page
         count: 10,          // count per page
         filter:{
-            
+
         },
         sorting: {
             name: 'asc'     // initial sorting
@@ -89,7 +89,7 @@ app.controller("CursoController", function CursoController($fileUploader,Faculta
             url: './import/cursosave',
             method: "POST",
             data: $scope.dataUpload.data,
-            
+
         }).success(function (data) {
             var n = noty({
                     text: 'data cargada satisfactoriamente',
@@ -97,11 +97,11 @@ app.controller("CursoController", function CursoController($fileUploader,Faculta
                     modal:false,
                     timeout:5000,
                     layout: 'bottomRight',
-                    theme: 'defaultTheme'                                  
+                    theme: 'defaultTheme'
             });
             $('#winUpload').modal('hide')
             $route.reload()
-              
+
         });
     };
 
@@ -141,14 +141,14 @@ app.controller("CursoController", function CursoController($fileUploader,Faculta
     };
     $scope.edit=function(id){
     	$scope.entidad={};
-        
+
         $http({
             url: './'+ENTITYNAME+'/'+id,
-            method: "GET"            
+            method: "GET"
         }).success(function (data) {
             console.log(data)
             $scope.entidad=data.data;
-            
+
         });
     };
     $scope.save=function(){
@@ -157,17 +157,32 @@ app.controller("CursoController", function CursoController($fileUploader,Faculta
             url: './'+ENTITYNAME,
             method: "POST",
             data: $scope.entidad,
-            
+
         }).success(function (data, status, headers, config) {
-                noty({
-                    text: 'Escuela registrada satisfactoriamente', 
-                    type: 'success',
-                    layout:'bottomRight',
-                    timeout:5000,
-                });
-               $('#winNew').modal('hide');
-               $route.reload();
-              
+            msg="";
+            if(data.success){
+              msg="Curso registrado satisfactoriamente";
+              type="success";
+            }else{
+              type="warning";
+              for (var key in data.messages) {
+                msg+=key+':<br/>'
+                for(var i=0;i<data.messages[key].length;i++){
+                    msg+="- "+data.messages[key][i]+'<br/>';
+                }
+              }
+            }
+            noty({
+                text: msg,
+                type: type,
+                layout:'bottomRight',
+                timeout:5000,
+            });
+            if(data.success){
+              $('#winNew').modal('hide');
+              $scope.tableParams.reload();
+            }
+
         });
     };
     $scope.update=function(){
@@ -175,19 +190,34 @@ app.controller("CursoController", function CursoController($fileUploader,Faculta
             url: './'+ENTITYNAME+'/'+$scope.entidad.id,
             method: "PUT",
             data: $scope.entidad,
-            
+
         }).success(function (data, status, headers, config) {
-            var n = noty({
-                    text: data.message,
-                    type: 'success',
-                    modal:false,
-                    timeout:5000,
-                    layout: 'bottomRight',
-                    theme: 'defaultTheme'                                  
-            });
-            $('#winUpd').modal('hide')
-            $route.reload()
-              
+              msg="";
+              if(data.success){
+                msg="Curso actualizado satisfactoriamente";
+                type="success";
+              }else{
+                type="warning";
+                for (var key in data.messages) {
+                  msg+=key+':<br/>'
+                  for(var i=0;i<data.messages[key].length;i++){
+                      msg+="- "+data.messages[key][i]+'<br/>';
+                  }
+                }
+              }
+              noty({
+                  text: msg,
+                  type: type,
+                  layout:'bottomRight'
+              });
+
+          if(data.success){
+              $('#winUpd').modal('hide');
+              $scope.tableParams.reload();
+          }
+
+
+
         });
     };
     $scope.delete=function(id){
@@ -201,16 +231,16 @@ app.controller("CursoController", function CursoController($fileUploader,Faculta
 
                 $http({
                         url: './'+ENTITYNAME+'/'+id,
-                        method: "DELETE"            
+                        method: "DELETE"
                     }).success(function (data) {
                         $route.reload();
                         console.log(data)
-                       
+
 
                 });
                 $noty.close();
                 noty({
-                    text: 'Se ha eliminado el registro satisfactoriamente', 
+                    text: 'Se ha eliminado el registro satisfactoriamente',
                     type: 'success',
                     layout:'bottomRight',
                     timeout:5000,
@@ -219,13 +249,13 @@ app.controller("CursoController", function CursoController($fileUploader,Faculta
             },
             {addClass: 'btn btn-danger', text: 'No', onClick: function($noty) {
                 $noty.close();
-                
+
             }
             }
           ]
         });
     };
-    
+
     $scope.list();
-    
+
 });

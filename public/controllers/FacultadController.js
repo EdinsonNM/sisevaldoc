@@ -9,7 +9,7 @@ app.controller("FacultadController", function FacultadController(FacultadService
         page: 1,            // show first page
         count: 10,          // count per page
         filter:{
-            
+
         },
         sorting: {
             name: 'asc'     // initial sorting
@@ -61,7 +61,7 @@ app.controller("FacultadController", function FacultadController(FacultadService
         page: 1,            // show first page
         count: 10,          // count per page
         filter:{
-            
+
         },
         sorting: {
             name: 'asc'     // initial sorting
@@ -84,7 +84,7 @@ app.controller("FacultadController", function FacultadController(FacultadService
             url: './import/facultadsave',
             method: "POST",
             data: $scope.dataUpload.data,
-            
+
         }).success(function (data) {
             var n = noty({
                     text: 'data cargada satisfactoriamente',
@@ -92,11 +92,11 @@ app.controller("FacultadController", function FacultadController(FacultadService
                     modal:false,
                     timeout:5000,
                     layout: 'bottomRight',
-                    theme: 'defaultTheme'                                  
+                    theme: 'defaultTheme'
             });
             $('#winUpload').modal('hide')
             $route.reload()
-              
+
         });
     };
 //END UPLOAD
@@ -130,37 +130,37 @@ app.controller("FacultadController", function FacultadController(FacultadService
     };
     $scope.edit=function(id){
         $scope.entidad={};
-        
+
         $http({
             url: './'+ENTITYNAME+'/'+id,
-            method: "GET"            
+            method: "GET"
         }).success(function (data) {
             console.log(data)
             $scope.entidad=data.data;
-            
+
         });
     };
     $scope.save=function(){
-        
+
         FacultadService.save($scope.entidad,function(data){
             noty({
-                    text: 'Facultad registrada satisfactoriamente', 
+                    text: 'Facultad registrada satisfactoriamente',
                     type: 'success',
                     layout:'bottomRight',
                     timeout:5000
             });
             $('#winNew').modal('hide');
-            $route.reload();
+            $scope.tableParams.reload();
         });
-        
+
     };
     $scope.update=function(){
-        
+
         $http({
             url: './'+ENTITYNAME+'/'+$scope.entidad.id,
             method: "PUT",
             data: $scope.entidad,
-            
+
         }).success(function (data, status, headers, config) {
             var n = noty({
                     text: data.message,
@@ -168,11 +168,11 @@ app.controller("FacultadController", function FacultadController(FacultadService
                     modal:false,
                     timeout:5000,
                     layout: 'bottomRight',
-                    theme: 'defaultTheme'                                  
+                    theme: 'defaultTheme'
             });
             $('#winUpd').modal('hide')
-            $route.reload()
-              
+            $scope.tableParams.reload()
+
         });
     };
     $scope.delete=function(id){
@@ -186,16 +186,16 @@ app.controller("FacultadController", function FacultadController(FacultadService
 
                 $http({
                         url: './'+ENTITYNAME+'/'+id,
-                        method: "DELETE"            
+                        method: "DELETE"
                     }).success(function (data) {
-                        $route.reload();
+                        $scope.tableParams.reload();
                         console.log(data)
-                       
+
 
                 });
                 $noty.close();
                 noty({
-                    text: 'Se ha eliminado el registro satisfactoriamente', 
+                    text: 'Se ha eliminado el registro satisfactoriamente',
                     type: 'success',
                     layout:'bottomRight',
                     timeout:5000,
@@ -204,7 +204,7 @@ app.controller("FacultadController", function FacultadController(FacultadService
             },
             {addClass: 'btn btn-danger', text: 'No', onClick: function($noty) {
                 $noty.close();
-                
+
             }
             }
           ]
@@ -213,14 +213,14 @@ app.controller("FacultadController", function FacultadController(FacultadService
 
 
     $scope.escuelas=function(id){
-       
+
         $location.url('/facultad/'+id+'/escuela');
     }
     $scope.etapas=function(id){
-       
+
         $location.url('/facultad/'+id+'/etapaevaluacion');
     }
     $scope.list();
-   
-    
+
+
 });

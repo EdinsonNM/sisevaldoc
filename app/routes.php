@@ -54,3 +54,5 @@ Route::controller('reports','ReportsController');
 
 Route::resource('evaluacionjefedpto','EvaluacionJefeDptoController');
 Route::resource('valoracionevaluacionjefedpto','ValoracionEvaluacionJefeDptoController');
+
+Route::get('docente/methods/jefes-dpto','DocenteController@DocentesJefesDpto');

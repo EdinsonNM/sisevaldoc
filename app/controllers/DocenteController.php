@@ -32,7 +32,7 @@ class DocenteController extends \BaseController {
 			->where('code','LIKE','%'.$code.'%')
 			->where('lastname','LIKE','%'.$lastname.'%')
 			->paginate(Input::get('count'));
-		
+
 	    return Response::json(
 	           $entities->toArray(),
 	          201
@@ -109,7 +109,7 @@ class DocenteController extends \BaseController {
 	          'success' => true,
 	          'data' => $entity->toArray()
 	          ),
-	          
+
 	          201
 	     );
 	}
@@ -136,7 +136,7 @@ class DocenteController extends \BaseController {
 		$input = Input::all();
 		$entity = Docente::find($id);
 		if(Input::get('updateGroup')){
-			
+
 			$user = Sentry::findUserById($entity->usuario_id);
 			$exist=false;
 			foreach ($user->getGroups() as $group) {
@@ -151,7 +151,7 @@ class DocenteController extends \BaseController {
 	    		$user->addGroup($adminGroup);
 	    		$message="Docente fue asignado como Jefe de Departamento";
 			}
-			
+
 		}else{
 			$user = Sentry::findUserById($entity->usuario_id);
 	        $user->username=Input::get('username');
@@ -167,7 +167,7 @@ class DocenteController extends \BaseController {
 			$entity->save();
 			$message="Docente actualizado satisfactoriamente";
 		}
-       
+
 
         return Response::json(array(
             'success' => true,
@@ -193,6 +193,25 @@ class DocenteController extends \BaseController {
             'message' => 'Entity Deleted'),
             200
         );
+	}
+
+
+	public function DocentesJefesDpto(){
+		$escuela_id=Input::get('escuela_id','');
+		$docentes=Docente::with(array('usuario'=>function($q){
+			return $q->with(array('groups'=>function($q2){
+				return $q2->where('group_id','=','3');
+			}));
+		}))
+		->where('escuela_id','=',$escuela_id)
+		->get();
+		$jefes=array();
+		foreach ($docentes as $docente) {
+			if(count($docente->usuario->groups)>0){
+				$jefes[]=$docente->toArray();
+			}
+		}
+		return Response::json($jefes,200);
 	}
 
 }

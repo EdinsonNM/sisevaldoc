@@ -10,7 +10,7 @@ app.controller("DocenteController", function DocenteController($q,DocenteService
         page: 1,            // show first page
         count: 10,          // count per page
         filter:{
-            
+
         },
         sorting: {
             name: 'asc'     // initial sorting
@@ -62,7 +62,7 @@ app.controller("DocenteController", function DocenteController($q,DocenteService
         page: 1,            // show first page
         count: 10,          // count per page
         filter:{
-            
+
         },
         sorting: {
             name: 'asc'     // initial sorting
@@ -85,7 +85,7 @@ app.controller("DocenteController", function DocenteController($q,DocenteService
             url: './import/docentesave',
             method: "POST",
             data: $scope.dataUpload.data,
-            
+
         }).success(function (data) {
             var n = noty({
                     text: 'data cargada satisfactoriamente',
@@ -93,11 +93,11 @@ app.controller("DocenteController", function DocenteController($q,DocenteService
                     modal:false,
                     timeout:5000,
                     layout: 'bottomRight',
-                    theme: 'defaultTheme'                                  
+                    theme: 'defaultTheme'
             });
             $('#winUpload').modal('hide')
             $route.reload()
-              
+
         });
     };
 
@@ -110,9 +110,9 @@ app.controller("DocenteController", function DocenteController($q,DocenteService
         EscuelaService.get(filter,function(data){
             $scope.others.escuelas=data.data;
         });
-       
+
     };
-    
+
     /*$scope.$watch("entidad.firstname.substring(0,1).toLowerCase()+'.'+entidad.lastname.substring(0,6).trim().toLowerCase()",function(text){
         $scope.entidad.username=text;
     });
@@ -146,15 +146,15 @@ app.controller("DocenteController", function DocenteController($q,DocenteService
                 });
             }
         });
-        
+
     }
     $scope.new=function(id){
         $scope.entidad = angular.copy($scope.master);
-        
+
     }
 
     $scope.edit=function(id){
-        
+
         $scope.entidad={};
         DocenteService.get({id:id},function(data){
             $scope.entidad=data.data;
@@ -162,8 +162,8 @@ app.controller("DocenteController", function DocenteController($q,DocenteService
             $scope.entidad.username=$scope.entidad.usuario.username;
             $scope.others.loadescuelas();
         });
-        
-        
+
+
     }
 
     $scope.save=function(){
@@ -171,17 +171,17 @@ app.controller("DocenteController", function DocenteController($q,DocenteService
             url: './docente',
             method: "POST",
             data: $scope.entidad,
-            
+
         }).success(function (data, status, headers, config) {
                 noty({
-                    text: 'Docente registrado satisfactoriamente', 
+                    text: 'Docente registrado satisfactoriamente',
                     type: 'success',
                     layout:'bottomRight',
                     timeout:5000,
                 });
                $('#winNew').modal('hide');
-               $route.reload();
-              
+               $scope.tableParams.reload();
+
         });
     };
 
@@ -190,7 +190,7 @@ app.controller("DocenteController", function DocenteController($q,DocenteService
             url: './docente/'+$scope.entidad.id,
             method: "PUT",
             data: $scope.entidad,
-            
+
         }).success(function (data, status, headers, config) {
             var n = noty({
                     text: data.message,
@@ -198,16 +198,16 @@ app.controller("DocenteController", function DocenteController($q,DocenteService
                     modal:false,
                     timeout:5000,
                     layout: 'bottomRight',
-                    theme: 'defaultTheme'                                  
+                    theme: 'defaultTheme'
             });
             $('#winUpd').modal('hide')
-            $route.reload()
-              
+            $scope.tableParams.reload()
+
         });
     };
 
     $scope.delete=function(id){
-        
+
         var n=noty({
           text: 'Desea eliminar el registro seleccionado?',
           layout: 'center',
@@ -218,16 +218,16 @@ app.controller("DocenteController", function DocenteController($q,DocenteService
 
                 $http({
                         url: './docente/'+id,
-                        method: "DELETE"            
+                        method: "DELETE"
                     }).success(function (data) {
-                        $route.reload();
+                        $scope.tableParams.reload();
                         console.log(data)
-                       
+
 
                 });
                 $noty.close();
                 noty({
-                    text: 'Se ha eliminado el registro satisfactoriamente', 
+                    text: 'Se ha eliminado el registro satisfactoriamente',
                     type: 'success',
                     layout:'bottomRight',
                     timeout:5000,
@@ -236,12 +236,12 @@ app.controller("DocenteController", function DocenteController($q,DocenteService
             },
             {addClass: 'btn btn-danger', text: 'No', onClick: function($noty) {
                 $noty.close();
-                
+
             }
             }
           ]
         });
-  
+
     };
     $scope.jefeDpto=function(id){
         $scope.entidad={
@@ -254,10 +254,10 @@ app.controller("DocenteController", function DocenteController($q,DocenteService
                     modal:false,
                     timeout:5000,
                     layout: 'bottomRight',
-                    theme: 'defaultTheme'                                  
+                    theme: 'defaultTheme'
             });
             $('#winUpd').modal('hide')
-            $route.reload();
+            $scope.tableParams.reload();
         });
     };
     $scope.list();
@@ -273,7 +273,7 @@ app.controller("DocenteController", function DocenteController($q,DocenteService
                     });
             });
             def.resolve(escuelas);
-            
+
         });
         return def;
     };

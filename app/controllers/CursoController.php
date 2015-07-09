@@ -15,14 +15,14 @@ class CursoController extends \BaseController {
 		$name=(!isset($filter['name']))?'':$filter['name'];
 		$ciclo=(!isset($filter['ciclo']))?'':$filter['ciclo'];
 
-		$entities = Curso::with('Escuela')	
+		$entities = Curso::with('Escuela')
 
 			->where('escuela_id','=',$escuela_id)
 			->where('name','LIKE','%'.$name.'%')
 			->where('code','LIKE','%'.$code.'%')
 			->where('ciclo','LIKE','%'.$ciclo.'%')
 			->paginate(Input::get('count'));
-	    
+
 	    return Response::json(
 	           $entities->toArray(),
 	          201
@@ -46,22 +46,20 @@ class CursoController extends \BaseController {
 	 */
 	public function store()
 	{
-		$input = Input::all();
+		$entity=null;
+		$success=false;
+		$validator = Validator::make($data = Input::all(), Curso::$rules_save);
+		$message='';
+		if (!$validator->fails())
+		{
+			$entity=Curso::create($data);
+			$success=true;
+			$entity=$entity->toArray();
+		}else{
+			$message=$validator->messages()->toArray();
+		}
 
-        $entity = new Curso();
- 		$entity->code=Input::get('code');
- 		$entity->name=Input::get('name');
- 		$entity->ciclo=Input::get('ciclo');
- 		$entity->numbercredits=Input::get('numbercredits');
- 		$entity->numberhours=Input::get('numberhours');
- 		$entity->escuela_id=Input::get('escuela_id');
- 		$entity->save();
-
-        return Response::json(array(
-            'success' => true,
-            'entity' => $entity->toArray()),
-            200
-        );
+		return Response::json(array('success' => $success, 'entity'=>$entity,'messages'=>$message), 201);
 	}
 
 	/**
@@ -77,7 +75,7 @@ class CursoController extends \BaseController {
 	          'success' => true,
 	          'data' => $entity->toArray()
 	          ),
-	          
+
 	          201
 	     );
 	}
@@ -101,23 +99,20 @@ class CursoController extends \BaseController {
 	 */
 	public function update($id)
 	{
-		$input = Input::all();
+		$success=false;
+		$entity = Curso::findOrFail($id);
+		$message='';
+		$validator = Validator::make($data = Input::all(), Curso::$rules_update);
 
-        $entity = Curso::find($id);
+		if (!$validator->fails())
+		{
+			$entity->update($data);
+			$success=true;
+		}else{
+			$message=$validator->messages()->toArray();
+		}
 
-       
- 		$entity->code=Input::get('code');
- 		$entity->name=Input::get('name');
- 		$entity->ciclo=Input::get('ciclo');
-		$entity->numbercredits=Input::get('numbercredits');
-		$entity->numberhours=Input::get('numberhours');
-        $entity->save();
-
-        return Response::json(array(
-            'sucess' => true,
-            'message' => 'Curso actualizado satisfactoriamente'),
-            200
-        );
+		return Response::json(array('success' => $success, 'entity'=>$entity,'messages'=>$message), 201);
 	}
 
 	/**
