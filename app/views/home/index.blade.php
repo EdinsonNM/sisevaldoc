@@ -27,7 +27,7 @@
 
 		<!-- Header -->
 			<div id="header">
-						
+
 				<!-- Inner -->
 					<div class="inner">
 						<header>
@@ -35,33 +35,33 @@
 							<hr />
 							<h3><a href="#" style="color:#FFFFFF">Universidad Nacional de Ucayali</a></h3>
 							<span class="byline">Sistema Informático para la Evaluación del Desempeño del Docente</span>
-							
+
 						</header>
 						<footer>
 							<a href="#sisevaldoc" class="button circled scrolly">¿Que es?</a>
 						</footer>
 					</div>
-				
+
 				<!-- Nav -->
 					<nav id="nav" ng-controller="LoadGroupsController">
 						<ul id="menu">
 							<li><a href="#">Inicio</a></li>
 							<li><a href="#sisevaldoc" class="scrolly">Sisevaldoc</a></li>
-							
+
 							<li ng-repeat="group in groups" bn-log-dom-creation>
 								<a href="#//group.url//" class="scrolly">//group.name//</a>
 							</li>
-							
-							
+
+
 						</ul>
 					</nav>
 
 			</div>
-			
+
 		<!-- Banner -->
 			<div id="sisevaldoc">
 				<article id="main" class="container special">
-					
+
 					<header>
 						<h2><a href="#">¿Que es SISEVALDOC?</a></h2>
 						<span class="byline">
@@ -99,8 +99,8 @@ Como resultado del proceso de evaluación, es de esperar resultados confiables q
 				<p>&nbsp;</p>
 			</div>
 </div>
-		
-		
+
+
 
 		<!-- Footer -->
 			<div id="footer">
@@ -109,7 +109,7 @@ Como resultado del proceso de evaluación, es de esperar resultados confiables q
 									<ul class="menu">
 										<li>&copy; YTG. All rights reserved.</li>
 										<li>Design: <a href="http://html5up.net/">HTML5 UP</a></li>
-									
+
 									</ul>
 					</div>
 				</div>

@@ -17,7 +17,7 @@ app.controller("AsignacionCursosController", function AsignacionCursosController
         page: 1,            // show first page
         count: 10,          // count per page
         filter:{
-            
+
         },
         sorting: {
             name: 'asc'     // initial sorting
@@ -65,7 +65,7 @@ app.controller("AsignacionCursosController", function AsignacionCursosController
             url:  $scope.paramsUpload.save,
             method: "POST",
             data: $scope.others.dataExcel.data,
-            
+
         }).success(function (data) {
             var n = noty({
                     text: 'data cargada satisfactoriamente',
@@ -73,11 +73,11 @@ app.controller("AsignacionCursosController", function AsignacionCursosController
                     modal:false,
                     timeout:5000,
                     layout: 'bottomRight',
-                    theme: 'defaultTheme'                                  
+                    theme: 'defaultTheme'
             });
             $('#winUpload').modal('hide');
             $scope.list();
-              
+
         });
     };
    $scope.newUpload=function(entity){
@@ -98,7 +98,7 @@ app.controller("AsignacionCursosController", function AsignacionCursosController
                  $scope.titleUpload="Alumnos";
                  break;
         }
-        
+
         uploader.url= $scope.paramsUpload.url;
         $('#fileExcel').val('');
         uploader.clearQueue();
@@ -108,7 +108,7 @@ app.controller("AsignacionCursosController", function AsignacionCursosController
 //END UPLOAD
     $scope.loadingData=true;
     FacultadService.get({},function(data){
-               $scope.facultades=data.data; 
+               $scope.facultades=data.data;
                $scope.others.facultades=data.data;
                if(data.total>0)
                 $scope.facultadSelected=data.data[0].id;
@@ -125,23 +125,23 @@ app.controller("AsignacionCursosController", function AsignacionCursosController
 
             }
             console.log($scope.faculta_id)
-            
+
     });
     SemestreService.get({},function(data){
         $scope.others.semestres=data.data;
         $scope.showLoading=false;
         if(data.total>0)
             $scope.LoadBySemestre(data.data[0],0);
-    });    
+    });
 
-    
 
-    
+
+
     $scope.loadEscuelas=function(){
         $scope.escuelaSelected=-1;
         $scope.loadingData=true;
         EscuelaService.get({'filter[facultad_id]':$scope.facultadSelected},function(data){
-               $scope.escuelas=data.data; 
+               $scope.escuelas=data.data;
                if(data.total>0)
                 $scope.escuelaSelected=data.data[0].id;
                $scope.loadingData=false;
@@ -178,7 +178,7 @@ app.controller("AsignacionCursosController", function AsignacionCursosController
         EscuelaService.get(filter,function(data){
             $scope.others.escuelas=data.data;
         });
-       
+
    };
    $scope.loadDocente=function(){
         $scope.others.docente=_.find($scope.docentes, function (item) {
@@ -189,7 +189,7 @@ app.controller("AsignacionCursosController", function AsignacionCursosController
         if($scope.IndexSemestreSelected!=-1){
             $scope.list();
         }
-        
+
    };
    $scope.others.loadcursos=function(){
         var filter={
@@ -199,11 +199,12 @@ app.controller("AsignacionCursosController", function AsignacionCursosController
         CursoService.get(filter,function(data){
             $scope.others.cursos=data.data;
         });
-       
+
    };
-   
+
    $scope.list=function(){
     if($scope.semestre.id!=-1 && $scope.others.docente.id!=-1)
+    if(!$scope.tableParams){
         $scope.tableParams = new ngTableParams({
             page: 1,            // show first page
             count: 10,          // count per page
@@ -227,15 +228,22 @@ app.controller("AsignacionCursosController", function AsignacionCursosController
                             params.total(data.total);
                             // set new data
                             $defer.resolve(data.data);
-                            
+
                         }, 500);
                     });
 
                 }
             });
+          }else{
+            $scope.tableParams.$params.filter={
+              semestre_id:$scope.semestre.id,
+              docente_id:$scope.others.docente.id
+            }
+            $scope.tableParams.reload();
+          }
     };
 
-            
+
     $scope.new=function(){
         $('#winNew').modal('show')
         //esto es para que siempre este en blanco los campos cuando se crea unno nuevo
@@ -253,7 +261,7 @@ app.controller("AsignacionCursosController", function AsignacionCursosController
             url: './'+ENTITYNAME,
             method: "POST",
             data: $scope.entidad,
-            
+
         }).success(function (data, status, headers, config) {
                 noty({
                     text: data.message,
@@ -265,7 +273,7 @@ app.controller("AsignacionCursosController", function AsignacionCursosController
                     $('#winNew').modal('hide');
                     $scope.list();
                 }
-              
+
         });
     };
 
@@ -280,16 +288,16 @@ app.controller("AsignacionCursosController", function AsignacionCursosController
 
                 $http({
                         url: './'+ENTITYNAME+'/'+id,
-                        method: "DELETE"            
+                        method: "DELETE"
                     }).success(function (data) {
                         $scope.list();
                         console.log(data)
-                       
+
 
                 });
                 $noty.close();
                 noty({
-                    text: 'Se ha eliminado el registro satisfactoriamente', 
+                    text: 'Se ha eliminado el registro satisfactoriamente',
                     type: 'success',
                     layout:'bottomRight',
                     timeout:5000,
@@ -298,7 +306,7 @@ app.controller("AsignacionCursosController", function AsignacionCursosController
             },
             {addClass: 'btn btn-danger', text: 'No', onClick: function($noty) {
                 $noty.close();
-                
+
             }
             }
           ]
@@ -307,21 +315,21 @@ app.controller("AsignacionCursosController", function AsignacionCursosController
 
 
     $scope.alumnos=function(id){
-       
+
         $location.url('/cursoasignado/'+id+'/alumnos');
     }
     $scope.autoevaluacion=function(id){
-       
+
         $location.url('/cursoasignado/'+id+'/autoevaluacion');
     }
-    
+
     $scope.carganolectiva=function(){
         $location.url('carganolectiva/'+$scope.semestre.id+'/docente/'+$scope.others.docente.id);
     }
-    
 
-    
-    
-   
-    
+
+
+
+
+
 });

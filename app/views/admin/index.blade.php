@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="es">
   <head>
-    <meta http-equiv="X-UA-Compatible" content="IE=edge"> 
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
   	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
   		{{ HTML::script('js/jquery.min.js') }}
       {{ HTML::script('js/bootstrap.min.js') }}
@@ -9,24 +9,24 @@
       {{ HTML::script('js/libs/noty/layouts/center.js') }}
       {{ HTML::script('js/libs/noty/layouts/bottomRight.js') }}
       {{ HTML::script('js/libs/noty/themes/default.js') }}
-      {{ HTML::script('js/libs/underscore-min.js') }} 
+      {{ HTML::script('js/libs/underscore-min.js') }}
       {{ HTML::script('js/libs/modernizr.custom.57796.js') }}
       {{ HTML::script('js/libs/jquery-ui-1.10.4.custom.min.js') }}
 
       {{ HTML::script('js/libs/moment.min.js') }}
       {{ HTML::script('js/libs/moment-timezone.min.js') }}
       {{ HTML::script('js/libs/moment-timezone-data.js') }}
-      
+
         {{ HTML::style('css/normalize.css') }}
         {{ HTML::style('css/bootstrap.min.css') }}
         {{ HTML::style('css/home.css') }}
         {{ HTML::style('css/ng-table.min.css') }}
         {{ HTML::style('css/ng-quick-date.css') }}
         {{ HTML::style('css/jquery-ui-1.10.4.custom.css') }}
-        
+
   </head>
   <body ng-app='app'>
-  	<nav class="navbar navbar-default" role="navigation">
+  	<nav class="navbar navbar-default  hidden-print" role="navigation">
   <div class="container-fluid" ng-controller="appController">
     <!-- Brand and toggle get grouped for better mobile display -->
     <div class="navbar-header">
@@ -42,7 +42,7 @@
     <!-- Collect the nav links, forms, and other content for toggling -->
     <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
       <ul class="nav navbar-nav">
-       
+
         <li ng-repeat="item in menu" ng-class="{ 'dropdown': item.children.length>0 }">
           <a href="//item.url//"  ng-click="itemclick($index)"  class="dropdown-toggle" data-toggle="dropdown">
             <span class='//item.icon//'></span> //item.title//
@@ -57,16 +57,16 @@
           </ul>
 
         </li>
-        
+
       </ul>
-     
+
       <ul class="nav navbar-nav navbar-right">
-       
+
         <li class="dropdown">
           <a style="cursor:pointer;" class="dropdown-toggle" data-toggle="dropdown"><span class="glyphicon glyphicon-user"></span> Bienvenido, {{ Sentry::getUser()->first_name }} <b class="caret"></b></a>
           <ul class="dropdown-menu">
             <li><a style="cursor:pointer;" data-toggle="modal" data-target="#winUpdPassword" ng-click="updatePassword()">Cambiar mi Contraseña</a></li>
-            
+
             <li class="divider"></li>
             <li>{{ HTML::link('admin/logout', 'Cerrar Sesión') }}</li>
           </ul>
@@ -77,7 +77,7 @@
   </div><!-- /.container-fluid -->
 </nav>
 
-<div id="header">
+<div id="header" class="hidden-print">
 
 <h4>UNIVERSIDAD NACIONAL DE UCAYALI</h4>
 Sistema Informático para la Evaluación del Desempeño del Docente
@@ -86,9 +86,9 @@ Sistema Informático para la Evaluación del Desempeño del Docente
     <div ng-view>
     </div>
  </div>
- 
 
-                      
+
+
   </body>
 </html>
 
@@ -130,4 +130,3 @@ Sistema Informático para la Evaluación del Desempeño del Docente
 {{ HTML::script('controllers/EvaluacionDocentesController.js') }}
 {{ HTML::script('controllers/EvaluacionJefeDptoController.js') }}
 {{ HTML::script('services/Services.js') }}
-

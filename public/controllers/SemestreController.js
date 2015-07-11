@@ -22,7 +22,7 @@ app.controller("SemestreController", function SemestreController(SemestreService
                         $defer.resolve(data.data);
                     }, 500);
                  })
-                
+
             }
         });
     };
@@ -36,20 +36,20 @@ app.controller("SemestreController", function SemestreController(SemestreService
         SemestreService.get({"id":id},function(data){
             $scope.entidad=data.data;
         });
-        
+
     };
     $scope.save=function(){
         SemestreService.save($scope.entidad,function(data){
             noty({
-                    text: 'Grado registrada satisfactoriamente', 
+                    text: 'Grado registrada satisfactoriamente',
                     type: 'success',
                     layout:'bottomRight',
                     timeout:5000,
             });
             $('#winNew').modal('hide');
-            $route.reload();
+            $scope.tableParams.reload();
         });
-        
+
     };
     $scope.update=function(){
         SemestreService.update($scope.entidad,function(data){
@@ -59,12 +59,12 @@ app.controller("SemestreController", function SemestreController(SemestreService
                     modal:false,
                     timeout:5000,
                     layout: 'bottomRight',
-                    theme: 'defaultTheme'                                  
+                    theme: 'defaultTheme'
             });
             $('#winUpd').modal('hide')
-            $route.reload();
+            $scope.tableParams.reload();
         });
-        
+
     };
     $scope.delete=function(id){
         var n=noty({
@@ -76,22 +76,22 @@ app.controller("SemestreController", function SemestreController(SemestreService
             {addClass: 'btn btn-success', text: 'Si', onClick: function($noty) {
                 $noty.close();
                 SemestreService.delete({id:id},function(data){
-                    $route.reload();
+                    $scope.tableParams.reload();
                     noty({
-                        text: 'Se ha eliminado el registro satisfactoriamente', 
+                        text: 'Se ha eliminado el registro satisfactoriamente',
                         type: 'success',
                         layout:'bottomRight',
                         timeout:5000
                     });
                 });
 
-                
+
 
               }
             },
             {addClass: 'btn btn-danger', text: 'No', onClick: function($noty) {
                 $noty.close();
-                
+
             }
             }
           ]
@@ -99,6 +99,6 @@ app.controller("SemestreController", function SemestreController(SemestreService
     };
 
     $scope.list();
-   
-    
+
+
 });

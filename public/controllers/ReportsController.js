@@ -686,250 +686,131 @@ app.controller("GraphicEvaluacionController",function($log,EtapaEvaluacionServic
 });
 
 app.controller("GraphicAutoEvaluacionController",function($log,EtapaEvaluacionService,CursoAsignadoService,SemestreService,FacultadService,EscuelaService,DocenteService,$scope,$timeout,$routeParams,$http,$resource,ngTableParams){
-    $scope.facultadSelected=0;
-    $scope.escuelaSelected=0;
-    $scope.docenteSelected=0;
-    $scope.cursoSelected=0;
-    $scope.semestreSelected=-1;
-    $scope.plantillaSelected=-1;
-    $scope.showmessage=false;
-    $scope.showLoading=false;
-    $scope.chartSeries=[];
-    $scope.categories=[];
-    $scope.showTable=false;
 
-    $scope.chartConfig = {
+	    $scope.plantillaSelected=-1;
+	    $scope.showmessage=false;
+	    $scope.showLoading=false;
+	    $scope.chartSeries=[];
+	    $scope.categories=[];
+	    $scope.showTable=false;
+	    $scope.criterioactivo= "PLANIFICACION Y PREPARACION DE CLASES";
 
 
-        "options": {
-            "chart": {
-                "type": "areaspline"
-            },
-            "plotOptions": {
-                "series": {
-                    "stacking": ""
-                }
-            }
-        },
-        credits: {
-                enabled: false
-            },
-        "series": [
+	    FacultadService.get({},function(data){
+	        $scope.facultades=data.data;
+	    });
 
-        ],
-        "title": {
-            "text": "Resumen General De Autoevaluacion Docente:"
-        },
-        subtitle: {
-            text: 'Por Variables'
-        },
-        xAxis: {
-            categories: [
-                'PLANIFICACION Y PREPARACION DE CLASES (De 10 Preguntas)',
-                'METODOLOGIA (De 14 preguntas)',
-                'AMBIENTE PARA EL APRENDISAJE (De 6 preguntas)',
-                'EVALUACION (De 8 preguntas)',
-                'COMPROMISO CON LA INSTITUCION (De 5 preguntas)',
-                'INVESTIGACION (De 4 preguntas)'
+	    SemestreService.get({},function(data){
+	        $scope.semestres=data.data;
+					if($scope.semestres.length>0)
+						$scope.semestreSelected=$scope.semestres[0].id
+	    });
 
-            ]
-        },
-        yAxis: {
-            min: 0,
-            max: 100,
-            title: {
-                text: 'Apreciaciones (%)'
-            }
-        },
-        "loading": false,
-        "size": {}
-    };
-    FacultadService.get({},function(data){
-               $scope.facultades=data.data;
-               if(data.total>0)
-                $scope.facultadSelected=data.data[0].id;
-               $scope.loadEscuelas();
-    });
+	    $scope.loadEscuelas=function(){
+	        if($scope.facultadSelected!=''){
+	            EscuelaService.get({'filter[facultad_id]':$scope.facultadSelected},function(data){
+	                $scope.escuelas=data.data;
+	            });
+	        }else{
+	            $scope.escuelas=[];
 
-    SemestreService.get({},function(data){
-        $scope.semestres=data.data;
-        if(data.total>0){
-            $scope.semestreSelected=data.data[0].id;
+	        }
 
-        }
-    });
-    $scope.loadEscuelas=function(){
-        $scope.escuelaSelected=0;
-        //$scope.loadEtapaEvaluacion();
-        if($scope.facultadSelected>0){
-            EscuelaService.get({'filter[facultad_id]':$scope.facultadSelected},function(data){
-                   $scope.escuelas=data.data;
-
-                   $scope.loadDocentes();
-            });
-        }else{
-            $scope.escuelas=[];
-            $scope.loadDocentes();
-        }
-
-    }
-
-    $scope.loadDocentes=function(){
-        //$scope.docenteSelected=0;
-        $log.info($scope.escuelaSelected)
-        if($scope.escuelaSelected!=0){
+	    }
 
 
-            $http({
-                url: './reports/docentessemestre',
-                method: "GET",
-                params:{
-                    facultad_id:$scope.facultadSelected,
-                    escuela_id:$scope.escuelaSelected,
-                    semestre_id:$scope.semestreSelected
-                }
-            }).success(function (data) {
-                $scope.docentes=data;
-                $scope.loadCursos();
-            });
-        }else{
-            $scope.docentes=[];
-        }
+	    $scope.chartTypes = [
+	        {"id": "line", "title": "Line"},
+	        {"id": "spline", "title": "Smooth line"},
+	        {"id": "area", "title": "Area"},
+	        {"id": "areaspline", "title": "Smooth area"},
+	        {"id": "column", "title": "Column"},
+	        {"id": "bar", "title": "Bar"},
+	        {"id": "pie", "title": "Pie"},
+	        {"id": "scatter", "title": "Scatter"}
+	    ];
 
+			$scope.list=function(){
+				$scope.facultad=_.findWhere($scope.facultades, {id:$scope.facultadSelected});
+				$scope.escuela=_.findWhere($scope.escuelas, {id:$scope.escuelaSelected});
+				$scope.semestre=_.findWhere($scope.semestres, {id:$scope.semestreSelected});
+				var params={
+						"semestre_id":$scope.semestreSelected,
+						"facultad_id":$scope.facultadSelected,
+						"escuela_id":$scope.escuelaSelected
+				};
 
-    };
-    $scope.loadCursos=function(){
-        $scope.cursoSelected=0;
-        if($scope.docenteSelected>0){
-            var params={
-                'filter[docente_id]':$scope.docenteSelected,
-                'filter[semestre_id]':$scope.semestreSelected
-            };
-            CursoAsignadoService.get(params,function(data){
-                $scope.cursos=data.data;
-                if(data.total>0){
-                    $scope.cursoSelected=data.data[0].id;
-                    //$scope.loadEtapaEvaluacion(data.data[0].curso.escuela.facultad_id);
-                }
+				$http({
+						url: './reports/reporte-autoevaluacion-general',
+						method: "GET",
+						params:params
+				}).success(function (data) {
+					$scope.datatable=data;
+					LoadGraphic();
+				});
+			}
 
-            });
-        }else{
-            $scope.cursos=[];
-        }
+			var LoadGraphic=function(){
+				$scope.chartConfig = {
+						"options": {
+								"chart": {
+										"type": "areaspline"
+								},
+								"plotOptions": {
+										"series": {
+												"stacking": ""
+										}
+								}
+						},
+						credits: {
+								enabled: false
+						},
+						"series": [
 
-    };
-    $scope.loadCriterios=function(data){
-        var myData=data;
-        $scope.tableParams = new ngTableParams({
-        page: 1,            // show first page
-        count: 10,          // count per page
-        filter:{
+						],
+						"title": {
+								"text": ""
+						},
+						subtitle: {
+								text: ''
+						},
+						xAxis: {
+								categories: [
 
-        },
-        sorting: {
-            name: 'asc'     // initial sorting
-        }
-        }, {
-            total: 1,           // length of data
-            counts:[],
-            getData: function($defer, params) {
-                var datapaginate = angular.copy(myData);
+								],
+								title: {
+										text: 'Variables'
+								},
+								labels: {
+									maxStaggerLines:100,
+	                rotation: 0,
+	                style: {
+											'width': '1000px',
+	                    fontSize: '11px',
+	                    fontFamily: 'Verdana, sans-serif'
+	                }
+	            }
+						},
+						yAxis: {
 
-                $defer.resolve(myData);
-            }
-        });
-    };
-    $scope.chartTypes = [
-    {"id": "line", "title": "Line"},
-    {"id": "spline", "title": "Smooth line"},
-    {"id": "area", "title": "Area"},
-    {"id": "areaspline", "title": "Smooth area"},
-    {"id": "column", "title": "Column"},
-    {"id": "bar", "title": "Bar"},
-    {"id": "pie", "title": "Pie"},
-    {"id": "scatter", "title": "Scatter"}
-  ];
-
-
-    $scope.list=function(){
-        $scope.showLoading=true;
-        $scope.showmessage=false;
-
-        console.log("Facultad id "+ $scope.facultadSelected);
-        console.log("Escuela id "+ $scope.escuelaSelected);
-        console.log("Semestre id "+ $scope.semestreSelected);
-
-        if(!$scope.tableParams){
-        /*EtapaEvaluacionService.get({
-            'filter[semestre_id]':$scope.semestreSelected,
-            'filter[facultad_id]':$scope.facultadSelected,
-            'filter[fromquestion]':'Docente'
-
-        },function(data){
-
-            if(data.total>0){*/
-
-                //if($scope.semestreSelected!=-1){
-                    //if($scope.plantillaSelected!=-1){
-
-                         var params={
-                               "facultad_id":$scope.facultadSelected,
-                                "escuela_id":$scope.escuelaSelected,
-                               "semestre_id":$scope.semestreSelected
-                               };
-
-                            $http({
-                                url: './reports/resumencriteriosauto',
-                                method: "GET",
-                                params:params,
-                            }).success(function (data) {
-                                $scope.datatable=data;
-
-                                var Si={
-                                    "name":'Si',"data":[],"type": "column", "id": "series-2", "color": "GREEN",dataLabels: { enabled: true}
-                                };
-                                var No={name:'No',"data":[],"type": "column", "id": "series-3", "color": "BLUE",dataLabels: { enabled: true}
-                                };
-
-
-                                $scope.categories=[];
-                                $scope.cat=[];
-                                $scope.totales={Si:0,No:0};
-                                $.each(data,function(index,element){
-
-                                    Si.data.push(parseFloat(this.PS));
-                                    No.data.push(parseFloat(this.PN));
-
-                                    $scope.categories.push(this);
-                                    $scope.cat.push(index);
-                                });
-                                //$scope.chartSeries=[Siempre,Frecuente,Poco,Nunca];
-                                $scope.chartConfig.series=[Si,No];
-                                //$scope.chartConfig.xAxis.categories=$scope.cat;
-                                $scope.loadCriterios($scope.categories);
-                                $scope.showLoading=false;
-                                $scope.showTable=true;
-                            });
-
-
-                    /*}else{
-                        $scope.message="No se encontro el listado de criterios o no  existe una etapa de autoevaluación para la facultad y el semestre seleccionado";
-                        $scope.showmessage=true;
-                         $scope.showLoading=false;
-                        $scope.showTable=false;
-                    }*/
-                //}
-            //}
-
-        /*})*/
-        }else
-            {
-                $scope.tableParams.filter.facultad_id=$scope.facultadSelected;
-                $scope.tableParams.filter.escuela_id=$scope.escuelaSelected;
-                $scope.tableParams.filter.semestre_id=$scope.semestreSelected;
-                $scope.tableParams.reload();
-            }
-    };
+								title: {
+										text: 'Apreciaciones'
+								}
+						},
+						"loading": false,
+						"size": {}
+				};
+				var Si={name:'Si',data:[],type: "column", "id": "series-2", "color": "GREEN",dataLabels: { enabled: true}};
+				var No={name:'No',data:[],type: "column", "id": "series-3", "color": "DARK",dataLabels: { enabled: true}};
+				var categories=[];
+				angular.forEach($scope.datatable,function(item,index){
+					Si.data.push(item.si);
+					No.data.push(item.no);
+					categories.push(index+1);
+				});
+				$scope.chartConfig.series=[Si,No];
+				$scope.chartConfig.xAxis.categories=categories;
+			}
 
 });
 
@@ -1137,7 +1018,7 @@ app.controller("GraphicEvaluacionJefeController",function($log, CriterioEvaluaci
 
 														$.each($scope.datatable, function(idx, el){
 															var arr = el.valores.split(',');
-															el.arr_valores = arr;															
+															el.arr_valores = arr;
 														});
 
                             var plaza=[];
@@ -1174,12 +1055,13 @@ app.controller("GraphicEvaluacionJefeController",function($log, CriterioEvaluaci
 
 });
 
-
+/**************************************************************************************************************
+*
+*REPORTE: AUTOEVALUACION DOCENTES POR CRITERIOS
+*
+**************************************************************************************************************/
 app.controller("GraphicAutoEvaluacionCriterioController",function($log,EtapaEvaluacionService,CursoAsignadoService,SemestreService,FacultadService,EscuelaService,DocenteService,$scope,$timeout,$routeParams,$http,$resource,ngTableParams){
-    $scope.facultadSelected=0;
-    $scope.escuelaSelected=0;
-    $scope.criterioSelected=81;
-    $scope.semestreSelected=-1;
+
     $scope.plantillaSelected=-1;
     $scope.showmessage=false;
     $scope.showLoading=false;
@@ -1188,28 +1070,15 @@ app.controller("GraphicAutoEvaluacionCriterioController",function($log,EtapaEval
     $scope.showTable=false;
     $scope.criterioactivo= "PLANIFICACION Y PREPARACION DE CLASES";
 
-    $scope.p = function(p)
-    {
-        for(i=0;i<$scope.varcri.length;i++) {
-            if ($scope.varcri[i].id == $scope.criterioSelected) {
-                $scope.criterioactivo = $scope.varcri[i].name;
-            }
-        }
-    }
 
     FacultadService.get({},function(data){
         $scope.facultades=data.data;
-        if(data.total>0)
-            $scope.facultadSelected=data.data[0].id;
-        $scope.loadEscuelas();
     });
 
     SemestreService.get({},function(data){
         $scope.semestres=data.data;
-        if(data.total>0){
-            $scope.semestreSelected=data.data[0].id;
-
-        }
+				if($scope.semestres.length>0)
+					$scope.semestreSelected=$scope.semestres[0].id
     });
     $scope.loadComboCriterios=function(){
         $http({
@@ -1217,19 +1086,17 @@ app.controller("GraphicAutoEvaluacionCriterioController",function($log,EtapaEval
             method: "GET"
         }).success(function (data) {
             $scope.criterios=data;
-            $scope.varcri=data;
+						if($scope.criterios.length>0)
+							$scope.criterioSelected=$scope.criterios[0].id;
         });
 
 
     };
     $scope.loadComboCriterios();
     $scope.loadEscuelas=function(){
-        $scope.escuelaSelected=0;
-        //$scope.loadEtapaEvaluacion();
-        if($scope.facultadSelected>0){
+        if($scope.facultadSelected!=''){
             EscuelaService.get({'filter[facultad_id]':$scope.facultadSelected},function(data){
                 $scope.escuelas=data.data;
-
             });
         }else{
             $scope.escuelas=[];
@@ -1250,113 +1117,90 @@ app.controller("GraphicAutoEvaluacionCriterioController",function($log,EtapaEval
         {"id": "scatter", "title": "Scatter"}
     ];
 
+		$scope.list=function(){
+			$scope.facultad=_.findWhere($scope.facultades, {id:$scope.facultadSelected});
+			$scope.escuela=_.findWhere($scope.escuelas, {id:$scope.escuelaSelected});
+			$scope.semestre=_.findWhere($scope.semestres, {id:$scope.semestreSelected});
+			$scope.criterio=_.findWhere($scope.criterios, {id:$scope.criterioSelected});
+			var params={
+					"semestre_id":$scope.semestreSelected,
+					"facultad_id":$scope.facultadSelected,
+					"escuela_id":$scope.escuelaSelected,
+					"criterio_id":$scope.criterioSelected
+			};
 
-    $scope.list=function(){
+			$http({
+					url: './reports/reporte-autoevaluacion-por-criterio',
+					method: "GET",
+					params:params
+			}).success(function (data) {
+				$scope.datatable=data;
+				LoadGraphic();
+			});
+		}
 
-        $scope.showLoading=true;
-        $scope.showmessage=false;
+		var LoadGraphic=function(){
+			$scope.chartConfig = {
+					"options": {
+							"chart": {
+									"type": "areaspline"
+							},
+							"plotOptions": {
+									"series": {
+											"stacking": ""
+									}
+							}
+					},
+					credits: {
+							enabled: false
+					},
+					"series": [
 
-        $scope.chartConfig = {
+					],
+					"title": {
+							"text": ""
+					},
+					subtitle: {
+							text: ''
+					},
+					xAxis: {
+							categories: [
 
-            "options": {
-                "chart": {
-                    "type": "areaspline"
-                },
-                "plotOptions": {
-                    "series": {
-                        "stacking": ""
-                    }
-                }
-            },
-            credits: {
-                enabled: false
-            },
-            "series": [
-
-            ],
-            "title": {
-                "text": "Autoevaluacion Docente:"
-            },
-            subtitle: {
-                text: 'Variable : ' + $scope.criterioactivo
-            },
-            xAxis: {
-                categories: [
-
-                ]
-            },
-            yAxis: {
-                min: 0,
-                max: 200,
-                title: {
-                    text: 'Apreciaciones'
-                }
-            },
-            "loading": false,
-            "size": {}
-        };
-
-        EtapaEvaluacionService.get({
-            'filter[semestre_id]':$scope.semestreSelected,
-            'filter[facultad_id]':$scope.facultadSelected,
-            'filter[fromquestion]':'Docente'
-
-        },function(data){
-            if(data.total>0){
-                $scope.plantillaSelected=data.data[0].plantilla_id;
-                $log.info("PLANTiLLA:"+$scope.plantillaSelected);
-                if($scope.semestreSelected!=-1){
-                    if($scope.plantillaSelected!=-1){
-
-                        var params={
-                            "semestre_id":$scope.semestreSelected,
-                            "facultad_id":$scope.facultadSelected,
-                            "escuela_id":$scope.escuelaSelected,
-                            "criterio_id":$scope.criterioSelected
-                        };
-
-                        $http({
-                            url: './reports/resumencriteriosautodetalle',
-                            method: "GET",
-                            params:params
-                        }).success(function (data) {
-                            $scope.datatable=data;
-
-                            var Si={"name":'Si',"data":[],"type": "column", "id": "series-2", "color": "GREEN",dataLabels: { enabled: true}};
-                            var No={name:'No',"data":[],"type": "column", "id": "series-3", "color": "DARK",dataLabels: { enabled: true}};
-
-                            $scope.categories=[];
-                            $scope.cat=[];
-                            $scope.totales={Si:0,No:0};
-                            $.each(data,function(index,element){
-
-                                Si.data.push(parseFloat(this.S));
-                                No.data.push(parseFloat(this.N));
-
-                                $scope.categories.push(this.name);
-                                $scope.cat.push(index);
-                            });
-
-                            $scope.chartConfig.series=[Si,No];
-                            $scope.chartConfig.xAxis.categories=$scope.categories;
-
-                            $scope.showLoading=false;
-                            $scope.showTable=true;
-                        });
-
-
-                    }else{
-                        $scope.message="No se encontro el listado de criterios o no  existe una etapa de autoevaluación para la facultad y el semestre seleccionado";
-                        $scope.showmessage=true;
-                        $scope.showLoading=false;
-                        $scope.showTable=false;
-                    }
+							],
+							title: {
+									text: 'Variables'
+							},
+							labels: {
+								maxStaggerLines:100,
+                rotation: 0,
+                style: {
+										'width': '1000px',
+                    fontSize: '11px',
+                    fontFamily: 'Verdana, sans-serif'
                 }
             }
+					},
+					yAxis: {
 
-        })
+							title: {
+									text: 'Apreciaciones'
+							}
+					},
+					"loading": false,
+					"size": {}
+			};
+			var Si={name:'Si',data:[],type: "column", "id": "series-2", "color": "GREEN",dataLabels: { enabled: true}};
+			var No={name:'No',data:[],type: "column", "id": "series-3", "color": "DARK",dataLabels: { enabled: true}};
+			var categories=[];
+			angular.forEach($scope.datatable,function(item,index){
+				Si.data.push(item.si);
+				No.data.push(item.no);
+				categories.push(index+1);
+			});
+			$scope.chartConfig.series=[Si,No];
+			$scope.chartConfig.xAxis.categories=categories;
+		}
 
-    };
 
 });
 
@@ -2262,9 +2106,7 @@ app.controller("EvaluacionDesempenoDocAlController",function($log,CriterioEvalua
 
     FacultadService.get({},function(data){
         $scope.facultades=data.data;
-        if(data.total>0)
-            $scope.facultadSelected=data.data[0].id;
-        $scope.loadEscuelas();
+
     });
 
     SemestreService.get({},function(data){
@@ -2274,7 +2116,6 @@ app.controller("EvaluacionDesempenoDocAlController",function($log,CriterioEvalua
         }
     });
     $scope.loadEscuelas=function(){
-        $scope.escuelaSelected=0;
         //$scope.loadEtapaEvaluacion();
         if($scope.facultadSelected>0){
             EscuelaService.get({'filter[facultad_id]':$scope.facultadSelected},function(data){
@@ -2340,8 +2181,12 @@ app.controller("EvaluacionDesempenoDocAlController",function($log,CriterioEvalua
     $scope.list=function(){
         $scope.showLoading=true;
         $scope.showmessage=false;
+				console.log($scope.semestreSelected);
 
-				if($scope.semestreSelected!=-1){
+					$scope.facultad=_.findWhere($scope.facultades, {id:$scope.facultadSelected+''});
+				//	$scope.escuela=_.findWhere($scope.escuelas, {id:$scope.escuelaSelected});
+					$scope.semestre=_.findWhere($scope.semestres, {id:$scope.semestreSelected});
+					console.log($scope.facultades,$scope.escuelas,$scope.semestres);
 					var params={
 							"semestre_id":$scope.semestreSelected,
 							"facultad_id":$scope.facultadSelected,
@@ -2369,7 +2214,7 @@ app.controller("EvaluacionDesempenoDocAlController",function($log,CriterioEvalua
 							$scope.showLoading=false;
 							$scope.showTable=true;
 					});
-				}
+
     };
 });
 

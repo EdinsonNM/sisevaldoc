@@ -1,6 +1,7 @@
 <?php
 class User extends Eloquent {
    	protected $table = 'users';
+    protected $hidden = array('password','persist_code','reset_password_code');
    	public function alumno(){
         return $this->hasOne('Alumno','usuario_id');
    }

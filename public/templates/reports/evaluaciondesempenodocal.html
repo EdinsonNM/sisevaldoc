@@ -13,7 +13,7 @@
             </div>
             <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-2">
                 <form class="navbar-form navbar-right">
-                    <button type="button" class="btn btn-info" onclick="javascript:imprSelec('printchart')">
+                    <button type="button" class="btn btn-info" onclick="window.print()">
                         <span class="glyphicon glyphicon-print"></span>
                         Imprimir
                     </button>
@@ -28,7 +28,7 @@
     </nav>
 
     <div class="panel-body" style="margin-top:-20px">
-        <div class="row">
+        <div class="row hidden-print">
             <div class="col-md-3">
 
                 <label>Facultad: </label>
@@ -51,8 +51,7 @@
 
                 <label>Semestre: </label>
                 <select class="form-control" ng-model="semestreSelected" >
-                    <option value="0">Todos los Semestres</option>
-                    <option ng-repeat="semestre  in semestres" value="//semestre.id//">//semestre.year+'-'+semestre.period//</option>
+                    <option ng-repeat="item  in semestres" value="//item.id//">//item.year+'-'+item.period//</option>
                 </select>
 
             </div>
@@ -67,7 +66,33 @@
         </div>
         <br/>
         <br/>
-
+        <p>
+          &nbsp;
+        </p>
+        <div class="row">
+          <div class="col-sm-12 text-center">
+            <h3>Evaluación del desempeño del docente según percepcion de los estudiantes</h3>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-sm-12 text-center">
+            <table class="table">
+              <thead>
+                <tr>
+                  <th>
+                  <label>Facultad:</label><br/>//facultad.name|| 'TODAS LAS FACULTADES'//
+                  </th>
+                  <th>
+                  <label>Escuela:</label><br/>//escuela.name|| 'TODAS LAS ESCUELAS'//
+                  </th>
+                  <th>
+                  <label>Semestre:</label><br/>//semestre.year+'-'+semestre.period//  //semestre//
+                  </th>
+                </tr>
+              </thead>
+            </table>
+          </div>
+        </div>
 
         <div class="row">
             <div class="col-md-12">

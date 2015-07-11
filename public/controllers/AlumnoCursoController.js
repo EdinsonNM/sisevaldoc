@@ -6,8 +6,8 @@ app.controller("AlumnoCursoController", function AlumnoCursoController(AlumnoCur
     $scope.location = $location;
     var ENTITYNAME='alumnocurso?x='+Math.random();
     FacultadService.get({r:Math.random()},function(data){ $scope.others.facultades=data.data;})
-    
-    
+
+
     $http({url: './admin/alumno',method: "GET"}).success(function (data) {
             $scope.others.alumno=data.data;
 
@@ -18,7 +18,7 @@ app.controller("AlumnoCursoController", function AlumnoCursoController(AlumnoCur
                     $scope.LoadBySemestre(data.data[0],0);
                 }
             });
-            
+
     });
     $scope.LoadBySemestre=function(semestre,$index){
         $scope.semestre=semestre;
@@ -34,7 +34,7 @@ app.controller("AlumnoCursoController", function AlumnoCursoController(AlumnoCur
         EscuelaService.get(filter,function(data){
             $scope.others.escuelas=data.data;
         });
-       
+
    };
    $scope.others.loadcursos=function(){
         var filter={
@@ -44,13 +44,13 @@ app.controller("AlumnoCursoController", function AlumnoCursoController(AlumnoCur
         CursoService.get(filter,function(data){
             $scope.others.cursos=data.data;
         });
-       
+
    };
 
    $scope.list=function(){
         console.log("list....");
-        try{
-            
+        if(!$scope.tableParams){
+
             $scope.tableParams = new ngTableParams({
             page: 1,            // show first page
             count: 10,          // count per page
@@ -58,7 +58,7 @@ app.controller("AlumnoCursoController", function AlumnoCursoController(AlumnoCur
             filter:{
                 semestre_id:$scope.semestre.id,
                 alumno_id:$scope.others.alumno.id
-               
+
             },
             sorting: {
                 name: 'asc'     // initial sorting
@@ -68,7 +68,7 @@ app.controller("AlumnoCursoController", function AlumnoCursoController(AlumnoCur
                 getData: function($defer, params) {
                     // ajax request to api
                     AlumnoCursoService.get(params.url(), function(data) {
-                        
+
                         $timeout(function() {
                             if(data.total==0){
                                 data.data={};
@@ -77,14 +77,18 @@ app.controller("AlumnoCursoController", function AlumnoCursoController(AlumnoCur
                             params.total(data.total);
                             // set new data
                             $defer.resolve(data.data);
-                            
+
                         }, 500);
                     });
                 }
             });
-        }catch(e){
-
-        }
+          }else{
+            $scope.tableParams.$params.filter={
+              semestre_id:$scope.semestre.id,
+              alumno_id:$scope.others.alumno.id
+            }
+            $scope.tableParams.reload();
+          }
     };
     $scope.new=function(){
         //esto es para que siempre este en blanco los campos cuando se crea unno nuevo
@@ -98,14 +102,14 @@ app.controller("AlumnoCursoController", function AlumnoCursoController(AlumnoCur
     };
     $scope.edit=function(id){
         $scope.entidad={};
-        
+
         $http({
             url: './'+ENTITYNAME+'/'+id,
-            method: "GET"            
+            method: "GET"
         }).success(function (data) {
             console.log(data)
             $scope.entidad=data.data;
-            
+
         });
     };
     $scope.save=function(){
@@ -113,26 +117,26 @@ app.controller("AlumnoCursoController", function AlumnoCursoController(AlumnoCur
             url: './'+ENTITYNAME,
             method: "POST",
             data: $scope.entidad,
-            
+
         }).success(function (data, status, headers, config) {
                 noty({
-                    text: 'Facultad registrada satisfactoriamente', 
+                    text: 'Facultad registrada satisfactoriamente',
                     type: 'success',
                     layout:'bottomRight',
                     timeout:5000,
                 });
                $('#winNew').modal('hide');
                $scope.list();
-              
+
         });
     };
     $scope.update=function(){
-        
+
         $http({
             url: './'+ENTITYNAME+'/'+$scope.entidad.id,
             method: "PUT",
             data: $scope.entidad,
-            
+
         }).success(function (data, status, headers, config) {
             var n = noty({
                     text: data.message,
@@ -140,11 +144,11 @@ app.controller("AlumnoCursoController", function AlumnoCursoController(AlumnoCur
                     modal:false,
                     timeout:5000,
                     layout: 'bottomRight',
-                    theme: 'defaultTheme'                                  
+                    theme: 'defaultTheme'
             });
             $('#winUpd').modal('hide')
             $scope.list();
-              
+
         });
     };
     $scope.delete=function(id){
@@ -158,16 +162,16 @@ app.controller("AlumnoCursoController", function AlumnoCursoController(AlumnoCur
 
                 $http({
                         url: './'+ENTITYNAME+'/'+id,
-                        method: "DELETE"            
+                        method: "DELETE"
                     }).success(function (data) {
                         $scope.list();
                         console.log(data)
-                       
+
 
                 });
                 $noty.close();
                 noty({
-                    text: 'Se ha eliminado el registro satisfactoriamente', 
+                    text: 'Se ha eliminado el registro satisfactoriamente',
                     type: 'success',
                     layout:'bottomRight',
                     timeout:5000,
@@ -176,7 +180,7 @@ app.controller("AlumnoCursoController", function AlumnoCursoController(AlumnoCur
             },
             {addClass: 'btn btn-danger', text: 'No', onClick: function($noty) {
                 $noty.close();
-                
+
             }
             }
           ]
@@ -184,10 +188,31 @@ app.controller("AlumnoCursoController", function AlumnoCursoController(AlumnoCur
     };
 
     $scope.evaluacion=function(id){
-       
+
         $location.url('/alumnocurso/'+id+'/evaluacion');
     }
     //$scope.list();
-   
-    
+
+    $scope.ImprimirFicha=function(){
+
+          $http({url:"./print/valida-constancia-alumno?semestre_id="+$scope.semestre.id+"&alumno_id="+$scope.others.alumno.id,method: "GET"}).success(function (data) {
+            if(data.success){
+              document.location.href="./print/constancia-evaluacion-alumno?semestre_id="+$scope.semestre.id+"&alumno_id="+$scope.others.alumno.id;
+            }else{
+              type="warning";
+              var n = noty({
+                      text: data.message,
+                      type: type,
+                      modal:false,
+                      timeout:5000,
+                      layout: 'bottomRight',
+                      theme: 'defaultTheme'
+              });
+            }
+
+          });
+
+    }
+
+
 });

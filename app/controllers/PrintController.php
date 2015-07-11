@@ -27,6 +27,61 @@ class PrintController extends BaseController {
 
     }
 
+		public function getValidaConstanciaAlumno(){
+			$success=true;
+			$message="Constancia valida para imprimir";
+			$alumno_id=Input::get('alumno_id','');
+			$semestre_id=Input::get('semestre_id','');
+			$ficha=FichaImpresion::where('semestre_id','=',$semestre_id)->where('alumno_id','=',$alumno_id)->first();
+			$alumno=Alumno::find($alumno_id);
+			$semestre=Semestre::find($semestre_id);
+
+			if(!$ficha){
+				if($semestre_id!=''&&$alumno_id!=''){
+					$inscripciones=InscripcionCurso::select(DB::Raw("inscripcioncurso.*"))
+					->with('evaluaciones')
+					->with(array('cursoasignado'=>function($q){
+							return $q->with('curso');
+						}))
+					->join('cursoasignado','cursoasignado.id','=','inscripcioncurso.cursoasignado_id')
+					->where('cursoasignado.semestre_id','=',$semestre_id)
+					->where('inscripcioncurso.alumno_id','=',$alumno_id)
+					->get();
+
+					if(count($inscripciones)>0){
+						foreach ($inscripciones as $inscripcion) {
+							if(count($inscripcion->evaluaciones)==0){
+								$message="Es necesario completar el registro de todas las evaluaciones";
+								$success=false;
+							}else{
+								if(!$inscripcion->evaluaciones[0]->finalizado){
+									$message="Una o mas evaluaciones no han sido finalizadas";
+									$success=false;
+								}else{
+									if($inscripcion->evaluaciones[0]->impreso){
+										$message="Ya se imprimio una copia de la constancia de evaluación. No tienes acceso a imprimir una replica";
+										$success=false;
+									}
+								}
+							}
+						}
+
+					}else{
+						$message="Alumno No se ha inscrito en ningun curso en el semestre seleccionado";
+						$success=false;
+					}
+
+				}else{
+					$success=false;
+					$message="Parametros alumno_id y semestre_id son requeridos";
+				}
+			}else{
+				$message="Ya se imprimio una copia de la Ficha de Evaluación";
+				$success=false;
+			}
+
+			return Response::json(array('success'=>$success,'message'=>$message),201);
+		}
 		public function getConstanciaEvaluacionAlumno()
     {
         $success=true;
@@ -48,21 +103,26 @@ class PrintController extends BaseController {
 						->where('inscripcioncurso.alumno_id','=',$alumno_id)
 						->get();
 
-						foreach ($inscripciones as $inscripcion) {
-							if(count($inscripcion->evaluaciones)==0){
-								$message="Es necesario completar el registro de todas las evaluaciones";
-								$success=false;
-							}else{
-								if(!$inscripcion->evaluaciones[0]->finalizado){
-									$message="Una o mas evaluaciones no ha sido finalizadas";
+						if(count($inscripciones)>0){
+							foreach ($inscripciones as $inscripcion) {
+								if(count($inscripcion->evaluaciones)==0){
+									$message="Es necesario completar el registro de todas las evaluaciones";
 									$success=false;
 								}else{
-									if($inscripcion->evaluaciones[0]->impreso){
-										$message="Ya se imprimio la ficha de evaluación. No tienes acceso a imprimir una replica";
+									if(!$inscripcion->evaluaciones[0]->finalizado){
+										$message="Una o mas evaluaciones no ha sido finalizadas";
 										$success=false;
+									}else{
+										if($inscripcion->evaluaciones[0]->impreso){
+											$message="Ya se imprimio una copia de la constancia de evaluación. No tienes acceso a imprimir una replica";
+											$success=false;
+										}
 									}
 								}
 							}
+						}else{
+							$message="Alumno No se ha inscrito en ningun curso en el semestre seleccionado";
+							$success=false;
 						}
 						if($success){
 							$ficha=new FichaImpresion();
@@ -86,7 +146,17 @@ class PrintController extends BaseController {
 					$success=false;
 				}
 
-				return Response::json(array('success'=>$success,'message'=>$message),201);
+				return $message;
 
     }
+
+		public function postExportExcel(){
+			$statusCode=200;
+			$data=(Input::get('data_download'));
+			$contents = View::make('downloadTable')->with('data', $data);
+			$response = Response::make($contents, $statusCode);
+			$response->header('Content-Type', 'application/vnd.ms-excel;');
+			$response->header('Content-Disposition', 'attachment; filename="report.xls"');
+			return $response;
+		}
 }

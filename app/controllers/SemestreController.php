@@ -9,7 +9,7 @@ class SemestreController extends \BaseController {
 	 */
 	public function index()
 	{
-		$entities = Semestre::paginate(Input::get('count'));
+		$entities = Semestre::orderBy('year','desc')->orderBy('period','desc')->paginate(Input::get('count'));
 	    return Response::json(
 	           $entities->toArray(),
 	          201
@@ -64,7 +64,7 @@ class SemestreController extends \BaseController {
 	          'success' => true,
 	          'data' => $entity->toArray()
 	          ),
-	          
+
 	          201
 	     );
 
