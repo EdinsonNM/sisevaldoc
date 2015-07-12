@@ -14,7 +14,7 @@
 
 Route::controller('login/{type}','LoginController');
 Route::controller('admin','AdminController');
-Route::controller('home','HomeController');
+Route::get('/','HomeController@getIndex');
 Route::controller('import','ImportController');
 Route::controller('print','PrintController');
 Route::controller('loginuser','LoginUserController');

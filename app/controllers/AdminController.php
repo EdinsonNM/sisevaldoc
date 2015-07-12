@@ -26,7 +26,7 @@ class AdminController extends BaseController {
     {
         $type = Session::get('type');
         Sentry::logout();
-        return Redirect::to('home')->with('mensaje','¡Has cerrado sesión correctamente!.')->with('type',$type);
+        return Redirect::to('');
     }
 
     public function getValidatelogin()

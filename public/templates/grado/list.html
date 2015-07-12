@@ -13,7 +13,7 @@
         </div>
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-2">
           <form class="navbar-form navbar-right" role="search">
-           
+
             <button type="submit" class="btn btn-success" data-toggle="modal" data-target="#winNew" ng-click="new()">Nuevo</button>
           </form>
         </div>
@@ -21,6 +21,9 @@
     </nav>
 
   <div class="panel-body">
+    <div class="table-responsive">
+
+
   	 <div loading-container="tableParams.settings().$loading">
       <table ng-table="tableParams" show-filter="true" class="table table-bordered table-striped table-hover table-condensed ">
         <tbody>
@@ -30,7 +33,7 @@
             <td data-title="'Fecha Creación'" sortable="created_at">//item.created_at//</td>
             <td data-title="'Ultima Actualización'" sortable="updated_at">//item.updated_at//</td>
             <td data-title="'Opciones'" style="width:80px;">
-             
+
               <a title="Editar" class="btn btn-success btn-xs" data-toggle="modal" data-target="#winUpd" ng-click="edit(item.id)"><span class="glyphicon glyphicon-pencil"></span></a>
               <a title="Eliminar" class="btn btn-danger btn-xs" ng-click="delete(item.id)"><span class="glyphicon glyphicon-remove"></span></a>
             </td>
@@ -38,8 +41,8 @@
         </tbody>
       </table>
     </div>
+</div>
 
-   
   </div>
 </div>
 
