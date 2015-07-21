@@ -25,18 +25,14 @@ class ReportsController extends BaseController {
         $docentes=CursoAsignado::select('cursoasignado.docente_id')
                             ->join('curso','curso.id','=','cursoasignado.curso_id')
                             ->join('escuela','escuela.id','=','curso.escuela_id')
-                            ->whereRaw("cursoasignado.semestre_id = $semestre_id")
-                            ->where(function($q) use($escuela_id){
-                                if($escuela_id==0)
-                                    return $q;
-                                else
-                                    return $q->whereRaw("curso.escuela_id=$escuela_id");
-                            })
-                            ->where(function($q) use($facultad_id){
-                                if($facultad_id==0)
-                                    return $q;
-                                else
-                                    return $q->whereRaw("escuela.facultad_id=$facultad_id");
+                            ->where(function($q) use($escuela_id,$facultad_id,$semestre_id){
+																if($semestre_id!=0)
+																	$q=$q->whereRaw("cursoasignado.semestre_id=$semestre_id");
+                                if($escuela_id!=0)
+                                  $q=$q->whereRaw("curso.escuela_id=$escuela_id");
+																if($facultad_id!=0)
+																	$q=$q->whereRaw("escuela.facultad_id=$facultad_id");
+																return $q;
                             })
                             ->distinct()
                             ->get();
@@ -471,7 +467,7 @@ class ReportsController extends BaseController {
 						}
 
 					}
-					
+
 					if($total>0){
 						$porcentaje_si=round($si*100/$total,2);
 						$porcentaje_no=round($no*100/$total,2);

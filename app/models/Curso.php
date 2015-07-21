@@ -1,12 +1,10 @@
 <?php
 class Curso extends Eloquent {
    protected $table = 'curso';
-    public static $rules_save = [
-		'code' => 'required|unique:curso'
-  	];
-  	public static $rules_update = [];
+    public static $rules_save = array('code' => 'required|unique:curso');
+  	public static $rules_update = array();
   	// Don't forget to fill this array
-  	protected $fillable = ['id','code','name','ciclo','numbercredits','numberhours','escuela_id'];
+  	protected $fillable = array('id','code','name','ciclo','numbercredits','numberhours','escuela_id');
 
    public function escuela(){
         return $this->belongsTo('Escuela','escuela_id');

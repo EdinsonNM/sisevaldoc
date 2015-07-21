@@ -1,5 +1,6 @@
 app.controller("EvaluacionDocenteController",function($log,$rootScope,EtapaEvaluacionService,CursoAsignadoService,SemestreService,FacultadService,EscuelaService,DocenteService,$scope,$timeout,$routeParams,$http,$resource,ngTableParams){
-	$scope.facultadSelected=-1;
+		console.log("usuario::",$rootScope.user);
+		$scope.facultadSelected=-1;
     $scope.escuelaSelected=-1;
     //$scope.docenteSelected=-1;
     //$scope.cursoSelected=-1;
@@ -999,7 +1000,9 @@ app.controller("GraphicEvaluacionJefeController",function($log, CriterioEvaluaci
                 $log.info("PLANTiLLA:"+$scope.plantillaSelected);
                 if($scope.semestreSelected!=-1){
                     if($scope.plantillaSelected!=-1){
-
+											$scope.facultad=_.findWhere($scope.facultades, {id:$scope.facultadSelected+''});
+											$scope.escuela=_.findWhere($scope.escuelas, {id:$scope.escuelaSelected});
+											$scope.semestre=_.findWhere($scope.semestres, {id:$scope.semestreSelected});
                         var params={
                             "plantilla_id":$scope.plantillaSelected,
                             "semestre_id":$scope.semestreSelected,
@@ -1800,10 +1803,7 @@ app.controller("CargaHorariaAsignadaJdController",function($rootScope,$log,Carga
 
 
 app.controller("EvaluacionPromedioAlDocDimController",function($log,CriterioEvaluacionService, EtapaEvaluacionService,CursoAsignadoService,SemestreService,FacultadService,EscuelaService,DocenteService,$scope,$timeout,$routeParams,$http,$resource,ngTableParams){
-    $scope.facultadSelected=0;
-    $scope.escuelaSelected=0;
-    $scope.docenteSelected=0;
-    $scope.cursoSelected=0;
+
     $scope.semestreSelected=-1;
     $scope.plantillaSelected=-1;
     $scope.showmessage=false;
@@ -1867,9 +1867,7 @@ app.controller("EvaluacionPromedioAlDocDimController",function($log,CriterioEval
 
     FacultadService.get({},function(data){
         $scope.facultades=data.data;
-        if(data.total>0)
-            $scope.facultadSelected=data.data[0].id;
-        $scope.loadEscuelas();
+
     });
 
     SemestreService.get({},function(data){
@@ -1985,8 +1983,10 @@ app.controller("EvaluacionPromedioAlDocDimController",function($log,CriterioEval
     $scope.list=function(){
         $scope.showLoading=true;
         $scope.showmessage=false;
-
-
+				$scope.facultad=_.findWhere($scope.facultades, {id:$scope.facultadSelected+''});
+				$scope.escuela=_.findWhere($scope.escuelas, {id:$scope.escuelaSelected});
+				$scope.semestre=_.findWhere($scope.semestres, {id:$scope.semestreSelected});
+				$scope.docente=_.findWhere($scope.docentes, {id:$scope.docenteSelected});
 				if($scope.semestreSelected!=-1){
 					var params={
 							"semestre_id":$scope.semestreSelected,
@@ -2184,7 +2184,7 @@ app.controller("EvaluacionDesempenoDocAlController",function($log,CriterioEvalua
 				console.log($scope.semestreSelected);
 
 					$scope.facultad=_.findWhere($scope.facultades, {id:$scope.facultadSelected+''});
-				//	$scope.escuela=_.findWhere($scope.escuelas, {id:$scope.escuelaSelected});
+					$scope.escuela=_.findWhere($scope.escuelas, {id:$scope.escuelaSelected});
 					$scope.semestre=_.findWhere($scope.semestres, {id:$scope.semestreSelected});
 					console.log($scope.facultades,$scope.escuelas,$scope.semestres);
 					var params={

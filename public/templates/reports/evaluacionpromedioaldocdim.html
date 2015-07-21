@@ -28,37 +28,48 @@
     </nav>
 
     <div class="panel-body" style="margin-top:-20px">
-        <div class="row">
+        <div class="row hidden-print">
             <div class="col-md-3">
 
                 <label>Facultad: </label>
-                <select class="form-control" placeholder="Search" ng-model="facultadSelected" ng-change="loadEscuelas()">
-                    <option value="0">Todas las Facultades</option>
-                    <option ng-repeat="facultad  in facultades" value="//facultad.id//">//facultad.name//</option>
+                <select
+                class="form-control"
+                placeholder="Search"
+                ng-options="facultad.id as facultad.name for facultad in facultades"
+                ng-model="facultadSelected"
+                ng-change="loadEscuelas()">
+                    <option value="" selected="selected">TODAS LAS FACULTADES</option>
                 </select>
 
             </div>
             <div class="col-md-3">
 
                 <label>Escuela: </label>
-                <select class="form-control" placeholder="Search" ng-model="escuelaSelected" ng-change="loadDocentes()">
-                    <option value="0" >Todas las Escuelas</option>
-                    <option ng-repeat="escuela  in escuelas" value="//escuela.id//">//escuela.name//</option>
+                <select
+                class="form-control"
+                placeholder="Search"
+                ng-options="escuela.id as escuela.name for escuela in escuelas"
+                ng-change="loadDocentes()"
+                ng-model="escuelaSelected">
+                  <option value="" >TODAS LAS ESCUELAS</option>
                 </select>
 
             </div>
             <div class="col-md-2">
 
                 <label>Semestre: </label>
-                <select class="form-control" ng-model="semestreSelected"  ng-change="loadCursos()">
-                    <option value="0">Todos los Semestres</option>
-                    <option ng-repeat="semestre  in semestres" value="//semestre.id//">//semestre.year+'-'+semestre.period//</option>
+                <select
+                class="form-control"
+                ng-model="semestreSelected"
+                ng-options="semestre.id as semestre.year+'-'+semestre.period for semestre in semestres"
+                >
                 </select>
+
 
             </div>
             <div class="col-md-2">
                 <label>Docente: </label>
-                <select class="form-control" ng-model="docenteSelected" ng-change="loadCursos()">
+                <select class="form-control" ng-model="docenteSelected">
                     <option value="0">Todas los Docentes</option>
                     <option ng-repeat="docente  in docentes" value="//docente.id//">//docente.firstname+' '+docente.lastname//</option>
                 </select>
@@ -68,7 +79,28 @@
         </div>
         <br/>
         <br/>
-
+        <div class="row">
+          <div class="col-sm-12 text-center">
+            <table class="table">
+              <thead>
+                <tr>
+                  <th>
+                  <label>Facultad:</label><br/>//facultad.name|| 'TODAS LAS FACULTADES'//
+                  </th>
+                  <th>
+                  <label>Escuela:</label><br/>//escuela.name|| 'TODAS LAS ESCUELAS'//
+                  </th>
+                  <th>
+                  <label>Semestre:</label><br/>//semestre.year+'-'+semestre.period//
+                  </th>
+                  <th>
+                  <label>Docente:</label><br/>//docente.firstname+' '+docente.lastname//
+                  </th>
+                </tr>
+              </thead>
+            </table>
+          </div>
+        </div>
 
         <div class="row">
             <div class="col-md-12">

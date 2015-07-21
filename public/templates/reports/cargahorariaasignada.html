@@ -14,9 +14,13 @@
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-2">
            <form id="myform" class="navbar-form navbar-right" method="post" action="admin/exportexcel">
             <input type="hidden" id="data_download" name="data_download" />
-            <button type="button" class="btn btn-success" ng-click="ExportToExcel()">
-                <span class="glyphicon glyphicon-print"></span> 
+            <button type="button" class="btn btn-info" onclick="window.print()">
+                <span class="glyphicon glyphicon-print"></span>
                 Imprimir
+            </button>
+            <button type="button" class="btn btn-success" ng-click="ExportToExcel()">
+                <span class="glyphicon glyphicon-print"></span>
+                Exportar a excel
             </button>
           </form>
 
@@ -25,12 +29,12 @@
     </nav>
 
   <div class="panel-body" style="margin-top:-20px">
-    <div class="row">
+    <div class="row hidden-print">
       <div class="col-md-3">
 
               <label>Facultad: </label>
               <select class="form-control" placeholder="Search" ng-model="facultad_id" ng-change="loadEscuelas()">
-                
+
                 <option ng-repeat="facultad  in facultades" value="//facultad.id//">//facultad.name//</option>
               </select>
 
@@ -68,12 +72,12 @@
           <strong>Alerta!</strong>
           //message//
         </div>
-        
-            
+
+
 
       </div>
     </div>
-  	 
+
 <div class="row">
 <div class="col-md-12" id="reportTable">
 
@@ -162,7 +166,7 @@
     <td colspan="1" rowspan="1" class="text-center">//curso.number_hours_theory//</td>
     <td colspan="1" rowspan="1" class="text-center">//curso.number_hours_practices//</td>
     <td colspan="1" rowspan="1" class="text-center">//curso.number_hours_laboratory//</td>
-    
+
     <td colspan="1" rowspan="1" class="text-center">// curso.number_hours_theory + curso.number_hours_practices + curso.number_hours_laboratory //</td>
   </tr>
 
@@ -209,10 +213,9 @@
 </tbody>
 </table>
 
-  
+
 </div>
-</div>
-   
-  </div>
 </div>
 
+  </div>
+</div>

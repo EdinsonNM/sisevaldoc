@@ -6,7 +6,7 @@ class ImportController extends BaseController {
     {
         $this->beforeFilter(function()
         {
-            if (!Sentry::check())   
+            if (!Sentry::check())
                 return View::make('home.index');
         });
         set_time_limit (600);
@@ -20,7 +20,7 @@ class ImportController extends BaseController {
             $tempPath = $_FILES[ 'file' ][ 'tmp_name' ];
             $result=Excel::excel2Array($tempPath);
             $isHeader=true;
-            
+
             foreach ($result[0] as $valor) {
                 $isvalid=true;
                 $message="";
@@ -34,7 +34,7 @@ class ImportController extends BaseController {
                         $isvalid=false;
                     }
                     $data[]=array(
-                        'code' => $valor[0][0], 
+                        'code' => $valor[0][0],
                         'name' => $valor[0][1],
                         'description'=>$valor[0][2],
                         'isvalid'=>$isvalid,
@@ -44,7 +44,7 @@ class ImportController extends BaseController {
 
             }
             $success=true;
-        } else 
+        } else
            $success=false;
 
        return Response::json(
@@ -67,7 +67,7 @@ class ImportController extends BaseController {
                 $entities[]=$entity;
             }
         }
-       
+
         return Response::json(array(
             'error' => false,
             'entities'=>$entities
@@ -104,7 +104,7 @@ class ImportController extends BaseController {
                     }
                     $data[]=array(
                         'facultad_id' => $facultad->id,
-                        'code' => $valor[0][1], 
+                        'code' => $valor[0][1],
                         'name' => $valor[0][2],
                         'description'=>$valor[0][3],
                         'facultad'=>$facultad->toArray(),
@@ -115,7 +115,7 @@ class ImportController extends BaseController {
 
             }
             $success=true;
-        } else 
+        } else
            $success=false;
 
        return Response::json(
@@ -139,7 +139,7 @@ class ImportController extends BaseController {
                 $entities[]=$entity;
             }
         }
-       
+
         return Response::json(array(
             'error' => false,
             'entities'=>$entities
@@ -176,7 +176,7 @@ class ImportController extends BaseController {
                     }
                     $data[]=array(
                         'escuela_id' => $escuela->id,
-                        'code' => $valor[0][1], 
+                        'code' => $valor[0][1],
                         'name' => $valor[0][2],
                         'ciclo'=>$valor[0][3],
                         'numbercredits'=>$valor[0][4],
@@ -189,7 +189,7 @@ class ImportController extends BaseController {
 
             }
             $success=true;
-        } else 
+        } else
            $success=false;
 
        return Response::json(
@@ -297,7 +297,7 @@ class ImportController extends BaseController {
                         'grado_id' => $grado->id,
                         'titulo_id' => $titulo->id,
                         'tipodedicacion_id'=>$dedicacion->id,
-                        'code' => $valor[0][1], 
+                        'code' => $valor[0][1],
                         'firstname' => $valor[0][2],
                         'lastname' => $valor[0][3],
                         'user'=>$valor[0][8],
@@ -315,7 +315,7 @@ class ImportController extends BaseController {
 
             }
             $success=true;
-        } else 
+        } else
            $success=false;
 
        return Response::json(
@@ -356,7 +356,7 @@ class ImportController extends BaseController {
                 $entities[]=$entity;
             }
         }
-       
+
         return Response::json(array(
             'error' => false,
             'entities'=>$entities
@@ -387,7 +387,7 @@ class ImportController extends BaseController {
 
                     }
 
-                   
+
                     $alumno=Alumno::where('code','=',$valor[0][1])->first();
                     if($alumno){
                         $message="Registro no se importara. Codigo de Alumno ya existe";
@@ -401,7 +401,7 @@ class ImportController extends BaseController {
                     }
                     $data[]=array(
                         'escuela_id' => $escuela->id,
-                        'code' => $valor[0][1], 
+                        'code' => $valor[0][1],
                         'firstname' => $valor[0][2],
                         'lastname' => $valor[0][3],
                         'yearinput' => $valor[0][4],
@@ -415,7 +415,7 @@ class ImportController extends BaseController {
 
             }
             $success=true;
-        } else 
+        } else
            $success=false;
 
        return Response::json(
@@ -457,6 +457,7 @@ class ImportController extends BaseController {
                 $alumno->lastname=$item['lastname'];
                 $alumno->yearinput=$item['yearinput'];
                 $alumno->usuario_id=$user->id;
+								$alumno->created_at=new Datetime();
                 $alumnos[]=$alumno->toArray();
             }
         }
@@ -511,23 +512,23 @@ class ImportController extends BaseController {
                         $escuela=new Escuela();
                         $curso=new Curso();
                     }
-                    
+
                     $semestre=Semestre::where('year','=',$valor[0][3])
-                            ->where('period','=',$valor[0][4])->first();     
-                    
+                            ->where('period','=',$valor[0][4])->first();
+
                     if(!$semestre){
                         $message="Registro no se importara.Semestre N° ".$valor[0][3]."-".$valor[0][4]." no existe";
                         $isvalid=false;
                         $semestre=new Semestre();
-                    }              
-                    
-                    
+                    }
+
+
                     if($isvalid){
                         $cursoasignado=CursoAsignado::where('curso_id','=',$curso->id)
                             ->where('semestre_id','=',$semestre->id)
                             ->where('docente_id','=',$docente->id)
                             ->first();
-                        if($cursoasignado){   
+                        if($cursoasignado){
                             $message="Registro no se importara. Curso ya se encuentra asignado al docente para el semestre seleccionado";
                             $isvalid=false;
                         }
@@ -535,7 +536,7 @@ class ImportController extends BaseController {
 
                     $data[]=array(
                         'escuela_id' => $escuela->id,
-                        'curso_id' => $curso->id, 
+                        'curso_id' => $curso->id,
                         'docente_id' => $docente->id,
                         'semestre_id' => $semestre->id,
                         'escuela'=>$escuela->toArray(),
@@ -545,12 +546,12 @@ class ImportController extends BaseController {
                         'isvalid'=>$isvalid,
                         'message'=>$message
                     );
-                    
+
                 }
 
             }
             $success=true;
-        } else 
+        } else
            $success=false;
 
        return Response::json(
@@ -573,7 +574,7 @@ class ImportController extends BaseController {
                 $entities[]=$entity;
             }
         }
-       
+
         return Response::json(array(
             'error' => false,
             'entities'=>$entities
@@ -620,29 +621,29 @@ class ImportController extends BaseController {
                         $escuela=new Escuela();
                         $curso=new Curso();
                     }
-                    
+
                     $semestre=Semestre::where('year','=',$valor[0][3])
-                            ->where('period','=',$valor[0][4])->first();     
-                    
+                            ->where('period','=',$valor[0][4])->first();
+
                     if(!$semestre){
                         $message="Registro no se importara.Semestre N° ".$valor[0][3]."-".$valor[0][4]." no existe";
                         $isvalid=false;
                         $semestre=new Semestre();
-                    }              
-                    
-                    $alumno=Alumno::where('code','=',$valor[0][5])->first();     
-                    
+                    }
+
+                    $alumno=Alumno::where('code','=',$valor[0][5])->first();
+
                     if(!$alumno){
                         $message="Registro no se importara.Código de alumno N° ".$valor[0][5]." no existe";
                         $isvalid=false;
                         $alumno=new Alumno();
-                    } 
+                    }
 
                     $cursoasignado=CursoAsignado::where('curso_id','=',$curso->id)
                             ->where('semestre_id','=',$semestre->id)
                             ->where('docente_id','=',$docente->id)
                             ->first();
-                    if(!$cursoasignado){   
+                    if(!$cursoasignado){
                             $message="Registro no se importara. El curso [".$curso->name."] al cual desea inscribir al alumno para el semestre [".$semestre->year.'-'.$semestre->period."] no se encuentra disponible";
                             $isvalid=false;
                             $cursoasignado=new CursoAsignado();
@@ -660,7 +661,7 @@ class ImportController extends BaseController {
 
                     $data[]=array(
                         'escuela_id' => $escuela->id,
-                        'curso_id' => $curso->id, 
+                        'curso_id' => $curso->id,
                         'docente_id' => $docente->id,
                         'semestre_id' => $semestre->id,
                         'cursoasignado_id'=>$cursoasignado->id,
@@ -674,12 +675,12 @@ class ImportController extends BaseController {
                         'isvalid'=>$isvalid,
                         'message'=>$message
                     );
-                    
+
                 }
 
             }
             $success=true;
-        } else 
+        } else
            $success=false;
 
        return Response::json(
@@ -701,7 +702,7 @@ class ImportController extends BaseController {
                 $entities[]=$entity;
             }
         }
-       
+
         return Response::json(array(
             'error' => false,
             'entities'=>$entities

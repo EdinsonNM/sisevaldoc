@@ -26,7 +26,7 @@ class AdminController extends BaseController {
     {
         $type = Session::get('type');
         Sentry::logout();
-        return Redirect::to('');
+        return Redirect::to('/');
     }
 
     public function getValidatelogin()
@@ -206,6 +206,19 @@ class AdminController extends BaseController {
                 $menu[1]['children'][1]=array('title'=>"Auto Evaluación Docente",'url'=>'#/reports/autoevaluaciondocentejd','icon'=>'glyphicon glyphicon-bookmark');
                 $menu[1]['children'][2]=array('title'=>"Avance Curricular",'url'=>'#/reports/avancecurricularjd','icon'=>'');
                 $menu[1]['children'][3]=array('title'=>"Carga Horaria Asignada",'url'=>'#/reports/cargahorariaasignadajd','icon'=>'');
+
+								$menu[2]=array('title'=>"Reportes",'url'=>'javascript:return false;','icon'=>'glyphicon glyphicon-book');
+                $menu[2]['children'][0]=array('title'=>"Evaluación Docente",'url'=>'#/reports/evaluaciondocente','icon'=>'');
+                $menu[2]['children'][1]=array('title'=>"Grafico Evaluación",'url'=>'#/reports/graphicevaluacion','icon'=>'');
+                $menu[2]['children'][2]=array('title'=>"Grafico AutoEvaluación",'url'=>'#/reports/graphicautoevaluacion','icon'=>'');
+                $menu[2]['children'][3]=array('title'=>"Grafico AutoEvaluación Por Criterios",'url'=>'#/reports/graphicautoevaluacioncriterio','icon'=>'');
+                $menu[2]['children'][4]=array('title'=>"Grafico Evaluación Jefe Departamento ",'url'=>'#/reports/evaluacionjefedepartamento','icon'=>'');
+                $menu[2]['children'][5]=array('title'=>"Carga Horaria Asignada",'url'=>'#/reports/cargahorariaasignada','icon'=>'');
+                $menu[2]['children'][6]=array('title'=>"Avance Curricular",'url'=>'#/reports/avancecurricular','icon'=>'');
+
+								$menu[2]['children'][7]=array('title'=>"Evaluacion de Desempeño Docente según percepción de los Estudiantes",'url'=>'#/reports/evaluaciondesempenodocal','icon'=>'');
+								$menu[2]['children'][8]=array('title'=>"Evaluacion Promedio de Alumnos a los Docentes por Dimension",'url'=>'#/reports/evaluacionpromedioaldocdim','icon'=>'');
+
                 break;
         }
 

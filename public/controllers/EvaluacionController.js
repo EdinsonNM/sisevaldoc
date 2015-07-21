@@ -15,7 +15,7 @@ app.controller("EvaluacionController", function EvaluacionController(ValoracionE
 
    AlumnoCursoService.get({id:$routeParams.id},function(data){
         $scope.others.inscripcion=data.data;
-   
+
             EtapaEvaluacionService.get(
                 {
                     'filter[semestre_id]':$scope.others.inscripcion.cursoasignado.semestre.id,
@@ -25,7 +25,7 @@ app.controller("EvaluacionController", function EvaluacionController(ValoracionE
                 function(data){
                     if(data.total>0){
                         $scope.others.etapaevaluacion=data.data[0];
-                        
+
                         var result=$scope.ValidateEtapa($scope.others.etapaevaluacion);
                         if(result.success){
                         //Obtengo la autoevaluacion de docente para el curso asignado
@@ -40,11 +40,11 @@ app.controller("EvaluacionController", function EvaluacionController(ValoracionE
                                         $scope.finalizado=true;
                                     }
                                 }else{
-                                     $scope.msg_title="No existe Evaluación";
+                                     $scope.msg_title="No existe Evaluación. ¿Desea Iniciar la evaluación?";
                                      $scope.showNoExisteEvaluacion=true;
                                      $scope.showMsg=true;
                                      $scope.showEvaluacion=false;
-                                     
+
                                 }
                                 $scope.showLoading=false;
                            });
@@ -66,9 +66,9 @@ app.controller("EvaluacionController", function EvaluacionController(ValoracionE
                     }
             });
    });
-   
-   
-   
+
+
+
    var ENTITYNAME='criterioevaluacion';
 
    $scope.ValidateEtapa=function(etapa){
@@ -115,7 +115,7 @@ app.controller("EvaluacionController", function EvaluacionController(ValoracionE
                 $scope.entidad=data.entity;
                 console.log($scope.entidad);
                 noty({
-                        text: 'Evaluacion registrada satisfactoriamente', 
+                        text: 'Evaluacion registrada satisfactoriamente',
                         type: 'success',
                         layout:'bottomRight',
                         timeout:5000,
@@ -127,7 +127,7 @@ app.controller("EvaluacionController", function EvaluacionController(ValoracionE
    };
 
     $scope.CloseEvaluacion=function(){
-       
+
         if($scope.existeevaluacion){
             var n=noty({
               text: 'Desea enviar la Evaluación?',
@@ -143,7 +143,7 @@ app.controller("EvaluacionController", function EvaluacionController(ValoracionE
                         EvaluacionService.update($scope.entidad,function(data){
                             $scope.entidad=data.entity;
                             noty({
-                                    text: 'Evaluacion enviada satisfactoriamente', 
+                                    text: 'Evaluacion enviada satisfactoriamente',
                                     type: 'success',
                                     layout:'bottomRight',
                                     timeout:5000,
@@ -151,18 +151,18 @@ app.controller("EvaluacionController", function EvaluacionController(ValoracionE
                             $route.reload();
                             $scope.showLoading=false;
                         });
-                    
+
                     }
                 },
                 {
                     addClass: 'btn btn-danger', text: 'No', onClick: function($noty) {
                     $noty.close();
-                    
+
                     }
                 }
               ]
             });
-            
+
         }
    };
 
@@ -190,18 +190,18 @@ app.controller("EvaluacionController", function EvaluacionController(ValoracionE
         //console.log(valoracion);
         ValoracionEvaluacionService.save(valoracion,function(data){
             noty({
-                    text: 'valoracion actualizada satisfactoriamente', 
+                    text: 'valoracion actualizada satisfactoriamente',
                     type: 'success',
                     layout:'bottomRight',
                     timeout:500,
             });
-            
+
         });
    };
    $scope.list=function(){
 
         PlantillaCriteriosService.get({id:$scope.others.etapaevaluacion.plantilla_id},function(data){
-            TipoValoracionService.get({'filter[tipo]':data.data.tiporespuesta},function(data){ 
+            TipoValoracionService.get({'filter[tipo]':data.data.tiporespuesta},function(data){
                 $scope.others.tiposvaloracion=data.data;});
         });
         $scope.tableParams = new ngTableParams({
@@ -254,6 +254,6 @@ app.controller("EvaluacionController", function EvaluacionController(ValoracionE
         return false;
     }
 
-    
-    
+
+
 });
