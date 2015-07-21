@@ -442,11 +442,10 @@ class ImportController extends BaseController {
                 $user->username =$item['user'];
                 $user->first_name=$item['firstname'];
                 $user->last_name=$item['lastname'];
-                $user->password  = password_hash($item['user'], PASSWORD_DEFAULT);
+                $user->password  = password_hash($user->username, PASSWORD_DEFAULT);
                 $user->email =$item['email'];
                 $user->activated = true;
                 $users[]=$user->toArray();
-
                 $usersgroups[]=array('group_id' => 2,'user_id'=>$user->id);
 
                 $alumno=new Alumno();
