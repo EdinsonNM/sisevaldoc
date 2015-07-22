@@ -9,12 +9,12 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-          <a class="navbar-brand" href="#//location.path()//">Reporte de Avance Curricular</a>
+          <a class="navbar-brand" href>Reporte de Avance Curricular</a>
         </div>
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-2">
           <form id="myform" class="navbar-form navbar-right" method="post" action="admin/exportexcel">
             <input type="hidden" id="data_download" name="data_download" />
-            <button type="button" class="btn btn-info" ng-click="ExportToExcel()">
+            <button type="button" class="btn btn-info" onclick="window.print()">
                 <span class="glyphicon glyphicon-print"></span> 
                 Imprimir
             </button>
@@ -30,7 +30,7 @@
     </nav>
 
   <div class="panel-body" style="margin-top:-20px">
-    <div class="row">
+    <div class="row hidden-print">
       <div class="col-md-3">
 
               <label>Facultad: </label>
@@ -42,7 +42,7 @@
       <div class="col-md-3">
 
             <label>Escuela: </label>
-              <select class="form-control" placeholder="Search" ng-model="escuelaSelected" ng-change="loadDocentes()" ng-disabled="loadingData">
+              <select class="form-control" placeholder="Search" ng-model="escuelaSelected" ng-change="loadDocentes()">
                 <option ng-repeat="escuela  in escuelas" value="//escuela.id//">//escuela.name//</option>
               </select>
 
@@ -117,30 +117,27 @@
             </tr>
             <tr>
               <td colspan="6">
-                <table ng-table="tableParams" show-filter="false" class="table table-bordered table-striped table-hover table-condensed " style="margin: 0px 0px 0px 0px;">
-                  <tbody ng-repeat="group in $groups | orderBy:'week'">
-                    <tr class="ng-table-group">
-                      <td colspan="//$columns.length//">
-                          <a href="" ng-click="group.$hideRows = !group.$hideRows">
-                              <span class="glyphicon" ng-class="{ 'glyphicon-chevron-right': group.$hideRows, 'glyphicon-chevron-down': !group.$hideRows }"></span>
-                              <strong>Semana // group.value //</strong>
-                          </a>
-                      </td>
+                <table class="table table-bordered table-striped table-hover table-condensed " style="margin: 0px 0px 0px 0px;">
+                  <thead>
+                    <tr>
+                      <th>Avance (%)</th>
+                      <th>Contenido</th>
+                      <th>Numero de Horas</th>
                     </tr>
-
-                  <tr ng-hide="group.$hideRows" ng-repeat="item in group.data">
-                    <td data-title="'Avance (%)'" style="width:50px;">//item.week//</td>
-                    <td data-title="'Contenido'">//$index+1//. //item.content//</td>
-                    <td data-title="'N° Horas'"  style="width:50px;">//item.numberhours//</td>          
-                  </tr>
-                  
+                  </thead>
+                  <tbody>
+                    <tr ng-repeat="item in items">
+                      <td data-title="'Avance (%)'">//item.avance//%</td>
+                      <td data-title="'Contenido'">//$index+1//. //item.content//</td>
+                      <td data-title="'N° Horas'">//item.numberhours//</td>          
+                    </tr>                  
+                    <tr>
+                      <th colspan="2">TOTAL DE HORAS:</th>
+                      <th>//totalHoras//</th>
+                    </tr>
                   </tbody>
                 </table>
               </td>
-            </tr>
-            <tr>
-              <td colspan="5">TOTAL DE HORAS:</td>
-              <td  style="width:50px;">//totalHoras//</td>
             </tr>
           </tbody>
         </table>

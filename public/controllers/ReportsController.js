@@ -1384,18 +1384,15 @@ app.controller("AvanceCurricularController",function(CargaLectivaService,$log,$r
         })
     }
     $scope.loadDocentes=function(){
-        $scope.docenteSelected=-1;
-        $scope.loadingData=true;
+        $scope.docenteSelected=-1;        
         DocenteService.get({'filter[escuela_id]':$scope.escuelaSelected},function(data){
             $scope.docentes=data.data;
             if(data.total>0){
-                //$scope.docenteSelected=data.data[0].id;
-                $scope.loadingData=false;
                 $scope.loadCursos();
             }
         });
     };
-    /*$scope.loadCursos=function(){
+    $scope.loadCursos=function(){
         $scope.docente=getById($scope.docentes,$scope.docenteSelected);
         $log.info($scope.docente);
         $scope.cursoSelected=-1;
@@ -1411,7 +1408,7 @@ app.controller("AvanceCurricularController",function(CargaLectivaService,$log,$r
             }
             $scope.changeCurso();
         });
-    };*/
+    };
     $scope.changeCurso=function(){
         $.each($scope.cursos,function(){
             if(this.id==$scope.cursoSelected)
@@ -1427,45 +1424,28 @@ app.controller("AvanceCurricularController",function(CargaLectivaService,$log,$r
                 var params={
                     "filter[plantilla_id]":$scope.plantillaSelected,
                     "filter[cursoasignado_id]":$scope.cursoSelected
-
                 };
-                $scope.tableParams = new ngTableParams(
-                {
-                    page: 1,            // show first page
-                    count: 10,          // count per page
-                    r:Math.random(),
-                    filter:
-                    {
-                        cursoasignado_id:$scope.cursoSelected
-                    },
-                    sorting:
-                    {
-                        name: 'asc'     // initial sorting
+
+                CargaLectivaService.get(params, function(data){
+                    $scope.totalHoras=0;
+                    console.log(data.data);
+                
+                    if(data.data.length>0){
+                        var cursoasignado = data.data[0].cursoasignado;
+                        var totalhoras_ca = cursoasignado.number_hours_laboratory + cursoasignado.number_hours_practices + cursoasignado.number_hours_theory;                        
+                        var avance = 0;
+                        $scope.items = data.data;
+                        $.each($scope.items,function(){
+                            $scope.totalHoras+=parseInt(this.numberhours);
+                            avance += this.numberhours*1;
+                            console.log(this);
+                            this.avance = avance/totalhoras_ca * 100;
+                        });
+                        
+
                     }
-                },
-                {
-                    groupBy: 'week',
-                    total: 1,           // length of data
-                    counts:[],
-                    getData: function($defer, params) {
-                        CargaLectivaService.get(params.url(),function(data){
-                            $scope.totalHoras=0;
-                            $timeout(function() {
-                                $.each(data.data,function(){
-                                    $scope.totalHoras+=parseInt(this.numberhours);
-                                });
-                                console.log(data);
-                                if(data.total==0){
-                                        data.data={};
-                                }
-                                // update table params
-                                params.total(data.total);
-                                // set new data
-                                $defer.resolve(data.data);
-                            }, 500);
-                         })
-                    }
-                });
+                 })
+                
             }else{
                 $scope.message="No se ha seleccionado el curso o docente evaluado.";
                 $scope.showmessage=true;
