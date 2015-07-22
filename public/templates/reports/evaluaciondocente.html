@@ -9,7 +9,7 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-          <a class="navbar-brand" href="#//location.path()//">Reporte de Evaluación por Docente</a>
+          <a class="navbar-brand" href>Reporte de Evaluación por Docente</a>
         </div>
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-2">
           <form id="myform" class="navbar-form navbar-right" method="post" action="./print/export-excel">
@@ -131,7 +131,7 @@
                    </a>
 
                    </h6>
-                   <table class="table table-hover table-bordered" ng-show="item.visible">
+                   <table class="table table-hover table-bordered" ng-show="!item.visible">
                     <thead>
                       <tr>
                         <th>Descripción</th>

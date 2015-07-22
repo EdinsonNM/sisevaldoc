@@ -50,7 +50,7 @@ class ReportsController extends BaseController {
 
     public function getEvaluaciondocente()
     {
-        $criterio_id=Input::get("criterio_id", '');
+        //$criterio_id=Input::get("criterio_id", '');
         $filter=Input::get("filter");
         $plantilla_id=(!isset($filter['plantilla_id']))?'':$filter['plantilla_id'];
         $cursoasignado_id=(!isset($filter['cursoasignado_id']))?'':$filter['cursoasignado_id'];
@@ -82,13 +82,7 @@ class ReportsController extends BaseController {
                     }));
 
             }))
-            ->whereIn('criterioevaluacion.plantilla_id',$ids)
-            ->Where(function($q) use($criterio_id){
-                    if ($criterio_id!=''){
-                        $q=$q->where('criterioevaluacion.id','=', $criterio_id);
-                    }
-                    return $q;
-                })
+            ->whereIn('criterioevaluacion.plantilla_id',$ids)            
             ->where("grupo",'=',1)
             ->paginate(Input::get('count'));
 

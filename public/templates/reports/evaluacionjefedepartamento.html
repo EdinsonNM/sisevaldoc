@@ -9,7 +9,7 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                <a class="navbar-brand" href="#//location.path()//">Reporte de Evaluación Docente Por Jefe De Departamento</a>
+                <a class="navbar-brand" href>Reporte de Evaluación Docente Por Jefe De Departamento</a>
             </div>
             <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-2">
                 <form class="navbar-form navbar-right">
@@ -32,10 +32,18 @@
             <div class="col-md-3">
 
                 <label>Facultad: </label>
-                <select class="form-control" placeholder="Search" ng-model="facultadSelected" ng-change="loadEscuelas()">
-                    <option value="0">Todas las Facultades</option>
-                    <option ng-repeat="facultad  in facultades" value="//facultad.id//">//facultad.name//</option>
+                <select
+                  class="form-control"
+                  placeholder="Search"
+                  ng-options="facultad.id as facultad.name for facultad in facultades"
+                  ng-model="facultadSelected"
+                  ng-change="loadEscuelas()">
+                    <option value="" selected="selected">Seleccionar Facultad</option>
                 </select>
+
+                <!--select class="form-control" placeholder="Search" ng-model="facultadSelected" ng-change="loadEscuelas()">
+                    <option ng-repeat="facultad  in facultades" value="//facultad.id//">//facultad.name//</option>
+                </select-->
 
             </div>
             <div class="col-md-3">
@@ -80,13 +88,16 @@
               <thead>
                 <tr>
                   <th>
-                  <label>Facultad:</label><br/>//facultad.name|| 'TODAS LAS FACULTADES'//
+                  <label>Facultad:</label><br/>//facultad.name//
                   </th>
                   <th>
-                  <label>Escuela:</label><br/>//escuela.name|| 'TODAS LAS ESCUELAS'//
+                  <label>Escuela:</label><br/>//escuela.name//
                   </th>
                   <th>
-                  <label>Semestre:</label><br/>//semestre.year+'-'+semestre.period//
+                  <label>Semestre:</label><br/>//semestre.year//
+                  </th>
+                  <th>
+                  <label>Docente:</label><br/>//docente.firstname+' '+docente.lastname//
                   </th>
                 </tr>
               </thead>
@@ -121,7 +132,7 @@
                     <tbody>
                       <tr ng-repeat="item in datatable" align="center">
                           <td colspan="1" rowspan="1" style="border: 1px solid #000;">//$index + 1//</td>
-                          <td colspan="6" rowspan="1" style="border: 1px solid #000;" align="left"></td>
+                          <td colspan="6" rowspan="1" style="border: 1px solid #000;" align="left">//escuela.name//</td>
                           <td colspan="1" rowspan="1" style="border: 1px solid #000;"><strong>//item.docente_id + 'CS'//</strong></td>
 
                           <td ng-repeat="valor in item.arr_valores track by $index" colspan="1" rowspan="1" style="border: 1px solid #000;"><strong>//valor//</strong></td>
@@ -139,7 +150,7 @@
         </div>
         <br/>
 
-        <div class="row">
+        <div class="row hidden-print">
             <div class="col-md-2">
                 <label>Tipo Gráfico</label>
                 <select ng-model="chartConfig.options.chart.type" ng-options="t.id as t.title for t in chartTypes"></select>

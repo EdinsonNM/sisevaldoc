@@ -1,5 +1,5 @@
 app.controller("EvaluacionDocenteController",function($log,$rootScope,EtapaEvaluacionService,CursoAsignadoService,SemestreService,FacultadService,EscuelaService,DocenteService,$scope,$timeout,$routeParams,$http,$resource,ngTableParams){
-		console.log("usuario::",$rootScope.user);
+		//console.log("usuario::",$rootScope.user);
 		$scope.facultadSelected=-1;
     $scope.escuelaSelected=-1;
     //$scope.docenteSelected=-1;
@@ -91,7 +91,6 @@ app.controller("EvaluacionDocenteController",function($log,$rootScope,EtapaEvalu
         			"filter[plantilla_id]":$scope.plantillaSelected,
                     "filter[cursoasignado_id]":$scope.cursoSelected,
                     "criterio_id":1
-
         		};
         		var Api = $resource('./reports/evaluaciondocente');
         		Api.get(params, function(data) {
@@ -816,7 +815,7 @@ app.controller("GraphicAutoEvaluacionController",function($log,EtapaEvaluacionSe
 });
 
 app.controller("GraphicEvaluacionJefeController",function($log, CriterioEvaluacionService, EtapaEvaluacionService,CursoAsignadoService,SemestreService,FacultadService,EscuelaService,DocenteService,$scope,$timeout,$routeParams,$http,$resource,ngTableParams){
-    $scope.facultadSelected=0;
+		$scope.facultadSelected=0;
     $scope.escuelaSelected=0;
     $scope.docenteSelected=0;
     $scope.cursoSelected=0;
@@ -883,9 +882,6 @@ app.controller("GraphicEvaluacionJefeController",function($log, CriterioEvaluaci
 
     FacultadService.get({},function(data){
         $scope.facultades=data.data;
-        if(data.total>0)
-            $scope.facultadSelected=data.data[0].id;
-        $scope.loadEscuelas();
     });
 
     SemestreService.get({},function(data){
@@ -986,8 +982,25 @@ app.controller("GraphicEvaluacionJefeController",function($log, CriterioEvaluaci
         {"id": "scatter", "title": "Scatter"}
     ];
     $scope.list=function(){
+        
+		$scope.facultad=_.findWhere($scope.facultades, {id:$scope.facultadSelected*1});
+		$scope.escuela=_.findWhere($scope.escuelas, {id:$scope.escuelaSelected*1});
+        $scope.semestre=_.findWhere($scope.semestres, {id:$scope.semestreSelected*1});
+		$scope.docente=_.findWhere($scope.docentes, {id:$scope.docenteSelected*1});
+
+
         $scope.showLoading=true;
         $scope.showmessage=false;
+
+				if($scope.facultadSelected*1 == 0){
+					noty({
+									text: 'Debe seleccionar una Facultad de la lista',
+									type: 'warning',
+									layout:'bottomRight',
+									timeout:5000,
+					});
+					return;
+				}
 
         EtapaEvaluacionService.get({
             'filter[semestre_id]':$scope.semestreSelected,
@@ -1000,9 +1013,7 @@ app.controller("GraphicEvaluacionJefeController",function($log, CriterioEvaluaci
                 $log.info("PLANTiLLA:"+$scope.plantillaSelected);
                 if($scope.semestreSelected!=-1){
                     if($scope.plantillaSelected!=-1){
-											$scope.facultad=_.findWhere($scope.facultades, {id:$scope.facultadSelected+''});
-											$scope.escuela=_.findWhere($scope.escuelas, {id:$scope.escuelaSelected});
-											$scope.semestre=_.findWhere($scope.semestres, {id:$scope.semestreSelected});
+											
                         var params={
                             "plantilla_id":$scope.plantillaSelected,
                             "semestre_id":$scope.semestreSelected,
