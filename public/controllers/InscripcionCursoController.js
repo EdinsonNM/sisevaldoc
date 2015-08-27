@@ -1,6 +1,6 @@
 app.controller("InscripcionCursoController", function InscripcionCursoController(AlumnoService,InscripcionCursoService,CursoAsignadoService,$routeParams,$scope,$timeout,$http,$route,$location, $resource,ngTableParams){
     $scope.others={};
-    
+
     $scope.entidad={};
     $scope.location = $location;
    CursoAsignadoService.get({id:$routeParams.id},function(data){ $scope.others.cursoasignado=data.data;});
@@ -34,7 +34,7 @@ app.controller("InscripcionCursoController", function InscripcionCursoController
             }
         });
     };
-    
+
     $scope.listStudents=function(){
         console.log($scope.others.cursoasignado.curso.escuela_id)
         $scope.others.Students = new ngTableParams({
@@ -71,24 +71,33 @@ app.controller("InscripcionCursoController", function InscripcionCursoController
         InscripcionCursoService.get({id:id},function(data){
             $scope.entidad=data.data;
         })
-        
+
     };
     $scope.others.AddStudent=function(item){
         $scope.entidad.alumno=item;
         $scope.entidad.cursoasignado=$scope.others.cursoasignado;
         InscripcionCursoService.save($scope.entidad,function(data){
-           
-            noty({
-                    text: 'Alumno registrado satisfactoriamente', 
-                    type: 'success',
-                    layout:'bottomRight',
-                    timeout:5000,
-            });
-            $('#winNew').modal('hide');
+           if(data.success){
+             noty({
+                     text: data.message,
+                     type: 'success',
+                     layout:'bottomRight',
+                     timeout:3000,
+             });
+             //$('#winNew').modal('hide');
              $scope.list();
+           }else{
+             noty({
+                     text: data.message,
+                     type: 'warning',
+                     layout:'bottomRight',
+                     timeout:3000,
+             });
+           }
+
         });
     };
-    
+
     $scope.update=function(){
         InscripcionCursoService.update($scope.entidad,function(data){
             var n = noty({
@@ -97,12 +106,12 @@ app.controller("InscripcionCursoController", function InscripcionCursoController
                     modal:false,
                     timeout:5000,
                     layout: 'bottomRight',
-                    theme: 'defaultTheme'                                  
+                    theme: 'defaultTheme'
             });
             $('#winUpd').modal('hide')
             $route.reload();
         });
-        
+
     };
     $scope.delete=function(id){
         var n=noty({
@@ -116,20 +125,20 @@ app.controller("InscripcionCursoController", function InscripcionCursoController
                 InscripcionCursoService.delete({id:id},function(data){
                     $scope.list();
                     noty({
-                        text: 'Se ha eliminado el registro satisfactoriamente', 
+                        text: 'Se ha eliminado el registro satisfactoriamente',
                         type: 'success',
                         layout:'bottomRight',
                         timeout:5000
                     });
                 });
 
-                
+
 
               }
             },
             {addClass: 'btn btn-danger', text: 'No', onClick: function($noty) {
                 $noty.close();
-                
+
             }
             }
           ]
@@ -138,6 +147,6 @@ app.controller("InscripcionCursoController", function InscripcionCursoController
 
 
     $scope.list();
-   
-    
+
+
 });

@@ -23,7 +23,7 @@
         {{ HTML::style('css/ng-table.min.css') }}
         {{ HTML::style('css/ng-quick-date.css') }}
         {{ HTML::style('css/jquery-ui-1.10.4.custom.css') }}
-
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
   </head>
   <body ng-app='app'>
   	<nav class="navbar navbar-default  hidden-print" role="navigation">

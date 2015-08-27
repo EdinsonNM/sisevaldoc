@@ -53,7 +53,7 @@ class LoginUserController extends BaseController {
         {
             $success=false;
         }
-        
+
         return View::make('login.resetpassword')
             ->with("success",$success)
             ->with("code",$code)
@@ -81,7 +81,7 @@ class LoginUserController extends BaseController {
                 $title="Error de Cambio de Contraseña!";
                 $message="Ocurrio un error mientras se intentaba cambiar la contraseña. Por favor intente nuevamente";
             }
-            
+
         }
         else
         {
@@ -89,13 +89,82 @@ class LoginUserController extends BaseController {
             $title="Requerimiento Denegado!";
             $message="Código de Petición de cambio de contraseña es incorrecto. Este problema puede ocurrir debido a que la dirección es invalida o su código de petición ha expirado. Si desea cambiar su contraseña haga click <a href='./forgotmypassword'>aqui</a>";
         }
-        
+
         return View::make('login.resetpasswordsuccess')
             ->with("success",$success)
             ->with("code",$code)
             ->with("username",$username)
             ->with('title',$title)
             ->with('message',$message);
+    }
+
+    public function getRecuperarPassword(){
+      $username=Input::get('username','');
+      $success=false;
+      $resetCode ='';
+      $message='';
+      try
+      {
+          $user = Sentry::findUserByLogin($username);
+          $resetCode = $user->getResetPasswordCode();
+          if($user->email!=''){
+            $success=true;
+            Mail::send('emails.RequestChangePassword',
+                array(
+                    'user'=>$user->toArray(),
+                    'resetCode'=>$resetCode
+                ), function($message) use($user)
+            {
+                 $message->from('sisevaldoc@unu.com', 'Sisevaldoc');
+                 $message->to($user->email, $user->first_name.' '.$user->last_name)->subject('Solicitud de cambio de Contraseña');
+            });
+          }else{
+            $message="Usuario no tiene un correo asignado. Por favor contacte con el Administrador del Sistema";
+          }
+
+      }
+      catch (Cartalyst\Sentry\Users\UserNotFoundException $e)
+      {
+          $message='Usuario no encontrado.';
+      }
+      return Response::json(array('success'=>$success,'message'=>$message),200);
+
+    }
+
+    public function postCambiarPassword(){
+      try
+      {
+          $code=Input::get('code','');
+          $password=Input::get('password','');
+          $success=false;
+          $message='';
+
+          // Find the user using the user id
+          $user = Sentry::findUserByResetPasswordCode($code);
+
+          // Check if the reset password code is valid
+          if ($user->checkResetPasswordCode($code))
+          {
+              // Attempt to reset the user password
+              if ($user->attemptResetPassword($code, $password))
+              {
+                  $success=true;
+              }
+              else
+              {
+                  $message='Ocurrio un error mientras se intentaba cambiar la contraseña';
+              }
+          }
+          else
+          {
+              $message="El código es invalido";
+          }
+      }
+      catch (Cartalyst\Sentry\Users\UserNotFoundException $e)
+      {
+          $message='Usuario o Código no encontrados.';
+      }
+      return Response::json(array('success'=>$success,'message'=>$message),201);
     }
 
 }

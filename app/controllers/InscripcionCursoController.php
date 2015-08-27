@@ -12,10 +12,10 @@ class InscripcionCursoController extends \BaseController {
 		$filter=Input::get("filter");
 		$cursoasignado_id=(!isset($filter['cursoasignado_id']))?'':$filter['cursoasignado_id'];
 		$entities = InscripcionCurso::with('cursoasignado')
-			->with('alumno')	
+			->with('alumno')
 			->where('cursoasignado_id','=',$cursoasignado_id)
 			->paginate(Input::get('count'));
-	    
+
 	    return Response::json(
 	           $entities->toArray(),
 	          201
@@ -39,16 +39,32 @@ class InscripcionCursoController extends \BaseController {
 	 */
 	public function store()
 	{
+		$message='';
+		$success=false;
 		$input = Input::all();
+		$entity=null;
+		$inscripciones=InscripcionCurso::where('alumno_id',Input::get('alumno.id'))
+			->where('cursoasignado_id',Input::get('cursoasignado.id'))
+			->get();
 
-        $entity = new InscripcionCurso();
- 		$entity->alumno_id=Input::get('alumno.id');
- 		$entity->cursoasignado_id=Input::get('cursoasignado.id');
- 		$entity->save();
+    if(count($inscripciones)==0){
+			$entity = new InscripcionCurso();
+	 		$entity->alumno_id=Input::get('alumno.id');
+	 		$entity->cursoasignado_id=Input::get('cursoasignado.id');
+	 		$entity->save();
+			$success=true;
+			$message='Alumno registrado satisfactoriamente';
+			$entity=$entity->toArray();
+		}else{
+			$message='Alumno ya se encuentra registrado';
+		}
+
 
  		return Response::json(array(
-            'error' => false,
-            'entity' => $entity->toArray()),
+            'success' => $success,
+            'entity' => $entity,
+						'message'=>$message
+					),
             200
         );
 	}

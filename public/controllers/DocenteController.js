@@ -101,6 +101,31 @@ app.controller("DocenteController", function DocenteController($q,DocenteService
         });
     };
 
+    $scope.ChangePassword=function(item){
+      $scope.entidad=item.usuario;
+    }
+
+    $scope.SaveUpdatePassword=function(){
+      $http({
+            url: './admin/updatepassword-for-users',
+            method: "POST",
+            data: $scope.entidad,
+
+        }).success(function (data) {
+            var n = noty({
+                    text: data.message,
+                    type: (data.success)?'success':'warning',
+                    modal:false,
+                    timeout:5000,
+                    layout: 'bottomRight',
+                    theme: 'defaultTheme'
+            });
+            $('#winChangePassword').modal('hide')
+
+
+        });
+    }
+
 //END UPLOAD
     $scope.others.loadescuelas=function(){
         var filter={

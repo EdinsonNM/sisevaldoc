@@ -47,7 +47,7 @@
               </select>
 
       </div>
-      <div class="col-md-2">
+      <div class="col-md-1">
 
               <label>Semestre: </label>
               <select class="form-control" ng-model="semestreSelected"  ng-change="loadDocentes()">
@@ -56,7 +56,7 @@
 
       </div>
       <div class="col-md-2">
-              <label>Docente: </label>
+              <label>Docente con asignación: </label>
               <select class="form-control" ng-model="docenteSelected" ng-change="loadCursos()">
                 <option value="0">Todos los Docentes</option>
                 <option ng-repeat="docente  in docentes" value="//docente.id//">//docente.firstname+' '+docente.lastname//</option>
@@ -65,9 +65,9 @@
       </div>
 
 
-      <div class="col-md-2">
+      <div class="col-md-3">
 
-              <label>Curso: </label>
+              <label>Curso Asignado: </label>
               <select class="form-control" placeholder="Search" ng-model="cursoSelected">
                 <option value="0">Todas los Cursos</option>
                 <option ng-repeat="curso  in cursos" value="//curso.id//">//curso.curso.name//</option>

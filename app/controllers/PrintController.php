@@ -76,8 +76,11 @@ class PrintController extends BaseController {
 					$message="Parametros alumno_id y semestre_id son requeridos";
 				}
 			}else{
-				$message="Ya se imprimio una copia de la Ficha de Evaluación";
-				$success=false;
+				if(!$ficha->habilitada){
+					$message="Ya se imprimio una copia de la Ficha de Evaluación";
+					$success=false;
+				}
+
 			}
 
 			return Response::json(array('success'=>$success,'message'=>$message),201);
@@ -142,13 +145,48 @@ class PrintController extends BaseController {
 						$message="Parametros alumno_id y semestre_id son requeridos";
 					}
 				}else{
-					$message="Ya se imprimio una copia de la Ficha de Evaluación";
-					$success=false;
+					if($ficha->habilitada){
+						$inscripciones=InscripcionCurso::select(DB::Raw("inscripcioncurso.*"))
+						->with('evaluaciones')
+						->with(array('cursoasignado'=>function($q){
+								return $q->with('curso');
+							}))
+						->join('cursoasignado','cursoasignado.id','=','inscripcioncurso.cursoasignado_id')
+						->where('cursoasignado.semestre_id','=',$semestre_id)
+						->where('inscripcioncurso.alumno_id','=',$alumno_id)
+						->get();
+						$ficha->habilitada=0;
+						$ficha->save();
+						$data = array('data' => $inscripciones,'alumno'=>$alumno,'semestre'=>$semestre,'constancia'=>$ficha);
+						$pdf = PDF::loadView('print.constanciaevaluacion',$data);
+						return $pdf->download('constanciaevaluacion.pdf');
+					}else{
+						$message="Ya se imprimio una copia de la Ficha de Evaluación";
+						$success=false;
+					}
+
 				}
 
 				return $message;
 
     }
+
+		public function postHabilitarConstancia(){
+			$success=false;
+			$message='';
+			$alumno_id=Input::get('alumno_id','');
+			$semestre_id=Input::get('semestre_id','');
+			$constancia=FichaImpresion::where('alumno_id',$alumno_id)->where('semestre_id',$semestre_id)->first();
+			if($constancia){
+					$constancia->habilitada=1;
+					$constancia->save();
+					$message="Constancia habilitada para impresión";
+					$success=true;
+			}else{
+				$message="No se encontro constancia para el semestre seleccionado";
+			}
+			return Response::json(array('success'=>$success,'message'=>$message),201);
+		}
 
 		public function postExportExcel(){
 			$statusCode=200;

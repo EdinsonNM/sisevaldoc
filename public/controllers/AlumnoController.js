@@ -1,4 +1,4 @@
-app.controller("AlumnoController", function AlumnoController($q,$fileUploader,FacultadService,EscuelaService,$scope,$timeout,$http,$route,$location, $resource,ngTableParams){
+app.controller("AlumnoController", function AlumnoController($q,$fileUploader,SemestreService,FacultadService,EscuelaService,$scope,$timeout,$http,$route,$location, $resource,ngTableParams){
     $scope.others={};
     $scope.entidad={};
     var messageLoadData="Espere un momento mientras se valida la información que desea importar.";
@@ -12,7 +12,7 @@ app.controller("AlumnoController", function AlumnoController($q,$fileUploader,Fa
         page: 1,            // show first page
         count: 10,          // count per page
         filter:{
-            
+
         },
         sorting: {
             name: 'asc'     // initial sorting
@@ -37,7 +37,7 @@ app.controller("AlumnoController", function AlumnoController($q,$fileUploader,Fa
             ],
             filters: [
                 function (item) {                    // first user filter
-                   
+
                     return true;
                 }
             ]
@@ -72,7 +72,7 @@ app.controller("AlumnoController", function AlumnoController($q,$fileUploader,Fa
         page: 1,            // show first page
         count: 10,          // count per page
         filter:{
-            
+
         },
         sorting: {
             name: 'asc'     // initial sorting
@@ -97,7 +97,7 @@ app.controller("AlumnoController", function AlumnoController($q,$fileUploader,Fa
             url: './import/alumnosave',
             method: "POST",
             data: $scope.dataUpload.data,
-            
+
         }).success(function (data) {
              var msg='Se importaron '+data.valid+' registros validos';
              $scope.others.showLoading=false;
@@ -107,11 +107,11 @@ app.controller("AlumnoController", function AlumnoController($q,$fileUploader,Fa
                     modal:false,
                     timeout:5000,
                     layout: 'bottomRight',
-                    theme: 'defaultTheme'                                  
+                    theme: 'defaultTheme'
             });
             $('#winUpload').modal('hide')
             $route.reload()
-              
+
         });
     };
 
@@ -124,7 +124,7 @@ app.controller("AlumnoController", function AlumnoController($q,$fileUploader,Fa
         EscuelaService.get(filter,function(data){
             $scope.others.escuelas=data.data;
         });
-       
+
    };
    $scope.list=function(){
         var Api = $resource('./'+ENTITYNAME);
@@ -156,47 +156,103 @@ app.controller("AlumnoController", function AlumnoController($q,$fileUploader,Fa
     };
     $scope.edit=function(id){
         $scope.entidad={};
-        
+
         $http({
             url: './'+ENTITYNAME+'/'+id,
-            method: "GET"            
+            method: "GET"
         }).success(function (data) {
             $scope.entidad=data.data;
-            
+
             $http({
                 url: './facultad/'+$scope.entidad.escuela.facultad_id,
-                method: "GET"            
+                method: "GET"
             }).success(function (data) {
                 $scope.entidad.facultad_id=data.data.id;
                 $scope.others.loadescuelas();
             });
         });
     };
+    $scope.ChangePassword=function(item){
+      $scope.entidad=item.usuario;
+    }
+    $scope.HabilitarConstancia=function(item){
+      $scope.entidad={
+        alumno_id:item.id
+      };
+      SemestreService.get({},function(data){
+        $scope.others={
+          semestres:data.data
+        }
+        console.log($scope.others.semestres);
+      });
+    }
+
+    $scope.SaveHabilitarConstancia=function(){
+      $http({
+            url: './print/habilitar-constancia',
+            method: "POST",
+            data: $scope.entidad,
+
+        }).success(function (data) {
+            var n = noty({
+                    text: data.message,
+                    type: (data.success)?'success':'warning',
+                    modal:false,
+                    timeout:5000,
+                    layout: 'bottomRight',
+                    theme: 'defaultTheme'
+            });
+            $('#winHabilitarConstancia').modal('hide')
+
+
+        });
+    }
+
+    $scope.SaveUpdatePassword=function(){
+      $http({
+            url: './admin/updatepassword-for-users',
+            method: "POST",
+            data: $scope.entidad,
+
+        }).success(function (data) {
+            var n = noty({
+                    text: data.message,
+                    type: (data.success)?'success':'warning',
+                    modal:false,
+                    timeout:5000,
+                    layout: 'bottomRight',
+                    theme: 'defaultTheme'
+            });
+            $('#winChangePassword').modal('hide')
+
+
+        });
+    }
     $scope.save=function(){
         $http({
             url: './'+ENTITYNAME,
             method: "POST",
             data: $scope.entidad,
-            
+
         }).success(function (data, status, headers, config) {
                 noty({
-                    text: 'Alumno registrado satisfactoriamente', 
+                    text: 'Alumno registrado satisfactoriamente',
                     type: 'success',
                     layout:'bottomRight',
                     timeout:5000,
                 });
                $('#winNew').modal('hide');
                $route.reload();
-              
+
         });
     };
     $scope.update=function(){
-        
+
         $http({
             url: './'+ENTITYNAME+'/'+$scope.entidad.id,
             method: "PUT",
             data: $scope.entidad,
-            
+
         }).success(function (data, status, headers, config) {
             var n = noty({
                     text: data.message,
@@ -204,11 +260,11 @@ app.controller("AlumnoController", function AlumnoController($q,$fileUploader,Fa
                     modal:false,
                     timeout:5000,
                     layout: 'bottomRight',
-                    theme: 'defaultTheme'                                  
+                    theme: 'defaultTheme'
             });
             $('#winUpd').modal('hide')
             $route.reload()
-              
+
         });
     };
     $scope.delete=function(id){
@@ -222,16 +278,16 @@ app.controller("AlumnoController", function AlumnoController($q,$fileUploader,Fa
 
                 $http({
                         url: './'+ENTITYNAME+'/'+id,
-                        method: "DELETE"            
+                        method: "DELETE"
                     }).success(function (data) {
                         $route.reload();
                         console.log(data)
-                       
+
 
                 });
                 $noty.close();
                 noty({
-                    text: 'Se ha eliminado el registro satisfactoriamente', 
+                    text: 'Se ha eliminado el registro satisfactoriamente',
                     type: 'success',
                     layout:'bottomRight',
                     timeout:5000,
@@ -240,7 +296,7 @@ app.controller("AlumnoController", function AlumnoController($q,$fileUploader,Fa
             },
             {addClass: 'btn btn-danger', text: 'No', onClick: function($noty) {
                 $noty.close();
-                
+
             }
             }
           ]
@@ -249,7 +305,7 @@ app.controller("AlumnoController", function AlumnoController($q,$fileUploader,Fa
 
 
     $scope.list();
-   
+
     $scope.listescuelas=function(column){
         var def = $q.defer();
         var escuelas=[];
@@ -261,7 +317,7 @@ app.controller("AlumnoController", function AlumnoController($q,$fileUploader,Fa
                     });
             });
             def.resolve(escuelas);
-            
+
         });
         return def;
     };

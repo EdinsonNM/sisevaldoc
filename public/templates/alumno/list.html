@@ -41,7 +41,9 @@
             <td data-title="'Email'" >//item.usuario.email//</td>
             <td data-title="'Fecha Creación'">//item.created_at | date:'dd/MM/yyyy'//</td>
             <td data-title="'Ultima Actualización'">//item.updated_at | date:'dd/MM/yyyy'//</td>
-            <td data-title="'Opciones'" style="width:70px;">
+            <td data-title="'Opciones'" style="width:160px;">
+              <a title="Habilitar Impresión de Constancia" class="btn btn-default btn-xs" data-toggle="modal" data-target="#winHabilitarConstancia" ng-click="HabilitarConstancia(item)"><span class="fa fa-file-text-o"></span></a>
+              <a title="Cambiar Contraseña" class="btn btn-default btn-xs" data-toggle="modal" data-target="#winChangePassword" ng-click="ChangePassword(item)"><i class="fa fa-key"></i></a>
               <a title="Editar" class="btn btn-success btn-xs" data-toggle="modal" data-target="#winUpd" ng-click="edit(item.id)"><span class="glyphicon glyphicon-pencil"></span></a>
               <a title="Eliminar" class="btn btn-danger btn-xs" ng-click="delete(item.id)"><span class="glyphicon glyphicon-remove"></span></a>
             </td>
@@ -53,8 +55,9 @@
 
   </div>
 </div>
+<window-dir title="Habilitar Constancia" window="winHabilitarConstancia" content="templates/alumno/form-habilitarconstancia.html" entidad="entidad" others="others" save="SaveHabilitarConstancia()"></window-dir>
 
-
+<window-dir title="Cambiar Contraseña" window="winChangePassword" content="templates/alumno/form-updatepassword.html" entidad="entidad" others="others" save="SaveUpdatePassword()"></window-dir>
 <window-dir title="Nuevo Alumno" window="winNew" content="templates/alumno/form.html" entidad="entidad" others="others" save="save()"></window-dir>
 
 <window-dir title="Editar Alumno" window="winUpd" content="templates/alumno/form.html" entidad="entidad" others="others" save="update()"></window-dir>

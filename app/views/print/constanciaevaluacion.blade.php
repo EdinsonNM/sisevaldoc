@@ -12,14 +12,13 @@
 <body>
 	<div class="container-fluid">
 	<div class="row">
+		<div class="pull-left">
+			<img src="http://unu.edu.pe/sisevaldoc/public/images/logo-unu.png" alt="logo" width="100" class="pull-left"/>
+		</div>
 		<div class="col-md-12">
-			<h3 class="text-center">Universidad Nacional de Ucayali</h3>
+			<h3 class="text-center"><strong>UNIVERSIDAD NACIONAL DE UCAYALI</strong></h3>
 		</div>
 	</div>
-	<br/>
-	<br/>
-	<br/>
-
 	<div class="row">
 		<div class="col-md-12">
 			<h3 class="text-center">CONSTANCIA DE REGISTRO DE EVALUACION DE DESEMPEÑO DEL DOCENTE (SISEVALDOC)</h3>

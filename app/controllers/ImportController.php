@@ -279,7 +279,7 @@ class ImportController extends BaseController {
                         $dedicacion=new TipoDedicacion();
 
                     }
-
+									
                     $docente=Docente::where('code','=',$valor[0][1])->first();
                     if($docente){
                         $message="Registro no se importara. Codigo de Docente ya existe";

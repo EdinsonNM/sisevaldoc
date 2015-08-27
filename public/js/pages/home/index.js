@@ -10,7 +10,16 @@ MyApp.config(function($interpolateProvider,$routeProvider,$locationProvider) {
   .when("/login/:type", {
         templateUrl : "home/login.html",
         controller:'LoginController'
-  });
+  })
+  .when("/recuperarpassword", {
+        templateUrl : "home/recuperarpassword.html",
+        controller:'RecuperarPasswordController'
+  })
+  .when("/cambiarpassword/:code", {
+        templateUrl : "home/cambiarpassword.html",
+        controller:'CambiarPasswordController'
+  })
+  ;
 
 
 });
@@ -30,7 +39,7 @@ MyApp.controller('HomeController', function LoadGroupsController($scope,$http) {
 
 });
 
-MyApp.controller('LoginController', function LoadGroupsController($scope,$http,$routeParams) {
+MyApp.controller('LoginController', function LoginController($scope,$http,$routeParams) {
   $http({
 		method: 'GET',
 		url: './grupo'
@@ -63,6 +72,47 @@ MyApp.controller('LoginController', function LoadGroupsController($scope,$http,$
   	});
   }
 
+});
+
+MyApp.controller('RecuperarPasswordController', function RecuperarPasswordController($location,$scope,$http,$routeParams) {
+  //recuperar password
+  $scope.Recuperar=function(){
+    $scope.showAlert=false;
+    $http({
+  		method: 'GET',
+  		url: './loginuser/recuperar-password?username='+$scope.model.username
+  	}).success(function(data){
+      console.log(data);
+      if(data.success){
+        $scope.message='Se ha enviado un correo a su dirección de email registrada para restablecer su contraseña.'
+      }else{
+        $scope.message=data.message;
+      }
+  	});
+  }
+});
+
+MyApp.controller('CambiarPasswordController', function RecuperarPasswordController($routeParams,$location,$scope,$http,$routeParams) {
+  //recuperar password
+  $scope.CambiarPassword=function(){
+    $scope.showAlert=false;
+    var params={
+      code:$routeParams.code,
+      password:$scope.model.password
+    }
+    $http({
+  		method: 'POST',
+  		url: './loginuser/cambiar-password',
+      data:params
+  	}).success(function(data){
+      console.log(data);
+      if(data.success){
+        $scope.message='Se realizó el cambio de su contraseña satisfactoriamente';
+      }else{
+        $scope.message=data.message;
+      }
+  	});
+  }
 });
 MyApp.directive(
             "bnLogDomCreation",

@@ -18,7 +18,7 @@
                 Upload
             </button>
             <button type="button" class="btn btn-success" data-toggle="modal" data-target="#winNew" ng-click="new()">
-                <span class="glyphicon glyphicon-plus"></span> 
+                <span class="glyphicon glyphicon-plus"></span>
                 Nuevo
             </button>
           </form>
@@ -49,8 +49,8 @@
             <td data-title="'Usuario'" >//item.usuario.username//</td>
             <td data-title="'Email'" >//item.usuario.email//</td>
 
-            <td data-title="'Opciones'" style="width:100px;">
-              
+            <td data-title="'Opciones'" style="width:120px;">
+              <a title="Cambiar Contraseña" class="btn btn-default btn-xs" data-toggle="modal" data-target="#winChangePassword" ng-click="ChangePassword(item)"><span class="glyphicon glyphicon-lock"></span></a>
               <a title="Editar" class="btn btn-success btn-xs" data-toggle="modal" data-target="#winUpd" ng-click="edit(item.id)"><span class="glyphicon glyphicon-pencil"></span></a>
               <a title="Eliminar" class="btn btn-danger btn-xs" ng-click="delete(item.id)"><span class="glyphicon glyphicon-remove"></span></a>
 
@@ -60,10 +60,11 @@
       </table>
     </div>
 
-   
+
   </div>
 </div>
 
+<window-dir title="Cambiar Contraseña" window="winChangePassword" content="templates/alumno/form-updatepassword.html" entidad="entidad" others="others" save="SaveUpdatePassword()"></window-dir>
 
 <window-dir title="Nuevo Docente" window="winNew" content="templates/docente/form.html" entidad="entidad" others="others" save="save()" stylewidth="modal-lg" close="close()"></window-dir>
 

@@ -269,4 +269,38 @@ class AdminController extends BaseController {
         return $response;
     }
 
+		public function postUpdatepasswordForUsers()
+    {
+				$usuario=Sentry::getUser();
+				$type = Session::get('type');
+				$message="";
+				$success=false;
+				if($type=='administrador'){
+	        try
+	        {
+	            $user = Sentry::findUserByLogin(Input::get('username'));
+	            if(Input::get('newpassword')==Input::get('repeatpassword')){
+	                $user->password = Input::get('newpassword');
+	                $user->save();
+	                $success=true;
+	                $message="Contraseña actualizada satisfactoriamente";
+	            }else{
+	                $message="Contraseña de confirmación no coincide con la nueva contraseña";
+	            }
+
+	        }
+	        catch (Cartalyst\Sentry\Users\UserNotFoundException $e)
+	        {
+	            $success=false;
+	            $message="Credenciales de Usuario no validas";
+	        }
+				}else{
+					$message="Acceso denegado";
+					$success=false;
+				}
+
+
+        return Response::json(array('success' => $success,'message'=>$message),201);
+    }
+
 }
